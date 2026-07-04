@@ -3,6 +3,42 @@ MAKEFLAGS += --no-print-directory
 
 NUMPROC ?= $(shell nproc)
 
+CHECK_ENV_CMDS := \
+	python3 \
+	ninja \
+	stat \
+	iconv \
+	mips-ps2-decompals-as \
+	mips-ps2-decompals-strip \
+	mips-ps2-decompals-ld \
+	mips-ps2-decompals-objcopy
+
+GREEN  := \033[32m
+RED    := \033[31m
+YELLOW := \033[33m
+RESET  := \033[0m
+
+.check-env:
+	@missing=0; \
+	output=""; \
+	for cmd in $(CHECK_ENV_CMDS); do \
+		if command -v $$cmd >/dev/null 2>&1; then \
+			output="$$output  ${GREEN}[OK]${RESET}      $$cmd\n"; \
+		else \
+			output="$$output  ${RED}[MISSING]${RESET} $$cmd\n"; \
+			missing=1; \
+		fi; \
+	done; \
+	if [ $$missing -eq 1 ]; then \
+		printf "%-11s %s\n" "STATUS" "COMMAND"; \
+		printf "%-11s %s\n" "------" "-------"; \
+		printf "$$output"; \
+		printf "\n${RED}Environment check failed${RESET}\n\n"; \
+		exit 1; \
+	fi
+
+WITH_ENV := .check-env
+
 .PHONY: help \
 		.build-only .check-files-on-error configure build extract-data make-asm map-mismatch report clean \
 
@@ -50,8 +86,9 @@ endef
 export PY_HELP_SCRIPT
 PYHELP := python3 -c "$$PY_HELP_SCRIPT"
 
-help: ## Show this help
+help: $(WITH_ENV) ## Show this help
 	@$(PYHELP) $(MAKEFILE_LIST)
+
 ##
 ##  Commands:
 configure: ## Configure  project (needs SLUS_210.07)

@@ -455,4 +455,7 @@ segments:
         # vutext
         - [0x11C700, textbin, vutext]
 
+        #- { start: 0x157880, type: bss, vram: 0x257880,  name: "bss_asm" }
+
+
     - [0x157900]
