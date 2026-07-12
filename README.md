@@ -1,12 +1,7 @@
-# Himuro / ひむろ
-## What is Himuro?
-Himuro is a project that aims to have a matching source decompilation of the PS2 game Fatal Frame 1; Project Zero; <ruby>零<rt>ぜろ</rt></ruby>. Once we have a matching decompiled rom we want to port the game to modern hardware.
+# Mulbery (桑)
+## What is Mulberry?
+Mulberry is a project that aims to have a matching source decompilation of the PS2 game Kuon. Once we have a matching decompiled rom we want to port the game to modern hardware.
 
-## Progress
-| Name | Region | Game ID     | Progress (powered by [decomp.dev](https://decomp.dev/))
-|----------------|--------|-------------|--------------------------------
-| Fatal Frame    | US     | SLUS_203.88 | [![](https://decomp.dev/Mikompilation/Himuro/SLUS_203.88.svg?mode=shield&category=us&label=⠀  Code   ⠀&measure=matched_code_percent)](https://decomp.dev/Mikompilation/Himuro/SLUS_203.88)⠀ [![](https://decomp.dev/Mikompilation/Himuro/SLUS_203.88.svg?mode=shield&category=us&label=Functions&measure=matched_functions)](https://decomp.dev/Mikompilation/Himuro/SLUS_203.88)
-| Project Zero   | EU     | SLES_508.21 |[![](https://decomp.dev/Mikompilation/Himuro/SLES_508.21.svg?mode=shield&category=eu&label=⠀  Code   ⠀&measure=matched_code_percent)](https://decomp.dev/Mikompilation/Himuro/SLES_508.21)⠀ [![](https://decomp.dev/Mikompilation/Himuro/SLES_508.21.svg?mode=shield&category=eu&label=Functions&measure=matched_functions)](https://decomp.dev/Mikompilation/Himuro/SLES_508.21)
 
 ## Disclaimer
 No game assets are hosted on this repository. You must provide them yourself, copying them from a legal copy.
@@ -41,64 +36,6 @@ python3 -m pip install -r requirements.txt
 
 ### Copy assets from game DVD/ISO
 The main executable is needed in order to perform the decompilation.
-#### EU
-Copy `SLES_508.21` from DVD/ISO into `config/eu/`. File **must** have the following sha1 hash:
-```
-cb36d4365e70be9e9dc5bb66e2aa083811a39f12
-```
-
-
-#### US
-Copy `SLUS_203.88` from DVD/ISO into `config/us/`. File **must** have the following sha1 hash:
-```
-5ac4626e0d76218e977b01f4fae5948de9a1755e
-```
-
-### Extract data
-NOTE: this operation needs to be performed only once.
-#### EU
-```bash
-make eu-extract-data
-```
-
-#### US
-```bash
-make us-extract-data
-```
-
-### Configure the project
-NOTE: running these commands on an already configured project will reconfigure it.
-#### EU
-```bash
-make eu-configure
-```
-
-#### US
-```bash
-make us-configure
-```
-
-### Compile
-#### EU
-```bash
-make eu-build
-```
-
-#### US
-```bash
-make us-build
-```
-
-### Clean Artifacts
-#### EU
-```bash
-make eu-clean
-```
-
-#### US
-```bash
-make us-clean
-```
 
 ### Command Help
 To have a list all available commands, run `make` without targets:
@@ -108,7 +45,7 @@ make
 
 ## Decompiling a TU
 1. Add the decompiled code to the TU's `c` file in `src/`
-2. Update `config/{region}/ff1.{region}.yaml`:
+2. Update `config/kuon.yaml`:
    1. Replace `asm` with `c` for the TU you are decompiling
    2. Add a leading dot (`.`) to the type (e.g., `rodata` -> `.rodata`) of each subsection that belongs to the TU
 3. Reconfigure the project
