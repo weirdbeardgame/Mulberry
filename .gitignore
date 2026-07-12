@@ -1,0 +1,21 @@
+__pycache__
+.venv/
+build/
+assets/
+asm/
+.ninja_log
+.splache
+build.ninja
+permuter_settings.toml
+Makefile.custom
+config/**/*.ld
+config/**/undefined_syms_auto.txt
+config/**/expected/
+config/**/include/
+config/**/cc-src/
+config/**/tmp_*/
+config/**/objdiff.json
+# ignore elf files, such as config/us/SLUS_203.88
+config/**/[A-Z][A-Z][A-Z][A-Z]_[0-9][0-9][0-9].[0-9][0-9]
+.idea/
+.vscode/

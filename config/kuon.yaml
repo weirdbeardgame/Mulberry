@@ -1,0 +1,753 @@
+name: Kuon
+sha1: 5ac4626e0d76218e977b01f4fae5948de9a1755e
+options:
+    basename: SLUS_210.07
+    target_path: SLUS_210.07
+    base_path: .
+    asm_path: asm
+    src_path: ../../src
+    build_path: build
+    asset_path: assets
+    compiler: EEGCC
+    find_file_boundaries: False
+    platform: ps2
+    string_encoding: EUC-JP
+    create_undefined_funcs_auto: False
+    create_undefined_syms_auto: True
+    undefined_funcs_auto_path: undefined_funcs_auto.txt
+    undefined_syms_auto_path: undefined_syms_auto.txt
+    symbol_addrs_path: symbol_addrs.txt
+    extensions_path: ../../tools/splat_ext
+    section_order: [".text", ".vutext", ".data", ".vudata", ".rodata", ".lit4", ".sdata", ".sbss", ".bss", ".vubss"]
+    #auto_all_sections: [".data", ".sdata", ".sbss", ".lit4", ".rodata", ".bss"]
+    disasm_unknown: True
+    subalign: 4
+    named_regs_for_c_funcs: False
+    gp_value: 0x35d070
+    ld_bss_is_noload: true
+# custom field used by fix_linkerscript.py to fix linkerscript alignments
+_section_subalign:
+    elf_header: 8
+    main: 2
+    main_bss: 1
+    reg_info: 4
+    mips_debug: 4
+    rest: 4
+segments:
+    - [0, databin, elf_header]
+    - name: main
+      type: code
+      start: 0x1000
+      vram: 0x100000
+      bss_size: 0x0b3024 # size of .sbss + size of .bss
+      align: 1
+      subalign: 2 # safe subalign value. proper values are applied by fix_linkerscript.py where necessary
+      # text has align 8 but other sections may have a different alignment ...
+      # explicit align correction is performed by fix_linkerscript.py during
+      # project configuration. vram address is used, when reported, in non text
+      # sections to calculate the correct align value.
+      subsegments:
+          - [0x1000,   asm, crt0]
+          - [0x10c8,   c,   main/main]
+          - [0x1380,   c,   outgame/mode_slct]
+          - [0x4b30,   c,   outgame/memory_album]
+          - [0xbf68,   c,   main/gamemain]
+          - [0xc2f8,   c,   main/glob]
+          - [0xc2f8,   c,   os/system]
+          - [0xc938,   c,   os/fileload]
+          - [0xcaa0,   c,   os/key_cnf]
+          - [0xcc48,   c,   os/backup]
+          - [0xcee0,   c,   os/pad]
+          - [0xda68,   c,   os/eeiop/eeiop]
+          - [0xde20,   c,   os/eeiop/cdvd/eecdvd]
+          - [0xe308,   c,   os/eeiop/adpcm/ea_ctrl]
+          - [0xeec8,   c,   os/eeiop/adpcm/ea_cmd]
+          - [0xf308,   c,   os/eeiop/adpcm/ea_dat]
+          - [0xf358,   c,   os/eeiop/adpcm/ea_btlmode]
+          - [0xf658,   c,   os/eeiop/adpcm/ea_gameover]
+          - [0xf860,   c,   os/eeiop/adpcm/ea_scene]
+          - [0xfb10,   c,   os/eeiop/adpcm/ea_magatoki]
+          - [0xfe40,   c,   os/eeiop/adpcm/ea_shinkan]
+          - [0x10178,  c,   os/eeiop/adpcm/ea_puzzle]
+          - [0x10478,  c,   os/eeiop/adpcm/ea_soul]
+          - [0x10740,  c,   os/eeiop/adpcm/ea_tape]
+          - [0x10948,  c,   os/eeiop/adpcm/ea_gdead]
+          - [0x10b78,  c,   os/eeiop/adpcm/ea_event]
+          - [0x10f98,  c,   os/eeiop/adpcm/ea_ghost]
+          - [0x11400,  c,   os/eeiop/adpcm/ea_autog]
+          - [0x11958,  c,   os/eeiop/adpcm/ea_hiso]
+          - [0x11d18,  c,   os/eeiop/adpcm/ea_furn]
+          - [0x12218,  c,   os/eeiop/adpcm/ea_map]
+          - [0x12460,  c,   os/eeiop/eese]
+          - [0x14108,  c,   os/eeiop/se_cmd]
+          - [0x14788,  c,   os/eeiop/se_data]
+          - [0x14c88,  c,   os/eeiop/se_ev]
+          - [0x14fe8,  c,   os/eeiop/se_trans]
+          - [0x15420,  c,   os/eeiop/se_door]
+          - [0x15958,  c,   os/eeiop/se_foot]
+          - [0x15e10,  c,   os/eeiop/se_event]
+          - [0x16150,  c,   os/eeiop/se_srund]
+          - [0x16490,  c,   os/eeiop/sd_room]
+          - [0x16680,  c,   os/eeiop/se_plyr]
+          - [0x16cd0,  c,   common/ul_math]
+          - [0x16fc8,  c,   common/utility]
+          - [0x17028,  c,   graphics/graph2d/compress]
+          - [0x18a08,  c,   graphics/graph2d/effect]
+          - [0x1b160,  c,   graphics/graph2d/effect_sub]
+          - [0x21398,  c,   graphics/graph2d/effect_sub2]
+          - [0x28e40,  c,   graphics/graph2d/effect_scr]
+          - [0x32a70,  c,   graphics/graph2d/effect_obj]
+          - [0x37430,  c,   graphics/graph2d/effect_oth]
+          - [0x47330,  c,   graphics/graph2d/effect_rdr]
+          - [0x48ab8,  c,   graphics/graph2d/effect_ene]
+          - [0x53ed0,  c,   graphics/graph2d/g2d_debug]
+          - [0x55db8,  c,   graphics/graph2d/g2d_main]
+          - [0x56048,  c,   graphics/graph2d/message]
+          - [0x5a8a8,  c,   graphics/graph2d/number]
+          - [0x5ac98,  c,   graphics/graph2d/snapshot]
+          - [0x5af10,  c,   graphics/graph2d/tim2]
+          - [0x5eb40,  c,   graphics/graph2d/tim2_new]
+          - [0x5fd58,  c,   graphics/graph2d/rare_ene]
+          - [0x60b88,  c,   graphics/graph3d/gra3d]
+          - [0x65240,  c,   graphics/graph3d/leditor]
+          - [0x66580,  c,   graphics/graph3d/load3d]
+          - [0x676b0,  c,   graphics/motion/mdldat]
+          - [0x676b0,  c,   graphics/motion/mdlwork]
+          - [0x68d88,  c,   graphics/motion/mdlact]
+          - [0x69cc0,  c,   graphics/motion/mime]
+          - [0x6b7c8,  c,   graphics/motion/accessory]
+          - [0x6f4e0,  c,   graphics/motion/motion]
+          - [0x72508,  c,   graphics/motion/anicode]
+          - [0x72dc0,  c,   graphics/motion/mim_dat]
+          - [0x72dc0,  c,   graphics/motion/acs_dat]
+          - [0x72dc0,  c,   graphics/graph3d/object]
+          - [0x72df8,  c,   graphics/graph3d/sce_pp3]
+          - [0x73050,  c,   graphics/graph3d/sgsgd]
+          - [0x739e8,  c,   graphics/graph3d/sglib]
+          - [0x747f0,  c,   graphics/graph3d/sgsu]
+          - [0x75f60,  c,   graphics/graph3d/sgdma]
+          - [0x76aa0,  c,   graphics/graph3d/sglight]
+          - [0x79c48,  c,   graphics/graph3d/sgsup]
+          - [0x7a9c8,  c,   graphics/graph3d/sgcam]
+          - [0x7ba68,  c,   graphics/graph3d/shadow]
+          - [0x7e4d8,  c,   graphics/graph3d/mirror]
+          - [0x7fcc8,  c,   graphics/mov/movie]
+          - [0x83f30,  c,   graphics/scene/fod]
+          - [0x85960,  c,   graphics/scene/scene]
+          - [0x88800,  c,   graphics/scene/scene_dat]
+          - [0x88800,  c,   ingame/ingame]
+          - [0x89578,  c,   ingame/ig_init]
+          - [0x89ae0,  c,   ingame/ig_glob]
+          - [0x89ae0,  c,   ingame/camera/camera]
+          - [0x8e618,  c,   ingame/enemy/ene_ctl]
+          - [0x91ea8,  c,   ingame/enemy/move_ctl]
+          - [0x99728,  c,   ingame/entry/entry]
+          - [0x99910,  c,   ingame/plyr/time_ctl]
+          - [0x99cc0,  c,   ingame/entry/ap_bgost]
+          - [0x99fd8,  c,   ingame/entry/ap_dgost]
+          - [0x9a4e8,  c,   ingame/entry/ap_fgost]
+          - [0x9b190,  c,   ingame/entry/ap_ggost]
+          - [0x9b880,  c,   ingame/entry/ap_pgost]
+          - [0x9be50,  c,   ingame/entry/ap_rgost]
+          - [0x9cd50,  c,   ingame/entry/ap_sgost]
+          - [0x9dc18,  c,   ingame/entry/ap_zgost]
+          - [0x9e508,  c,   ingame/entry/fgst_dat]
+          - [0x9e508,  c,   ingame/entry/rgst_dat]
+          - [0x9e508,  c,   ingame/event/ev_main]
+          - [0xa07c0,  c,   ingame/event/ev_spcl]
+          - [0xb1cf0,  c,   ingame/event/ev_load]
+          - [0xb30f0,  c,   ingame/event/mv_cmnd]
+          - [0xb3250,  c,   ingame/info/inf_disp]
+          - [0xbaa00,  c,   ingame/map/map_ctrl]
+          - [0xbe398,  c,   ingame/map/map_area]
+          - [0xbece0,  c,   ingame/map/door_ctl]
+          - [0xc66d0,  c,   ingame/map/doortype]
+          - [0xc67f8,  c,   ingame/map/rotd_ctl]
+          - [0xc6d60,  c,   ingame/map/find_ctl]
+          - [0xc7118,  c,   ingame/map/find_dat]
+          - [0xc7118,  c,   ingame/map/furn_ctl]
+          - [0xc8b98,  c,   ingame/map/furn_dat]
+          - [0xc8bb8,  c,   ingame/map/furn_eff]
+          - [0xc9148,  c,   ingame/map/item_ctl]
+          - [0xc9ca8,  c,   ingame/map/map_htck]
+          - [0xca958,  c,   ingame/map/furn_spe/furn_spe]
+          - [0xce500,  c,   ingame/map/furn_spe/fsla_main]
+          - [0xcece8,  c,   ingame/map/furn_spe/fsla_dat]
+          - [0xcece8,  c,   ingame/map/furn_spe/fspe_acs]
+          - [0xced88,  c,   ingame/map/furn_spe/adj_valg]
+          - [0xcf0a0,  c,   ingame/menu/item]
+          - [0xd4a28,  c,   ingame/menu/gameover]
+          - [0xd5070,  c,   ingame/menu/pause]
+          - [0xd5a10,  c,   ingame/menu/ig_album]
+          - [0xdd1e8,  c,   ingame/menu/ig_camra]
+          - [0xe0cd0,  c,   ingame/menu/ig_menu]
+          - [0xe5538,  c,   ingame/menu/ig_spd_menu]
+          - [0xe5de0,  c,   ingame/menu/item_get]
+          - [0xe78b8,  c,   ingame/menu/ig_file]
+          - [0xee668,  c,   ingame/menu/ig_rank]
+          - [0xf1970,  c,   ingame/menu/ig_glst]
+          - [0xf3d78,  c,   ingame/menu/ig_map]
+          - [0xf7268,  c,   ingame/menu/ig_option]
+          - [0xfa1c8,  c,   ingame/menu/sp_menu]
+          - [0x100458, c,   ingame/map/door_conte]
+          - [0x100838, c,   ingame/photo/photo]
+          - [0x1012b8, c,   ingame/photo/pht_main]
+          - [0x101af0, c,   ingame/photo/pht_make]
+          - [0x1059a8, c,   ingame/plyr/plyr_ctl]
+          - [0x10e5b0, c,   ingame/plyr/unit_ctl]
+          - [0x10ed38, c,   edit/test_2d]
+          - [0x10ef08, c,   outgame/scn_test]
+          - [0x113ca8, c,   outgame/title]
+          - [0x116dd0, c,   graphics/graph2d/takep_pe]
+          - [0x117b58, c,   mc/mc]
+          - [0x117b58, c,   mc/mc_main]
+          - [0x119b60, c,   mc/mc_acs]
+          - [0x11a4b8, c,   mc/mc_album]
+          - [0x11b000, c,   mc/mc_exec]
+          - [0x11c3d0, c,   mc/mc_start]
+          - [0x11c998, c,   mc/mc_icon]
+          - [0x11c998, c,   mc/mc_disp]
+          - [0x11caa8, c,   mc/mc_at]
+          - [0x11d260, c,   outgame/outgame]
+          - [0x11d988, c,   outgame/btl_mode/btl_menu]
+          - [0x11ed08, c,   outgame/btl_mode/btl_mode]
+          - [0x11f5d0, c,   outgame/btl_mode/btl_dat]
+          - [0x11f5d0, c,   ingame/event/wan_soul]
+          - [0x121030, c,   ingame/event/wan_dat]
+          - [0x121098, c,   outgame/sound_test]
+          - [0x1225c0, textbin, text_rest]
+          - [0x1475b0, textbin, vutext]
+          # ######################## DATA    (vram: 0x250180) #####################################
+          - { start: 0x151180, type: .data,   vram: 0x250180, name: outgame/mode_slct             }
+          - { start: 0x152ae0, type: .data,   vram: 0x251ae0, name: outgame/memory_album          }
+          - { start: 0x1532c0, type: .data,   vram: 0x2522c0, name: main/glob                     }
+          - { start: 0x166eb0, type: .data,   vram: 0x265eb0, name: os/system                     }
+          - { start: 0x1670e0, type: .data,   vram: 0x2660e0, name: os/key_cnf                    }
+          - { start: 0x167200, type: .data,   vram: 0x266200, name: os/pad                        }
+          - { start: 0x167240, type: .data,   vram: 0x266240, name: os/eeiop/eeiop                }
+          - { start: 0x167800, type: .data,   vram: 0x266800, name: os/eeiop/adpcm/ea_ctrl        }
+          - { start: 0x167c40, type: .data,   vram: 0x266c40, name: os/eeiop/adpcm/ea_dat         }
+          - { start: 0x1687c0, type: .data,   vram: 0x2677c0, name: os/eeiop/eese                 }
+          - { start: 0x168838, type: .data,   vram: 0x267838, name: os/eeiop/se_data              }
+          - { start: 0x168870, type: .data,   vram: 0x267870, name: os/eeiop/se_ev                }
+          - { start: 0x168930, type: .data,   vram: 0x267930, name: os/eeiop/se_trans             }
+          - { start: 0x168960, type: .data,   vram: 0x267960, name: os/eeiop/sd_room              }
+          - { start: 0x169350, type: .data,   vram: 0x268350, name: os/eeiop/se_plyr              }
+          - { start: 0x169388, type: .data,   vram: 0x268388, name: graphics/graph2d/compress     }
+          - { start: 0x16ce40, type: .data,   vram: 0x26be40, name: graphics/graph2d/effect       }
+          - { start: 0x171e20, type: .data,   vram: 0x270e20, name: graphics/graph2d/effect_sub   }
+          - { start: 0x171e30, type: .data,   vram: 0x270e30, name: graphics/graph2d/effect_sub2  }
+          - { start: 0x1819f0, type: .data,   vram: 0x2809f0, name: graphics/graph2d/effect_scr   }
+          - { start: 0x181a70, type: .data,   vram: 0x280a70, name: graphics/graph2d/effect_obj   }
+          - { start: 0x198440, type: .data,   vram: 0x297440, name: graphics/graph2d/effect_oth   }
+          - { start: 0x198ad0, type: .data,   vram: 0x297ad0, name: graphics/graph2d/effect_rdr   }
+          - { start: 0x1991f0, type: .data,   vram: 0x2981f0, name: graphics/graph2d/effect_ene   }
+          - { start: 0x1a8580, type: .data,   vram: 0x2a7580, name: graphics/graph2d/g2d_debug    }
+          - { start: 0x1aab58, type: .data,   vram: 0x2a9b58, name: graphics/graph2d/message      }
+          - { start: 0x1ac388, type: .data,   vram: 0x2ab388, name: graphics/graph2d/number       }
+          - { start: 0x1ac890, type: .data,   vram: 0x2ab890, name: graphics/graph2d/tim2         }
+          - { start: 0x1f6890, type: .data,   vram: 0x2f5890, name: graphics/graph2d/rare_ene     }
+          - { start: 0x1f6d80, type: .data,   vram: 0x2f5d80, name: graphics/graph3d/gra3d        }
+          - { start: 0x1f9f40, type: .data,   vram: 0x2f8f40, name: graphics/graph3d/leditor      }
+          - { start: 0x1fa008, type: .data,   vram: 0x2f9008, name: graphics/graph3d/load3d       }
+          - { start: 0x1fb4e0, type: .data,   vram: 0x2fa4e0, name: graphics/motion/mdldat        }
+          - { start: 0x1fd8a8, type: .data,   vram: 0x2fc8a8, name: graphics/motion/mdlwork       }
+          - { start: 0x1fd8e8, type: .data,   vram: 0x2fc8e8, name: graphics/motion/mdlact        }
+          - { start: 0x1fda80, type: .data,   vram: 0x2fca80, name: graphics/motion/accessory     }
+          - { start: 0x2013f0, type: .data,   vram: 0x3003f0, name: graphics/motion/motion        }
+          - { start: 0x2034c0, type: .data,   vram: 0x3024c0, name: graphics/motion/mim_dat       }
+          - { start: 0x203640, type: .data,   vram: 0x302640, name: graphics/motion/acs_dat       }
+          - { start: 0x204810, type: .data,   vram: 0x303810, name: graphics/graph3d/sglib        }
+          - { start: 0x204d00, type: .data,   vram: 0x303d00, name: graphics/graph3d/sgsu         }
+          - { start: 0x204d10, type: .data,   vram: 0x303d10, name: graphics/graph3d/sgdma        }
+          - { start: 0x204d20, type: .data,   vram: 0x303d20, name: graphics/graph3d/sgsup        }
+          - { start: 0x204d40, type: .data,   vram: 0x303d40, name: graphics/graph3d/sgcam        }
+          - { start: 0x204d60, type: .data,   vram: 0x303d60, name: graphics/graph3d/shadow       }
+          - { start: 0x2054e0, type: .data,   vram: 0x3044e0, name: graphics/graph3d/mirror       }
+          - { start: 0x205640, type: .data,   vram: 0x304640, name: graphics/mov/movie            }
+          - { start: 0x205aa0, type: .data,   vram: 0x304aa0, name: graphics/scene/fod            }
+          - { start: 0x205bc0, type: .data,   vram: 0x304bc0, name: graphics/scene/scene          }
+          - { start: 0x20eab0, type: .data,   vram: 0x30dab0, name: graphics/scene/scene_dat      }
+          - { start: 0x20fa70, type: .data,   vram: 0x30ea70, name: ingame/ig_glob                }
+          - { start: 0x21b6c0, type: .data,   vram: 0x31a6c0, name: ingame/camera/camera          }
+          - { start: 0x221060, type: .data,   vram: 0x320060, name: ingame/enemy/ene_ctl          }
+          - { start: 0x223550, type: .data,   vram: 0x322550, name: ingame/enemy/move_ctl         }
+          - { start: 0x223778, type: .data,   vram: 0x322778, name: ingame/entry/entry            }
+          - { start: 0x2237d8, type: .data,   vram: 0x3227d8, name: ingame/entry/ap_bgost         }
+          - { start: 0x2237e8, type: .data,   vram: 0x3227e8, name: ingame/entry/ap_dgost         }
+          - { start: 0x223810, type: .data,   vram: 0x322810, name: ingame/entry/ap_fgost         }
+          - { start: 0x223840, type: .data,   vram: 0x322840, name: ingame/entry/ap_ggost         }
+          - { start: 0x223898, type: .data,   vram: 0x322898, name: ingame/entry/ap_pgost         }
+          - { start: 0x2238e0, type: .data,   vram: 0x3228e0, name: ingame/entry/ap_rgost         }
+          - { start: 0x223c60, type: .data,   vram: 0x322c60, name: ingame/entry/ap_sgost         }
+          - { start: 0x223f30, type: .data,   vram: 0x322f30, name: ingame/entry/ap_zgost         }
+          - { start: 0x223f60, type: .data,   vram: 0x322f60, name: ingame/entry/fgst_dat         }
+          - { start: 0x227220, type: .data,   vram: 0x326220, name: ingame/entry/rgst_dat         }
+          - { start: 0x227428, type: .data,   vram: 0x326428, name: ingame/event/ev_main          }
+          - { start: 0x227558, type: .data,   vram: 0x326558, name: ingame/event/ev_spcl          }
+          - { start: 0x229530, type: .data,   vram: 0x328530, name: ingame/event/ev_load          }
+          - { start: 0x22a870, type: .data,   vram: 0x329870, name: ingame/info/inf_disp          }
+          - { start: 0x2330e8, type: .data,   vram: 0x3320e8, name: ingame/map/map_ctrl           }
+          - { start: 0x233120, type: .data,   vram: 0x332120, name: ingame/map/map_area           }
+          - { start: 0x2336b0, type: .data,   vram: 0x3326b0, name: ingame/map/door_ctl           }
+          - { start: 0x234b40, type: .data,   vram: 0x333b40, name: ingame/map/doortype           }
+          - { start: 0x237c48, type: .data,   vram: 0x336c48, name: ingame/map/find_ctl           }
+          - { start: 0x237d68, type: .data,   vram: 0x336d68, name: ingame/map/find_dat           }
+          - { start: 0x238730, type: .data,   vram: 0x337730, name: ingame/map/furn_dat           }
+          - { start: 0x23af10, type: .data,   vram: 0x339f10, name: ingame/map/furn_eff           }
+          - { start: 0x23b130, type: .data,   vram: 0x33a130, name: ingame/map/item_ctl           }
+          - { start: 0x23c9e0, type: .data,   vram: 0x33b9e0, name: ingame/map/furn_spe/furn_spe  }
+          - { start: 0x23de10, type: .data,   vram: 0x33ce10, name: ingame/map/furn_spe/fsla_main }
+          - { start: 0x23e0a0, type: .data,   vram: 0x33d0a0, name: ingame/map/furn_spe/fsla_dat  }
+          - { start: 0x23e2d8, type: .data,   vram: 0x33d2d8, name: ingame/menu/item              }
+          - { start: 0x23e870, type: .data,   vram: 0x33d870, name: ingame/menu/ig_camra          }
+          - { start: 0x23e8c8, type: .data,   vram: 0x33d8c8, name: ingame/menu/ig_menu           }
+          - { start: 0x23e950, type: .data,   vram: 0x33d950, name: ingame/menu/item_get          }
+          - { start: 0x23e998, type: .data,   vram: 0x33d998, name: ingame/menu/ig_file           }
+          - { start: 0x240270, type: .data,   vram: 0x33f270, name: ingame/menu/ig_rank           }
+          - { start: 0x240390, type: .data,   vram: 0x33f390, name: ingame/menu/ig_glst           }
+          - { start: 0x2407e0, type: .data,   vram: 0x33f7e0, name: ingame/menu/ig_map            }
+          - { start: 0x240ab0, type: .data,   vram: 0x33fab0, name: ingame/photo/photo            }
+          - { start: 0x240bd8, type: .data,   vram: 0x33fbd8, name: ingame/photo/pht_make         }
+          - { start: 0x242058, type: .data,   vram: 0x341058, name: ingame/plyr/plyr_ctl          }
+          - { start: 0x242128, type: .data,   vram: 0x341128, name: edit/test_2d                  }
+          - { start: 0x242370, type: .data,   vram: 0x341370, name: outgame/scn_test              }
+          - { start: 0x243c90, type: .data,   vram: 0x342c90, name: outgame/title                 }
+          - { start: 0x244080, type: .data,   vram: 0x343080, name: graphics/graph2d/takep_pe     }
+          - { start: 0x244140, type: .data,   vram: 0x343140, name: mc/mc                         }
+          - { start: 0x244280, type: .data,   vram: 0x343280, name: mc/mc_main                    }
+          - { start: 0x244f60, type: .data,   vram: 0x343f60, name: mc/mc_acs                     }
+          - { start: 0x244f88, type: .data,   vram: 0x343f88, name: mc/mc_start                   }
+          - { start: 0x244fa8, type: .data,   vram: 0x343fa8, name: mc/mc_icon                    }
+          - { start: 0x244fc0, type: .data,   vram: 0x343fc0, name: outgame/btl_mode/btl_menu     }
+          - { start: 0x245670, type: .data,   vram: 0x344670, name: outgame/btl_mode/btl_mode     }
+          - { start: 0x245850, type: .data,   vram: 0x344850, name: outgame/btl_mode/btl_dat      }
+          - { start: 0x246750, type: .data,   vram: 0x345750, name: ingame/event/wan_soul         }
+          - { start: 0x246820, type: .data,   vram: 0x345820, name: ingame/event/wan_dat          }
+          - { start: 0x246de8, type: .data,   vram: 0x345de8, name: outgame/sound_test            }
+          - { start: 0x246e80, type:  data,   vram: 0x345e80, name: data_rest                     }
+          # ######################## VUDATA  (vram: 0x349608) #####################################
+          - { start: 0x24a608, type: databin, vram: 0x349608, name: vudata                        }
+          # ######################## RODATA  (vram: 0x349680) #####################################
+          - { start: 0x24a680, type: .rodata, vram: 0x349680, name: outgame/mode_slct             }
+          - { start: 0x24a7e0, type: .rodata, vram: 0x3497e0, name: outgame/memory_album          }
+          - { start: 0x24a8b0, type: .rodata, vram: 0x3498b0, name: main/gamemain                 }
+          - { start: 0x24a8d0, type: .rodata, vram: 0x3498d0, name: os/system                     }
+          - { start: 0x24a990, type: .rodata, vram: 0x349990, name: os/backup                     }
+          - { start: 0x24a9b0, type: .rodata, vram: 0x3499b0, name: os/pad                        }
+          - { start: 0x24a9c0, type: .rodata, vram: 0x3499c0, name: os/eeiop/eeiop                }
+          - { start: 0x24a9f0, type: .rodata, vram: 0x3499f0, name: os/eeiop/adpcm/ea_ctrl        }
+          - { start: 0x24aa30, type: .rodata, vram: 0x349a30, name: os/eeiop/adpcm/ea_btlmode     }
+          - { start: 0x24aa50, type: .rodata, vram: 0x349a50, name: os/eeiop/adpcm/ea_scene       }
+          - { start: 0x24aa70, type: .rodata, vram: 0x349a70, name: os/eeiop/adpcm/ea_magatoki    }
+          - { start: 0x24aa90, type: .rodata, vram: 0x349a90, name: os/eeiop/adpcm/ea_shinkan     }
+          - { start: 0x24aab0, type: .rodata, vram: 0x349ab0, name: os/eeiop/adpcm/ea_puzzle      }
+          - { start: 0x24aad0, type: .rodata, vram: 0x349ad0, name: os/eeiop/adpcm/ea_soul        }
+          - { start: 0x24aaf0, type: .rodata, vram: 0x349af0, name: os/eeiop/adpcm/ea_tape        }
+          - { start: 0x24ab10, type: .rodata, vram: 0x349b10, name: os/eeiop/adpcm/ea_gdead       }
+          - { start: 0x24ab30, type: .rodata, vram: 0x349b30, name: os/eeiop/adpcm/ea_event       }
+          - { start: 0x24abc0, type: .rodata, vram: 0x349bc0, name: os/eeiop/adpcm/ea_ghost       }
+          - { start: 0x24abe0, type: .rodata, vram: 0x349be0, name: os/eeiop/adpcm/ea_autog       }
+          - { start: 0x24ac00, type: .rodata, vram: 0x349c00, name: os/eeiop/adpcm/ea_hiso        }
+          - { start: 0x24ac80, type: .rodata, vram: 0x349c80, name: os/eeiop/adpcm/ea_furn        }
+          - { start: 0x24ad10, type: .rodata, vram: 0x349d10, name: os/eeiop/eese                 }
+          - { start: 0x24af60, type: .rodata, vram: 0x349f60, name: os/eeiop/se_cmd               }
+          - { start: 0x24af80, type: .rodata, vram: 0x349f80, name: os/eeiop/se_data              }
+          - { start: 0x24b238, type: .rodata, vram: 0x34a238, name: os/eeiop/se_ev                }
+          - { start: 0x24b270, type: .rodata, vram: 0x34a270, name: os/eeiop/se_plyr              }
+          - { start: 0x24b280, type: .rodata, vram: 0x34a280, name: graphics/graph2d/effect       }
+          - { start: 0x24b500, type: .rodata, vram: 0x34a500, name: graphics/graph2d/effect_sub   }
+          - { start: 0x24b750, type: .rodata, vram: 0x34a750, name: graphics/graph2d/effect_sub2  }
+          - { start: 0x24b8c0, type: .rodata, vram: 0x34a8c0, name: graphics/graph2d/effect_scr   }
+          - { start: 0x24c350, type: .rodata, vram: 0x34b350, name: graphics/graph2d/effect_obj   }
+          - { start: 0x24c6a0, type: .rodata, vram: 0x34b6a0, name: graphics/graph2d/effect_oth   }
+          - { start: 0x24cc70, type: .rodata, vram: 0x34bc70, name: graphics/graph2d/effect_rdr   }
+          - { start: 0x24cd10, type: .rodata, vram: 0x34bd10, name: graphics/graph2d/effect_ene   }
+          - { start: 0x24d390, type: .rodata, vram: 0x34c390, name: graphics/graph2d/g2d_debug    }
+          - { start: 0x24da70, type: .rodata, vram: 0x34ca70, name: graphics/graph2d/message      }
+          - { start: 0x24dcc8, type: .rodata, vram: 0x34ccc8, name: graphics/graph2d/number       }
+          - { start: 0x24dcd8, type: .rodata, vram: 0x34ccd8, name: graphics/graph2d/snapshot     }
+          - { start: 0x24dcf0, type: .rodata, vram: 0x34ccf0, name: graphics/graph2d/tim2         }
+          - { start: 0x24df70, type: .rodata, vram: 0x34cf70, name: graphics/graph2d/tim2_new     }
+          - { start: 0x24dff0, type: .rodata, vram: 0x34cff0, name: graphics/graph2d/rare_ene     }
+          - { start: 0x24e000, type: .rodata, vram: 0x34d000, name: graphics/graph3d/leditor      }
+          - { start: 0x24e3c0, type: .rodata, vram: 0x34d3c0, name: graphics/graph3d/load3d       }
+          - { start: 0x24e3e0, type: .rodata, vram: 0x34d3e0, name: graphics/motion/mdlwork       }
+          - { start: 0x24e440, type: .rodata, vram: 0x34d440, name: graphics/motion/accessory     }
+          - { start: 0x24e480, type: .rodata, vram: 0x34d480, name: graphics/motion/motion        }
+          - { start: 0x24e6e0, type: .rodata, vram: 0x34d6e0, name: graphics/motion/anicode       }
+          - { start: 0x24e718, type: .rodata, vram: 0x34d718, name: graphics/graph3d/sce_pp3      }
+          - { start: 0x24e730, type: .rodata, vram: 0x34d730, name: graphics/graph3d/sgsgd        }
+          - { start: 0x24e780, type: .rodata, vram: 0x34d780, name: graphics/graph3d/sglib        }
+          - { start: 0x24e7d0, type: .rodata, vram: 0x34d7d0, name: graphics/graph3d/sgsu         }
+          - { start: 0x24e8b0, type: .rodata, vram: 0x34d8b0, name: graphics/graph3d/sgdma        }
+          - { start: 0x24e980, type: .rodata, vram: 0x34d980, name: graphics/graph3d/sglight      }
+          - { start: 0x24eaf0, type: .rodata, vram: 0x34daf0, name: graphics/graph3d/sgsup        }
+          - { start: 0x24ecb8, type: .rodata, vram: 0x34dcb8, name: graphics/graph3d/sgcam        }
+          - { start: 0x24ecf0, type: .rodata, vram: 0x34dcf0, name: graphics/graph3d/mirror       }
+          - { start: 0x24ed20, type: .rodata, vram: 0x34dd20, name: graphics/mov/movie            }
+          - { start: 0x24f2b0, type: .rodata, vram: 0x34e2b0, name: graphics/scene/fod            }
+          - { start: 0x24f370, type: .rodata, vram: 0x34e370, name: ingame/ingame                 }
+          - { start: 0x24f400, type: .rodata, vram: 0x34e400, name: ingame/ig_init                }
+          - { start: 0x24f430, type: .rodata, vram: 0x34e430, name: ingame/camera/camera          }
+          - { start: 0x24f680, type: .rodata, vram: 0x34e680, name: ingame/enemy/ene_ctl          }
+          - { start: 0x24f730, type: .rodata, vram: 0x34e730, name: ingame/enemy/move_ctl         }
+          - { start: 0x24f750, type: .rodata, vram: 0x34e750, name: ingame/entry/ap_bgost         }
+          - { start: 0x24f770, type: .rodata, vram: 0x34e770, name: ingame/entry/ap_dgost         }
+          - { start: 0x24f790, type: .rodata, vram: 0x34e790, name: ingame/entry/ap_fgost         }
+          - { start: 0x24f7c0, type: .rodata, vram: 0x34e7c0, name: ingame/entry/ap_ggost         }
+          - { start: 0x24f7e0, type: .rodata, vram: 0x34e7e0, name: ingame/entry/ap_sgost         }
+          - { start: 0x24f8c0, type: .rodata, vram: 0x34e8c0, name: ingame/entry/ap_zgost         }
+          - { start: 0x24f8f0, type: .rodata, vram: 0x34e8f0, name: ingame/event/ev_main          }
+          - { start: 0x24fd10, type: .rodata, vram: 0x34ed10, name: ingame/event/ev_spcl          }
+          - { start: 0x2503d0, type: .rodata, vram: 0x34f3d0, name: ingame/event/ev_load          }
+          - { start: 0x250440, type: .rodata, vram: 0x34f440, name: ingame/event/mv_cmnd          }
+          - { start: 0x250470, type: .rodata, vram: 0x34f470, name: ingame/info/inf_disp          }
+          - { start: 0x250558, type: .rodata, vram: 0x34f558, name: ingame/map/map_ctrl           }
+          - { start: 0x2505b0, type: .rodata, vram: 0x34f5b0, name: ingame/map/map_area           }
+          - { start: 0x2505e0, type: .rodata, vram: 0x34f5e0, name: ingame/map/door_ctl           }
+          - { start: 0x250740, type: .rodata, vram: 0x34f740, name: ingame/map/doortype           }
+          - { start: 0x250790, type: .rodata, vram: 0x34f790, name: ingame/map/furn_ctl           }
+          - { start: 0x2507d0, type: .rodata, vram: 0x34f7d0, name: ingame/map/furn_spe/furn_spe  }
+          - { start: 0x250bc0, type: .rodata, vram: 0x34fbc0, name: ingame/menu/item              }
+          - { start: 0x250d00, type: .rodata, vram: 0x34fd00, name: ingame/menu/ig_album          }
+          - { start: 0x250d40, type: .rodata, vram: 0x34fd40, name: ingame/menu/ig_camra          }
+          - { start: 0x250db0, type: .rodata, vram: 0x34fdb0, name: ingame/menu/ig_menu           }
+          - { start: 0x251830, type: .rodata, vram: 0x350830, name: ingame/menu/item_get          }
+          - { start: 0x251a30, type: .rodata, vram: 0x350a30, name: ingame/menu/ig_file           }
+          - { start: 0x251b40, type: .rodata, vram: 0x350b40, name: ingame/menu/ig_rank           }
+          - { start: 0x251b80, type: .rodata, vram: 0x350b80, name: ingame/menu/ig_glst           }
+          - { start: 0x251c30, type: .rodata, vram: 0x350c30, name: ingame/menu/ig_map            }
+          - { start: 0x251ce0, type: .rodata, vram: 0x350ce0, name: ingame/menu/ig_option         }
+          - { start: 0x2521a0, type: .rodata, vram: 0x3511a0, name: ingame/menu/sp_menu           }
+          - { start: 0x2523d0, type: .rodata, vram: 0x3513d0, name: ingame/map/door_conte         }
+          - { start: 0x2523f0, type: .rodata, vram: 0x3513f0, name: ingame/photo/pht_main         }
+          - { start: 0x252420, type: .rodata, vram: 0x351420, name: ingame/photo/pht_make         }
+          - { start: 0x2525f0, type: .rodata, vram: 0x3515f0, name: ingame/plyr/plyr_ctl          }
+          - { start: 0x252800, type: .rodata, vram: 0x351800, name: outgame/scn_test              }
+          - { start: 0x2532b0, type: .rodata, vram: 0x3522b0, name: outgame/title                 }
+          - { start: 0x253530, type: .rodata, vram: 0x352530, name: graphics/graph2d/takep_pe     }
+          - { start: 0x253550, type: .rodata, vram: 0x352550, name: mc/mc_main                    }
+          - { start: 0x2537c0, type: .rodata, vram: 0x3527c0, name: mc/mc_acs                     }
+          - { start: 0x253800, type: .rodata, vram: 0x352800, name: mc/mc_album                   }
+          - { start: 0x253960, type: .rodata, vram: 0x352960, name: mc/mc_exec                    }
+          - { start: 0x253a48, type: .rodata, vram: 0x352a48, name: mc/mc_icon                    }
+          - { start: 0x253b80, type: .rodata, vram: 0x352b80, name: mc/mc_disp                    }
+          - { start: 0x253cb0, type: .rodata, vram: 0x352cb0, name: mc/mc_at                      }
+          - { start: 0x253e00, type: .rodata, vram: 0x352e00, name: outgame/outgame               }
+          - { start: 0x253f28, type: .rodata, vram: 0x352f28, name: outgame/btl_mode/btl_menu     }
+          - { start: 0x253f50, type: .rodata, vram: 0x352f50, name: outgame/btl_mode/btl_mode     }
+          - { start: 0x253f80, type: .rodata, vram: 0x352f80, name: ingame/event/wan_soul         }
+          - { start: 0x254010, type: .rodata, vram: 0x353010, name: outgame/sound_test            }
+          - { start: 0x254048, type:  rodata, vram: 0x353048, name: rodata_rest                   }
+          # ######################## LIT4    (vram: 0x355080) #####################################
+          - { start: 0x256080, type: .lit4,   vram: 0x355080, name: outgame/mode_slct             }
+          - { start: 0x256088, type: .lit4,   vram: 0x355088, name: outgame/memory_album          }
+          - { start: 0x256120, type: .lit4,   vram: 0x355120, name: os/pad                        }
+          - { start: 0x25612c, type: .lit4,   vram: 0x35512c, name: os/eeiop/adpcm/ea_cmd         }
+          - { start: 0x256144, type: .lit4,   vram: 0x355144, name: os/eeiop/se_cmd               }
+          - { start: 0x256154, type: .lit4,   vram: 0x355154, name: os/eeiop/se_plyr              }
+          - { start: 0x256158, type: .lit4,   vram: 0x355158, name: graphics/graph2d/compress     }
+          - { start: 0x25615c, type: .lit4,   vram: 0x35515c, name: graphics/graph2d/effect       }
+          - { start: 0x256178, type: .lit4,   vram: 0x355178, name: graphics/graph2d/effect_sub   }
+          - { start: 0x2561e4, type: .lit4,   vram: 0x3551e4, name: graphics/graph2d/effect_sub2  }
+          - { start: 0x25620c, type: .lit4,   vram: 0x35520c, name: graphics/graph2d/effect_scr   }
+          - { start: 0x256308, type: .lit4,   vram: 0x355308, name: graphics/graph2d/effect_obj   }
+          - { start: 0x2563b4, type: .lit4,   vram: 0x3553b4, name: graphics/graph2d/effect_oth   }
+          - { start: 0x256658, type: .lit4,   vram: 0x355658, name: graphics/graph2d/effect_rdr   }
+          - { start: 0x256688, type: .lit4,   vram: 0x355688, name: graphics/graph2d/effect_ene   }
+          - { start: 0x256874, type: .lit4,   vram: 0x355874, name: graphics/graph2d/g2d_debug    }
+          - { start: 0x256890, type: .lit4,   vram: 0x355890, name: graphics/graph2d/message      }
+          - { start: 0x256894, type: .lit4,   vram: 0x355894, name: graphics/graph2d/tim2         }
+          - { start: 0x25689c, type: .lit4,   vram: 0x35589c, name: graphics/graph2d/rare_ene     }
+          - { start: 0x2568ac, type: .lit4,   vram: 0x3558ac, name: graphics/graph3d/gra3d        }
+          - { start: 0x25691c, type: .lit4,   vram: 0x35591c, name: graphics/graph3d/leditor      }
+          - { start: 0x256944, type: .lit4,   vram: 0x355944, name: graphics/motion/mdlact        }
+          - { start: 0x256990, type: .lit4,   vram: 0x355990, name: graphics/motion/mime          }
+          - { start: 0x256998, type: .lit4,   vram: 0x355998, name: graphics/motion/accessory     }
+          - { start: 0x2569fc, type: .lit4,   vram: 0x3559fc, name: graphics/motion/motion        }
+          - { start: 0x256a10, type: .lit4,   vram: 0x355a10, name: graphics/motion/anicode       }
+          - { start: 0x256a14, type: .lit4,   vram: 0x355a14, name: graphics/graph3d/sglib        }
+          - { start: 0x256a9c, type: .lit4,   vram: 0x355a9c, name: graphics/graph3d/sglight      }
+          - { start: 0x256aa0, type: .lit4,   vram: 0x355aa0, name: graphics/graph3d/shadow       }
+          - { start: 0x256ab0, type: .lit4,   vram: 0x355ab0, name: graphics/graph3d/mirror       }
+          - { start: 0x256ac0, type: .lit4,   vram: 0x355ac0, name: graphics/scene/fod            }
+          - { start: 0x256b08, type: .lit4,   vram: 0x355b08, name: graphics/scene/scene          }
+          - { start: 0x256b24, type: .lit4,   vram: 0x355b24, name: ingame/ig_init                }
+          - { start: 0x256b38, type: .lit4,   vram: 0x355b38, name: ingame/camera/camera          }
+          - { start: 0x256c04, type: .lit4,   vram: 0x355c04, name: ingame/enemy/ene_ctl          }
+          - { start: 0x256c38, type: .lit4,   vram: 0x355c38, name: ingame/enemy/move_ctl         }
+          - { start: 0x256cec, type: .lit4,   vram: 0x355cec, name: ingame/entry/ap_dgost         }
+          - { start: 0x256cf0, type: .lit4,   vram: 0x355cf0, name: ingame/entry/ap_fgost         }
+          - { start: 0x256cf4, type: .lit4,   vram: 0x355cf4, name: ingame/entry/ap_zgost         }
+          - { start: 0x256cf8, type: .lit4,   vram: 0x355cf8, name: ingame/event/ev_main          }
+          - { start: 0x256d04, type: .lit4,   vram: 0x355d04, name: ingame/event/ev_spcl          }
+          - { start: 0x256d3c, type: .lit4,   vram: 0x355d3c, name: ingame/info/inf_disp          }
+          - { start: 0x256d8c, type: .lit4,   vram: 0x355d8c, name: ingame/map/map_ctrl           }
+          - { start: 0x256d9c, type: .lit4,   vram: 0x355d9c, name: ingame/map/door_ctl           }
+          - { start: 0x256e30, type: .lit4,   vram: 0x355e30, name: ingame/map/rotd_ctl           }
+          - { start: 0x256e3c, type: .lit4,   vram: 0x355e3c, name: ingame/map/find_ctl           }
+          - { start: 0x256e44, type: .lit4,   vram: 0x355e44, name: ingame/map/furn_ctl           }
+          - { start: 0x256e48, type: .lit4,   vram: 0x355e48, name: ingame/map/furn_eff           }
+          - { start: 0x256e4c, type: .lit4,   vram: 0x355e4c, name: ingame/map/item_ctl           }
+          - { start: 0x256e54, type: .lit4,   vram: 0x355e54, name: ingame/map/furn_spe/furn_spe  }
+          - { start: 0x256ea0, type: .lit4,   vram: 0x355ea0, name: ingame/map/furn_spe/fsla_main }
+          - { start: 0x256ea8, type: .lit4,   vram: 0x355ea8, name: ingame/menu/item              }
+          - { start: 0x256ed4, type: .lit4,   vram: 0x355ed4, name: ingame/menu/pause             }
+          - { start: 0x256ed8, type: .lit4,   vram: 0x355ed8, name: ingame/menu/ig_album          }
+          - { start: 0x256f04, type: .lit4,   vram: 0x355f04, name: ingame/menu/ig_camra          }
+          - { start: 0x256f24, type: .lit4,   vram: 0x355f24, name: ingame/menu/item_get          }
+          - { start: 0x256f28, type: .lit4,   vram: 0x355f28, name: ingame/menu/ig_file           }
+          - { start: 0x256f38, type: .lit4,   vram: 0x355f38, name: ingame/menu/ig_rank           }
+          - { start: 0x256f54, type: .lit4,   vram: 0x355f54, name: ingame/menu/ig_glst           }
+          - { start: 0x256f68, type: .lit4,   vram: 0x355f68, name: ingame/menu/ig_map            }
+          - { start: 0x256fa0, type: .lit4,   vram: 0x355fa0, name: ingame/menu/ig_option         }
+          - { start: 0x256fd4, type: .lit4,   vram: 0x355fd4, name: ingame/menu/sp_menu           }
+          - { start: 0x257014, type: .lit4,   vram: 0x356014, name: ingame/photo/pht_make         }
+          - { start: 0x257024, type: .lit4,   vram: 0x356024, name: ingame/plyr/plyr_ctl          }
+          - { start: 0x257208, type: .lit4,   vram: 0x356208, name: ingame/plyr/unit_ctl          }
+          - { start: 0x257238, type: .lit4,   vram: 0x356238, name: outgame/scn_test              }
+          - { start: 0x257284, type: .lit4,   vram: 0x356284, name: outgame/title                 }
+          - { start: 0x257290, type: .lit4,   vram: 0x356290, name: graphics/graph2d/takep_pe     }
+          - { start: 0x257298, type: .lit4,   vram: 0x356298, name: mc/mc_start                   }
+          - { start: 0x25729c, type: .lit4,   vram: 0x35629c, name: ingame/event/wan_soul         }
+          - { start: 0x2572d4, type: .lit4,   vram: 0x3562d4, name: outgame/sound_test            }
+          # ######################## SDATA   (vram: 0x356300) #####################################
+          - { start: 0x257300, type: .sdata,  vram: 0x356300, name: outgame/mode_slct             }
+          - { start: 0x25731a, type: .sdata,  vram: 0x35631a, name: outgame/memory_album          }
+          - { start: 0x25731c, type: .sdata,  vram: 0x35631c, name: main/gamemain                 }
+          - { start: 0x257328, type: .sdata,  vram: 0x356328, name: main/glob                     }
+          - { start: 0x257338, type: .sdata,  vram: 0x356338, name: os/system                     }
+          - { start: 0x257350, type: .sdata,  vram: 0x356350, name: os/eeiop/adpcm/ea_ghost       }
+          - { start: 0x257354, type: .sdata,  vram: 0x356354, name: os/eeiop/adpcm/ea_autog       }
+          - { start: 0x257358, type: .sdata,  vram: 0x356358, name: os/eeiop/adpcm/ea_furn        }
+          - { start: 0x257360, type: .sdata,  vram: 0x356360, name: graphics/graph2d/compress     }
+          - { start: 0x257368, type: .sdata,  vram: 0x356368, name: graphics/graph2d/effect       }
+          - { start: 0x2573c8, type: .sdata,  vram: 0x3563c8, name: graphics/graph2d/effect_sub   }
+          - { start: 0x2573e8, type: .sdata,  vram: 0x3563e8, name: graphics/graph2d/effect_sub2  }
+          - { start: 0x257438, type: .sdata,  vram: 0x356438, name: graphics/graph2d/effect_scr   }
+          - { start: 0x257558, type: .sdata,  vram: 0x356558, name: graphics/graph2d/effect_obj   }
+          - { start: 0x257578, type: .sdata,  vram: 0x356578, name: graphics/graph2d/effect_oth   }
+          - { start: 0x257670, type: .sdata,  vram: 0x356670, name: graphics/graph2d/effect_rdr   }
+          - { start: 0x257678, type: .sdata,  vram: 0x356678, name: graphics/graph2d/effect_ene   }
+          - { start: 0x2576d0, type: .sdata,  vram: 0x3566d0, name: graphics/graph2d/g2d_debug    }
+          - { start: 0x257a80, type: .sdata,  vram: 0x356a80, name: graphics/graph2d/g2d_main     }
+          - { start: 0x257a88, type: .sdata,  vram: 0x356a88, name: graphics/graph2d/message      }
+          - { start: 0x257ac0, type: .sdata,  vram: 0x356ac0, name: graphics/graph2d/snapshot     }
+          - { start: 0x257ad0, type: .sdata,  vram: 0x356ad0, name: graphics/graph2d/tim2         }
+          - { start: 0x257af0, type: .sdata,  vram: 0x356af0, name: graphics/graph2d/tim2_new     }
+          - { start: 0x257af4, type: .sdata,  vram: 0x356af4, name: graphics/graph2d/rare_ene     }
+          - { start: 0x257b08, type: .sdata,  vram: 0x356b08, name: graphics/graph3d/gra3d        }
+          - { start: 0x257b58, type: .sdata,  vram: 0x356b58, name: graphics/graph3d/leditor      }
+          - { start: 0x257b98, type: .sdata,  vram: 0x356b98, name: graphics/graph3d/load3d       }
+          - { start: 0x257bb0, type: .sdata,  vram: 0x356bb0, name: graphics/motion/mdlwork       }
+          - { start: 0x257bc0, type: .sdata,  vram: 0x356bc0, name: graphics/motion/mdlact        }
+          - { start: 0x257bcc, type: .sdata,  vram: 0x356bcc, name: graphics/motion/mime          }
+          - { start: 0x257bd0, type: .sdata,  vram: 0x356bd0, name: graphics/motion/accessory     }
+          - { start: 0x257bf0, type: .sdata,  vram: 0x356bf0, name: graphics/motion/motion        }
+          - { start: 0x257c10, type: .sdata,  vram: 0x356c10, name: graphics/motion/acs_dat       }
+          - { start: 0x257c40, type: .sdata,  vram: 0x356c40, name: graphics/graph3d/object       }
+          - { start: 0x257c54, type: .sdata,  vram: 0x356c54, name: graphics/graph3d/sce_pp3      }
+          - { start: 0x257c64, type: .sdata,  vram: 0x356c64, name: graphics/graph3d/sgsgd        }
+          - { start: 0x257c68, type: .sdata,  vram: 0x356c68, name: graphics/graph3d/sglib        }
+          - { start: 0x257d14, type: .sdata,  vram: 0x356d14, name: graphics/graph3d/sgsu         }
+          - { start: 0x257d50, type: .sdata,  vram: 0x356d50, name: graphics/graph3d/sgdma        }
+          - { start: 0x257d60, type: .sdata,  vram: 0x356d60, name: graphics/graph3d/sglight      }
+          - { start: 0x257db0, type: .sdata,  vram: 0x356db0, name: graphics/graph3d/sgsup        }
+          - { start: 0x257dd0, type: .sdata,  vram: 0x356dd0, name: graphics/graph3d/sgcam        }
+          - { start: 0x257de0, type: .sdata,  vram: 0x356de0, name: graphics/graph3d/shadow       }
+          - { start: 0x257e04, type: .sdata,  vram: 0x356e04, name: graphics/graph3d/mirror       }
+          - { start: 0x257e08, type: .sdata,  vram: 0x356e08, name: graphics/mov/movie            }
+          - { start: 0x257ea8, type: .sdata,  vram: 0x356ea8, name: graphics/scene/fod            }
+          - { start: 0x257eb0, type: .sdata,  vram: 0x356eb0, name: graphics/scene/scene          }
+          - { start: 0x257ef0, type: .sdata,  vram: 0x356ef0, name: ingame/ingame                 }
+          - { start: 0x257ef8, type: .sdata,  vram: 0x356ef8, name: ingame/ig_init                }
+          - { start: 0x257f00, type: .sdata,  vram: 0x356f00, name: ingame/ig_glob                }
+          - { start: 0x257f10, type: .sdata,  vram: 0x356f10, name: ingame/camera/camera          }
+          - { start: 0x257f68, type: .sdata,  vram: 0x356f68, name: ingame/enemy/ene_ctl          }
+          - { start: 0x257fa8, type: .sdata,  vram: 0x356fa8, name: ingame/enemy/move_ctl         }
+          - { start: 0x257fc0, type: .sdata,  vram: 0x356fc0, name: ingame/entry/ap_dgost         }
+          - { start: 0x257fc8, type: .sdata,  vram: 0x356fc8, name: ingame/entry/ap_fgost         }
+          - { start: 0x257fcc, type: .sdata,  vram: 0x356fcc, name: ingame/entry/ap_ggost         }
+          - { start: 0x257fd8, type: .sdata,  vram: 0x356fd8, name: ingame/entry/ap_pgost         }
+          - { start: 0x257fe8, type: .sdata,  vram: 0x356fe8, name: ingame/entry/ap_sgost         }
+          - { start: 0x257ff0, type: .sdata,  vram: 0x356ff0, name: ingame/entry/ap_zgost         }
+          - { start: 0x257ff8, type: .sdata,  vram: 0x356ff8, name: ingame/event/ev_main          }
+          - { start: 0x258018, type: .sdata,  vram: 0x357018, name: ingame/event/ev_spcl          }
+          - { start: 0x2580a8, type: .sdata,  vram: 0x3570a8, name: ingame/event/ev_load          }
+          - { start: 0x2580b8, type: .sdata,  vram: 0x3570b8, name: ingame/event/mv_cmnd          }
+          - { start: 0x2580c0, type: .sdata,  vram: 0x3570c0, name: ingame/info/inf_disp          }
+          - { start: 0x2580e0, type: .sdata,  vram: 0x3570e0, name: ingame/map/map_ctrl           }
+          - { start: 0x2580ec, type: .sdata,  vram: 0x3570ec, name: ingame/map/map_area           }
+          - { start: 0x2580f0, type: .sdata,  vram: 0x3570f0, name: ingame/map/door_ctl           }
+          - { start: 0x2580f4, type: .sdata,  vram: 0x3570f4, name: ingame/map/furn_ctl           }
+          - { start: 0x2580f8, type: .sdata,  vram: 0x3570f8, name: ingame/map/furn_eff           }
+          - { start: 0x258108, type: .sdata,  vram: 0x357108, name: ingame/map/furn_spe/furn_spe  }
+          - { start: 0x258140, type: .sdata,  vram: 0x357140, name: ingame/menu/pause             }
+          - { start: 0x258158, type: .sdata,  vram: 0x357158, name: ingame/menu/ig_camra          }
+          - { start: 0x258180, type: .sdata,  vram: 0x357180, name: ingame/menu/ig_menu           }
+          - { start: 0x258198, type: .sdata,  vram: 0x357198, name: ingame/menu/ig_spd_menu       }
+          - { start: 0x25819c, type: .sdata,  vram: 0x35719c, name: ingame/menu/item_get          }
+          - { start: 0x2581a8, type: .sdata,  vram: 0x3571a8, name: ingame/menu/ig_file           }
+          - { start: 0x2581c8, type: .sdata,  vram: 0x3571c8, name: ingame/menu/ig_map            }
+          - { start: 0x2581d8, type: .sdata,  vram: 0x3571d8, name: ingame/menu/sp_menu           }
+          - { start: 0x2581f8, type: .sdata,  vram: 0x3571f8, name: ingame/map/door_conte         }
+          - { start: 0x258200, type: .sdata,  vram: 0x357200, name: ingame/photo/pht_main         }
+          - { start: 0x258220, type: .sdata,  vram: 0x357220, name: ingame/photo/pht_make         }
+          - { start: 0x258260, type: .sdata,  vram: 0x357260, name: ingame/plyr/plyr_ctl          }
+          - { start: 0x258310, type: .sdata,  vram: 0x357310, name: outgame/scn_test              }
+          - { start: 0x2586a0, type: .sdata,  vram: 0x3576a0, name: outgame/title                 }
+          - { start: 0x2586c8, type: .sdata,  vram: 0x3576c8, name: graphics/graph2d/takep_pe     }
+          - { start: 0x2586d0, type: .sdata,  vram: 0x3576d0, name: mc/mc                         }
+          - { start: 0x2586e0, type: .sdata,  vram: 0x3576e0, name: mc/mc_main                    }
+          - { start: 0x258708, type: .sdata,  vram: 0x357708, name: mc/mc_album                   }
+          - { start: 0x258720, type: .sdata,  vram: 0x357720, name: mc/mc_exec                    }
+          - { start: 0x258756, type: .sdata,  vram: 0x357756, name: mc/mc_start                   }
+          - { start: 0x258758, type: .sdata,  vram: 0x357758, name: outgame/outgame               }
+          - { start: 0x258788, type: .sdata,  vram: 0x357788, name: outgame/btl_mode/btl_menu     }
+          - { start: 0x2587e8, type: .sdata,  vram: 0x3577e8, name: outgame/btl_mode/btl_mode     }
+          - { start: 0x258814, type: .sdata,  vram: 0x357814, name: ingame/event/wan_soul         }
+          - { start: 0x258830, type: .sdata,  vram: 0x357830, name: outgame/sound_test            }
+          - { start: 0x258834, type:  sdata,  vram: 0x357834, name: sdata_rest                    }
+          # ######################## SBSS    (vram: 0x357880) #####################################
+          - { start: 0x258880, type: .sbss,   vram: 0x357880, name: outgame/mode_slct             }
+          - { start: 0x258880, type: .sbss,   vram: 0x357888, name: outgame/memory_album          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357894, name: os/system                     }
+          - { start: 0x258880, type: .sbss,   vram: 0x357898, name: os/eeiop/cdvd/eecdvd          }
+          - { start: 0x258880, type: .sbss,   vram: 0x35789b, name: os/eeiop/adpcm/ea_ctrl        }
+          - { start: 0x258880, type: .sbss,   vram: 0x35789c, name: os/eeiop/adpcm/ea_ghost       }
+          - { start: 0x258880, type: .sbss,   vram: 0x3578a0, name: os/eeiop/adpcm/ea_map         }
+          - { start: 0x258880, type: .sbss,   vram: 0x3578a4, name: graphics/graph2d/compress     }
+          - { start: 0x258880, type: .sbss,   vram: 0x3578c0, name: graphics/graph2d/effect       }
+          - { start: 0x258880, type: .sbss,   vram: 0x3578d0, name: graphics/graph2d/effect_sub   }
+          - { start: 0x258880, type: .sbss,   vram: 0x3578e4, name: graphics/graph2d/effect_scr   }
+          - { start: 0x258880, type: .sbss,   vram: 0x357900, name: graphics/graph2d/effect_obj   }
+          - { start: 0x258880, type: .sbss,   vram: 0x357904, name: graphics/graph2d/effect_oth   }
+          - { start: 0x258880, type: .sbss,   vram: 0x357938, name: graphics/graph2d/effect_rdr   }
+          - { start: 0x258880, type: .sbss,   vram: 0x357948, name: graphics/graph2d/g2d_debug    }
+          - { start: 0x258880, type: .sbss,   vram: 0x35794c, name: graphics/graph2d/tim2         }
+          - { start: 0x258880, type: .sbss,   vram: 0x357960, name: graphics/graph3d/gra3d        }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579a4, name: graphics/graph3d/leditor      }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579a8, name: graphics/graph3d/load3d       }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579bc, name: graphics/motion/mdlwork       }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579c0, name: graphics/motion/mdlact        }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579c4, name: graphics/motion/accessory     }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579c8, name: graphics/graph3d/sgsgd        }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579d0, name: graphics/graph3d/sgsu         }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579d8, name: graphics/graph3d/sgdma        }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579e0, name: graphics/graph3d/sglight      }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579e4, name: graphics/graph3d/sgsup        }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579ec, name: graphics/graph3d/shadow       }
+          - { start: 0x258880, type: .sbss,   vram: 0x3579f4, name: graphics/graph3d/mirror       }
+          - { start: 0x258880, type: .sbss,   vram: 0x357a0c, name: graphics/mov/movie            }
+          - { start: 0x258880, type: .sbss,   vram: 0x357a18, name: graphics/scene/scene          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357a28, name: ingame/camera/camera          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357a40, name: ingame/enemy/ene_ctl          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357a58, name: ingame/enemy/move_ctl         }
+          - { start: 0x258880, type: .sbss,   vram: 0x357a88, name: ingame/entry/ap_sgost         }
+          - { start: 0x258880, type: .sbss,   vram: 0x357a90, name: ingame/event/ev_spcl          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357aa8, name: ingame/info/inf_disp          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357ac4, name: ingame/map/door_ctl           }
+          - { start: 0x258880, type: .sbss,   vram: 0x357ad0, name: ingame/menu/item              }
+          - { start: 0x258880, type: .sbss,   vram: 0x357af0, name: ingame/menu/gameover          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357af8, name: ingame/menu/pause             }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b02, name: ingame/menu/ig_camra          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b08, name: ingame/menu/ig_menu           }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b28, name: ingame/menu/ig_spd_menu       }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b38, name: ingame/menu/item_get          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b50, name: ingame/menu/ig_file           }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b60, name: ingame/menu/ig_rank           }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b70, name: ingame/menu/ig_glst           }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b78, name: ingame/menu/ig_map            }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b80, name: ingame/menu/ig_option         }
+          - { start: 0x258880, type: .sbss,   vram: 0x357b90, name: ingame/menu/sp_menu           }
+          - { start: 0x258880, type: .sbss,   vram: 0x357bb0, name: ingame/photo/pht_main         }
+          - { start: 0x258880, type: .sbss,   vram: 0x357bb8, name: ingame/photo/pht_make         }
+          - { start: 0x258880, type: .sbss,   vram: 0x357bba, name: ingame/plyr/plyr_ctl          }
+          - { start: 0x258880, type: .sbss,   vram: 0x357bc0, name: outgame/scn_test              }
+          - { start: 0x258880, type: .sbss,   vram: 0x357bc8, name: outgame/title                 }
+          - { start: 0x258880, type: .sbss,   vram: 0x357bec, name: graphics/graph2d/takep_pe     }
+          - { start: 0x258880, type: .sbss,   vram: 0x357bf8, name: mc/mc_main                    }
+          - { start: 0x258880, type: .sbss,   vram: 0x357c08, name: mc/mc_album                   }
+          - { start: 0x258880, type: .sbss,   vram: 0x357c10, name: mc/mc_start                   }
+          - { start: 0x258880, type: .sbss,   vram: 0x357c18, name: mc/mc_at                      }
+          - { start: 0x258880, type: .sbss,   vram: 0x357c2c, name: outgame/outgame               }
+          - { start: 0x258880, type: .sbss,   vram: 0x357c30, name: ingame/event/wan_soul         }
+          - { start: 0x258880, type: .sbss,   vram: 0x357c58, name: outgame/sound_test            }
+          - { start: 0x258880, type:  sbss,   vram: 0x357c5f, name: sbss_rest                     }
+          # ######################## BSS     (vram: 0x357c80) #####################################
+          - { start: 0x25888c, type:  bss,    vram: 0x357c80, name: bss_pre                       }
+          - { start: 0x25888c, type: .bss,    vram: 0x357dc8, name: outgame/mode_slct             }
+          - { start: 0x25888c, type: .bss,    vram: 0x357df0, name: outgame/memory_album          }
+          - { start: 0x25888c, type: .bss,    vram: 0x357e40, name: os/fileload                   }
+          - { start: 0x25888c, type: .bss,    vram: 0x357ea8, name: os/eeiop/cdvd/eecdvd          }
+          - { start: 0x25888c, type: .bss,    vram: 0x357ed0, name: os/eeiop/eese                 }
+          - { start: 0x25888c, type: .bss,    vram: 0x358ad0, name: graphics/graph2d/compress     }
+          - { start: 0x25888c, type: .bss,    vram: 0x3599e0, name: graphics/graph2d/effect       }
+          - { start: 0x25888c, type: .bss,    vram: 0x359c30, name: graphics/graph2d/effect_sub   }
+          - { start: 0x25888c, type: .bss,    vram: 0x359f90, name: graphics/graph2d/effect_sub2  }
+          - { start: 0x25888c, type: .bss,    vram: 0x365610, name: graphics/graph2d/effect_scr   }
+          - { start: 0x25888c, type: .bss,    vram: 0x379d40, name: graphics/graph2d/effect_obj   }
+          - { start: 0x25888c, type: .bss,    vram: 0x382580, name: graphics/graph2d/effect_oth   }
+          - { start: 0x25888c, type: .bss,    vram: 0x3b9220, name: graphics/graph2d/effect_rdr   }
+          - { start: 0x25888c, type: .bss,    vram: 0x3b9260, name: graphics/graph2d/effect_ene   }
+          - { start: 0x25888c, type: .bss,    vram: 0x3bb1a0, name: graphics/graph2d/message      }
+          - { start: 0x25888c, type: .bss,    vram: 0x3bb540, name: graphics/graph2d/tim2_new     }
+          - { start: 0x25888c, type: .bss,    vram: 0x3bd580, name: graphics/graph2d/rare_ene     }
+          - { start: 0x25888c, type: .bss,    vram: 0x3bd5c0, name: graphics/graph3d/gra3d        }
+          - { start: 0x25888c, type: .bss,    vram: 0x3f4180, name: graphics/graph3d/leditor      }
+          - { start: 0x25888c, type: .bss,    vram: 0x3f5540, name: graphics/graph3d/load3d       }
+          - { start: 0x25888c, type: .bss,    vram: 0x3f5680, name: graphics/motion/accessory     }
+          - { start: 0x25888c, type: .bss,    vram: 0x3f6a50, name: graphics/motion/motion        }
+          - { start: 0x25888c, type: .bss,    vram: 0x3f9390, name: graphics/graph3d/object       }
+          - { start: 0x25888c, type: .bss,    vram: 0x3fb390, name: graphics/graph3d/sce_pp3      }
+          - { start: 0x25888c, type: .bss,    vram: 0x3fb620, name: graphics/graph3d/sgsu         }
+          - { start: 0x25888c, type: .bss,    vram: 0x3fb720, name: graphics/graph3d/sglight      }
+          - { start: 0x25888c, type: .bss,    vram: 0x3fb7b0, name: graphics/graph3d/sgsup        }
+          - { start: 0x25888c, type: .bss,    vram: 0x3fb8a0, name: graphics/graph3d/shadow       }
+          - { start: 0x25888c, type: .bss,    vram: 0x3fba80, name: graphics/mov/movie            }
+          - { start: 0x25888c, type: .bss,    vram: 0x4002c0, name: graphics/scene/fod            }
+          - { start: 0x25888c, type: .bss,    vram: 0x4007e0, name: graphics/scene/scene          }
+          - { start: 0x25888c, type: .bss,    vram: 0x401c40, name: ingame/camera/camera          }
+          - { start: 0x25888c, type: .bss,    vram: 0x401f20, name: ingame/enemy/ene_ctl          }
+          - { start: 0x25888c, type: .bss,    vram: 0x401fd0, name: ingame/enemy/move_ctl         }
+          - { start: 0x25888c, type: .bss,    vram: 0x402130, name: ingame/info/inf_disp          }
+          - { start: 0x25888c, type: .bss,    vram: 0x402740, name: ingame/map/door_ctl           }
+          - { start: 0x25888c, type: .bss,    vram: 0x402770, name: ingame/map/furn_eff           }
+          - { start: 0x25888c, type: .bss,    vram: 0x402810, name: ingame/map/furn_spe/adj_valg  }
+          - { start: 0x25888c, type: .bss,    vram: 0x402ae0, name: ingame/menu/item              }
+          - { start: 0x25888c, type: .bss,    vram: 0x402b10, name: ingame/menu/gameover          }
+          - { start: 0x25888c, type: .bss,    vram: 0x402b20, name: ingame/menu/ig_album          }
+          - { start: 0x25888c, type: .bss,    vram: 0x402b40, name: ingame/menu/ig_camra          }
+          - { start: 0x25888c, type: .bss,    vram: 0x402b60, name: ingame/menu/item_get          }
+          - { start: 0x25888c, type: .bss,    vram: 0x402b80, name: ingame/menu/ig_file           }
+          - { start: 0x25888c, type: .bss,    vram: 0x402ca0, name: ingame/menu/ig_glst           }
+          - { start: 0x25888c, type: .bss,    vram: 0x402cb0, name: ingame/menu/ig_map            }
+          - { start: 0x25888c, type: .bss,    vram: 0x402cc8, name: ingame/menu/sp_menu           }
+          - { start: 0x25888c, type: .bss,    vram: 0x402d58, name: ingame/map/door_conte         }
+          - { start: 0x25888c, type: .bss,    vram: 0x402d80, name: outgame/title                 }
+          - { start: 0x25888c, type: .bss,    vram: 0x402e50, name: ingame/event/wan_soul         }
+          - { start: 0x25888c, type: .bss,    vram: 0x402ea0, name: outgame/sound_test            }
+          - { start: 0x25888c, type:  bss,    vram: 0x402f00, name: bss_rest                      }
+          # ######################## VUBSS   (vram: 0x40a8b0) #####################################
+          - { start: 0x25888c, type:  bss,    vram: 0x40a8b0, name: vubss_1                       }
+    - [0x258880, databin, reg_info]
+    - [0x2588a4, databin, mips_debug]
+    - [0x71d5d4, databin, rest]
+    - [0x7775b8]
+
+# Section Headers:
+#   [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+#   [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+#   [ 1] .text             PROGBITS        00100000 001000 1465a4 00  AX  0   0 64
+#   [ 2] .vutext           PROGBITS        002465b0 1475b0 009b80 00  AX  0   0 16
+#   [ 3] .reginfo          MIPS_REGINFO    00250130 25888c 000018 01      0   0  4
+#   [ 4] .data             PROGBITS        00250180 151180 0f9488 00  WA  0   0 64
+#   [ 5] .vudata           PROGBITS        00349608 24a608 000000 00  WA  0   0  1
+#   [ 6] .rodata           PROGBITS        00349680 24a680 00b9a8 00   A  0   0 16
+#   [ 7] .lit4             PROGBITS        00355080 256080 001268 00 WAp  0   0  4
+#   [ 8] .sdata            PROGBITS        00356300 257300 001534 00 WAp  0   0  8
+#   [ 9] .sbss             NOBITS          00357880 258880 0003f4 00 WAp  0   0  8
+#   [10] .bss              NOBITS          00357c80 25888c 0b2c30 00  WA  0   0 64
+#   [11] .vubss            NOBITS          0040a8b0 25888c 000000 00  WA  0   0  1
+#   [12] .mdebug           MIPS_DEBUG      0040a8b0 2588a4 4c4d30 01      0   0  4
