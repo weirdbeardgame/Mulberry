@@ -99,7 +99,7 @@ def make_compiler_cmd(config_dir: Path, src_path: Path, language: str):
 
     compiler_includes = f"-I{src_path.parent / 'src'} -I{src_path.parent / 'include'} -Iinclude -isystem include/sdk/ee -isystem include/gcc"
     assembler_includes = f"-Wa,-I{src_path.parent / 'include'} -Wa,-I{src_path.parent}"
-    common_includes = f"{compiler_includes} {assembler_includes} {language_define}"
+    common_includes = f"{compiler_includes} {assembler_includes}"
     game_compile_cmd = f"{game_cc_dir}/ee-gcc -c {common_includes} {COMPILER_FLAGS}"
     lib_compile_cmd = f"{lib_cc_dir}/ee-gcc -c -isystem include/{COMPILER} {common_includes} {COMPILER_FLAGS}"
 
