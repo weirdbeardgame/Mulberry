@@ -5,7 +5,7 @@ options:
     target_path: SLUS_210.07
     base_path: .
     asm_path: asm
-    src_path: ../../src
+    src_path: src
     build_path: build
     asset_path: assets
     compiler: MWCCPS2
