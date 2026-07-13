@@ -52,8 +52,7 @@ COMPILER = "ee-gcc2.9-991111-01"
 COMPILER_FLAGS = "-DMATCHING_DECOMP -O2 -g2 -gstabs"  # -malign-functions=3
 
 LANGUAGES: dict[str, str] = {
-    "SLUS_203.88": "us",
-    "SLES_508.21": "eu",
+    "SLUS_210.07": "",
 }
 
 # list of object file names (e.g., "tim2_new.c.o"), that have asm that needs
@@ -97,10 +96,6 @@ def make_compiler_cmd(config_dir: Path, src_path: Path, language: str):
 
     game_cc_dir = f"{tools_dir}/cc/{COMPILER}/bin"
     lib_cc_dir = f"{tools_dir}/cc/{COMPILER}/bin"
-
-    language_define = ""
-    if language == "eu":
-        language_define = "-DBUILD_EU_VERSION"
 
     compiler_includes = f"-I{src_path.parent / 'src'} -I{src_path.parent / 'include'} -Iinclude -isystem include/sdk/ee -isystem include/gcc"
     assembler_includes = f"-Wa,-I{src_path.parent / 'include'} -Wa,-I{src_path.parent}"
@@ -569,8 +564,7 @@ def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], la
         units.append(unit)
 
     category_name = {
-        "us": "Fatal Frame",
-        "eu": "Project Zero",
+        "": "Kuon",
     }
 
     progress_categories = [
@@ -685,7 +679,7 @@ def main():
 
     # fix asset .incbin path from relative to root to relative to config dir:
     #  e.g., change:
-    #     .incbin "config/us/assets/name.section.bin"
+    #     .incbin "config/assets/name.section.bin"
     #  to:
     #     .incbin "assets/name.section.bin"
     fix_assets(asm_data_path, asset_rel_path)
