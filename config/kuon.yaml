@@ -1,5 +1,5 @@
 name: Kuon
-sha1: 5ac4626e0d76218e977b01f4fae5948de9a1755e
+sha1: 7124b436f61ebbe5944e4b50b7d4c04475711c11
 options:
     basename: SLUS_210.07
     target_path: SLUS_210.07
@@ -50,7 +50,7 @@ segments:
           - [0x80,   asm, crt0]
           - [00257880, asm, bss]
 
-    - [0x7775b8]
+    - [0x157900]
 
 # Section Headers:
 #   [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
