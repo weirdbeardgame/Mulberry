@@ -8,7 +8,7 @@ options:
     src_path: ../../src
     build_path: build
     asset_path: assets
-    compiler: EEGCC
+    compiler: MWCCPS2
     find_file_boundaries: False
     platform: ps2
     string_encoding: EUC-JP
@@ -23,7 +23,7 @@ options:
     disasm_unknown: True
     subalign: 4
     named_regs_for_c_funcs: False
-    gp_value: 0x35d070
+    gp_value: 0x25f4f0
     ld_bss_is_noload: true
 # custom field used by fix_linkerscript.py to fix linkerscript alignments
 _section_subalign:
@@ -37,7 +37,7 @@ segments:
     - [0, databin, elf_header]
     - name: main
       type: code
-      start: 0x1000
+      start: 0x80
       vram: 0x100000
       bss_size: 0x0b3024 # size of .sbss + size of .bss
       align: 1
@@ -47,7 +47,8 @@ segments:
       # project configuration. vram address is used, when reported, in non text
       # sections to calculate the correct align value.
       subsegments:
-          - [0x1000,   asm, crt0]
+          - [0x80,   asm, crt0]
+          - [00257880, asm, bss]
 
     - [0x7775b8]
 

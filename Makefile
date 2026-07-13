@@ -4,8 +4,7 @@ MAKEFLAGS += --no-print-directory
 NUMPROC ?= $(shell nproc)
 
 .PHONY: help \
-		.us-build-only .us-check-files-on-error us-configure us-build us-extract-data us-make-asm us-map-mismatch us-report clean \
-		.eu-build-only .eu-check-files-on-error eu-configure eu-build eu-extract-data eu-make-asm eu-map-mismatch eu-report clean
+		.build-only .check-files-on-error configure build extract-data make-asm map-mismatch report clean \
 
 .DEFAULT_GOAL := help
 
@@ -54,82 +53,43 @@ PYHELP := python3 -c "$$PY_HELP_SCRIPT"
 help: ## Show this help
 	@$(PYHELP) $(MAKEFILE_LIST)
 ##
-## US Commands:
-us-configure: ## Configure US project (needs SLUS_203.88)
-	@python3 configure.py config/us/ff1.us.yaml -c
+##  Commands:
+configure: ## Configure  project (needs SLUS_210.07)
+	@python3 configure.py config/kuon.yaml -c
 
-.us-build-only:
-	@cd config/us; \
+.build-only:
+	@cd config/; \
 	ninja -t clean; \
 	ninja -j$(NUMPROC)
 
-.us-check-files-on-error:
-	ls -l config/us/build/SLUS_203.88 config/us/SLUS_203.88
+.check-files-on-error:
+	ls -l config/build/SLUS_210.07 config/SLUS_210.07
 
-us-build: ## Build US project
-	@$(MAKE) .us-build-only; status=$$?; [ $$status -eq 0 ] || { $(MAKE) .us-check-files-on-error; }; exit $$status
+build: ## Build project
+	@$(MAKE) .build-only; status=$$?; [ $$status -eq 0 ] || { $(MAKE) .check-files-on-error; }; exit $$status
 
-us-extract-data:  ## Extract variables from .data in US config directory
-	@python3 tools/python/parse_data.py us
+extract-data:  ## Extract variables from .data in config directory
+	@python3 tools/python/parse_data.py 
 
-us-make-asm:  ## Create expected asm folder in US config directory
-	@python3 configure.py config/us/ff1.us.yaml --make-asm
+make-asm:  ## Create expected asm folder in config directory
+	@python3 configure.py config/kuon.yaml --make-asm
 
-us-map-mismatch:  ## Check for mismatches in US mapfile
-	@python3 tools/python/map_mismatch.py --language us
+map-mismatch:  ## Check for mismatches in mapfile
+	@python3 tools/python/map_mismatch.py --language 
 
-us-report:  ## Create progress report in US config directory
-	@(stat config/us/expected/obj/ >/dev/null 2>&1 || (echo "Target objects do not exist, please run \`make us-make-asm\`"; false));
-	@(stat config/us/build/src/ >/dev/null 2>&1 || (echo "Base objects do not exist, please run \`make us-build\`"; false));
-	@tools/objdiff/objdiff-cli report generate -p config/us/ -o config/us/report.json -f json
-	@python3 tools/python/fix_report.py config/us/report.json
-	@python3 -c "import json;from pathlib import Path;report=json.loads(Path('config/us/report.json').read_text());print(f\"Progress: {report['measures']['fuzzy_match_percent']:.2f}%\")"
+report:  ## Create progress report in config directory
+	@(stat config/expected/obj/ >/dev/null 2>&1 || (echo "Target objects do not exist, please run \`make make-asm\`"; false));
+	@(stat config/build/src/ >/dev/null 2>&1 || (echo "Base objects do not exist, please run \`make build\`"; false));
+	@tools/objdiff/objdiff-cli report generate -p config/ -o config/report.json -f json
+	@python3 tools/python/fix_report.py config/report.json
+	@python3 -c "import json;from pathlib import Path;report=json.loads(Path('config/report.json').read_text());print(f\"Progress: {report['measures']['fuzzy_match_percent']:.2f}%\")"
 
-us-clean:  ## Clean artifact in US config directory
-	@cd config/us; \
+clean:  ## Clean artifact in config directory
+	@cd config/; \
 	ninja -t clean
 
-us-reset:  ## Resets the US config directory to its original state
-	@python3 configure.py config/us/ff1.us.yaml --reset
-
-##
-## EU Commands:
-eu-configure: ## Configure EU project (needs SLES_508.21)
-	@python3 configure.py config/eu/ff1.eu.yaml -c
-
-.eu-build-only:
-	@cd config/eu; \
-	ninja -t clean; \
-	ninja -j$(NUMPROC)
-
-.eu-check-files-on-error:
-	ls -l config/eu/build/SLES_508.21 config/eu/SLES_508.21
-
-eu-build: ## Build EU project
-	@$(MAKE) .eu-build-only; status=$$?; [ $$status -eq 0 ] || { $(MAKE) .eu-check-files-on-error; }; exit $$status
-
-eu-extract-data:  ## Extract initialized variables from .data in EU config directory
-	@python3 tools/python/parse_data.py eu
-
-eu-make-asm:  ## Create expected asm folder in EU config directory
-	@python3 configure.py config/eu/ff1.eu.yaml --make-asm
-
-eu-map-mismatch:  ## Check for mismatches in EU mapfile
-	@python3 tools/python/map_mismatch.py --language eu
-
-eu-report:  ## Create progress report in EU config directory
-	@(stat config/eu/expected/obj/ >/dev/null 2>&1 || (echo "Target objects do not exist, please run \`make eu-make-asm\`"; false));
-	@(stat config/eu/build/src/ >/dev/null 2>&1 || (echo "Base objects do not exist, please run \`make eu-build\`"; false));
-	@tools/objdiff/objdiff-cli report generate -p config/eu/ -o config/eu/report.json -f json
-	@python3 tools/python/fix_report.py config/eu/report.json
-	@python3 -c "import json;from pathlib import Path;report=json.loads(Path('config/eu/report.json').read_text());print(f\"Progress: {report['measures']['fuzzy_match_percent']:.2f}%\")"
-
-eu-clean:  ## Clean artifact in US config directory
-	@cd config/eu; \
-	ninja -t clean
-
-eu-reset:  ## Resets the EU config directory to its original state
-	@python3 configure.py config/eu/ff1.eu.yaml --reset
+reset:  ## Resets the  config directory to its original state
+	@python3 configure.py config/kuon.yaml --reset
 
 # Include custom makefile for user-defined commands
 -include Makefile.custom
