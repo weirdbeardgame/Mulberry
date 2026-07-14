@@ -230,7 +230,7 @@ def build_stuff(
         "cc-s",
         description="compile c source to object through assembly",
         command=(
-            f"s_in=$$(echo $in.S | sed 's,^[^/]*/[^/]*/,cc-src/,') && "  # .............. 1) remove ../../ from path + prefix with cc-src/ + suffix with .S and store it into s_in var: ../../src/file.c -> s_in=cc-src/src/file.c.S
+            f"s_in=$$(echo $in.S | sed 's,^[^/]*/[^/]*/,cc-src/,') && "  # .............. 1) remove ../../ from path + prefix with cc-src/ + suffix with .S and store it into s_in var: ../src/file.c -> s_in=cc-src/src/file.c.S
             f'mkdir -p $$(dirname "$$s_in") && '  # ..................................... 2) create directory from s_in var: s_in=cc-src/src/path/to/file.c.S -> mkdir -p cc-src/src/path/to/
             f"{game_compile_cmd.replace(' -c ', ' -S ')} $in -o $$s_in && "  # .......... 3) replace -c with -S in gcc command to generate intermediate assembly file instead of object
             f"python3 {ROOT}/tools/python/fix_asm_matching.py {language} $$s_in && "  # . 4) fix assembly file using known patterns with tools/python/fix_asm_matching.py
@@ -249,7 +249,7 @@ def build_stuff(
         "cc-eucjp",
         description="convert source to EUC-JP encoding and compile same as 'cc'",
         command=(
-            f"eucjp_in=$$(echo $in.eucjp.c | sed 's,^[^/]*/[^/]*/,cc-src/,') && "  # . 1) remove ../../ from path + prefix with cc-src/ + suffix with .eucjp.c and store it into eucjp_in var: ../../src/file.c -> eucjp_in=cc-src/src/file.c.eucjp.c
+            f"eucjp_in=$$(echo $in.eucjp.c | sed 's,^[^/]*/[^/]*/,cc-src/,') && "  # . 1) remove ../../ from path + prefix with cc-src/ + suffix with .eucjp.c and store it into eucjp_in var: ../src/file.c -> eucjp_in=cc-src/src/file.c.eucjp.c
             f'mkdir -p $$(dirname "$$eucjp_in") && '  # .............................. 2) create directory from eucjp_in var: s_in=cc-src/src/path/to/file.c.eucjp.c -> mkdir -p cc-src/src/path/to/
             f"iconv -o $$eucjp_in -f=UTF-8 -t=EUC-JP $in && "  # ..................... 3) convert source file to EUC-JP (save converted source to cc-src/src/file.c.eucjp.c)
             f'{game_compile_cmd} -I$$(dirname "$in") $$eucjp_in -o $out && '  # ...... 4) compile converted source file into object (also add original source directory as include path to allow relative imports)
@@ -464,9 +464,9 @@ def make_asm(config_path: Path, config: dict[str, Any]):
             obj_file = tmp_obj_path / obj_file_rel.relative_to("obj")
             obj_file.parent.mkdir(parents=True, exist_ok=True)
             subprocess.run(
-                f"{cpp} -I../../../src -I../../../include -Iinclude -isystem include/sdk/ee -isystem include/gcc -Wa,-I../../../include -Wa,-I../../..  '{asm_file_rel}' -o  - | "
+                f"{cpp} -I../src -I../include -Iinclude -isystem include/sdk/ee -isystem include/gcc -Wa,-I../include -Wa,-I../..  '{asm_file_rel}' -o  - | "
                 f"iconv -f=UTF-8 -t=EUC-JP '{asm_file_rel}' | "
-                f"mips-linux-gnu-as -no-pad-sections -EL -march=5900 -mabi=eabi -I../../../include -o {obj_file_rel} {asm_file_rel}",
+                f"mips-linux-gnu-as -no-pad-sections -EL -march=5900 -mabi=eabi -I../include -o {obj_file_rel} {asm_file_rel}",
                 shell=True,
                 cwd=tmp_path,
             )
