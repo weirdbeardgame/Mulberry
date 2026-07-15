@@ -25,6 +25,8 @@ options:
     named_regs_for_c_funcs: False
     gp_value: 0x25f4f0
     ld_bss_is_noload: true
+    make_full_disasm_for_code: true
+    asm_nonmatching_label_macro: ""
 # custom field used by fix_linkerscript.py to fix linkerscript alignments
 _section_subalign:
     elf_header: 8
