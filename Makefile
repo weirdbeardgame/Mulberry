@@ -106,11 +106,11 @@ build: ## Build project
 	@$(MAKE) .build-only; status=$$?; [ $$status -eq 0 ] || { $(MAKE) .check-files-on-error; }; exit $$status
 
 extract-data:  ## Extract variables from .data in config directory
-	@python3 tools/python/parse_data.py 
+	@python3 tools/python/parse_data.py
 
 make-asm:  ## Create expected asm folder in config directory
 	@python3 configure.py config/kuon.yaml --make-asm
-
+ 
 map-mismatch:  ## Check for mismatches in mapfile
 	@python3 tools/python/map_mismatch.py --language 
 

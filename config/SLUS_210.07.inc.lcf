@@ -1,0 +1,3 @@
+INCLUDE "undefined_syms.txt"
+INCLUDE "undefined_syms_auto.txt"
+INCLUDE "undefined_funcs_auto.txt"
