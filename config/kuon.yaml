@@ -41,7 +41,7 @@ segments:
       type: code
       start: 0x80
       vram: 0x100000
-      bss_size: 0x0b3024 # size of .sbss + size of .bss
+      bss_size: 0x80BB00 # size of .sbss + size of .bss
       align: 1
       subalign: 2 # safe subalign value. proper values are applied by fix_linkerscript.py where necessary
       # text has align 8 but other sections may have a different alignment ...
@@ -455,7 +455,8 @@ segments:
         # vutext
         - [0x11C700, textbin, vutext]
 
-        #- { start: 0x157880, type: bss, vram: 0x257880,  name: "bss_asm" }
+        - { vram: 0x257880, type: sbss,  name: "sbss" }
+        - { vram: 0x257D80, type: bss,  name: "bss" }
 
 
     - [0x157900]
