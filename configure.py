@@ -50,30 +50,12 @@ TOOLS_DIR = ROOT / "tools"
 
 CROSS = "mips-ps2-decompals-"
 
-COMPILER = "ee-gcc2.9-991111-01"
-COMPILER_FLAGS = "-DMATCHING_DECOMP -O2 -g2 -gstabs"  # -malign-functions=3
+COMPILER = "mwcps2-3.0b52-030722"
+COMPILER_FLAGS = "-O3,p -sym on -str readonly"
 
 LANGUAGES: dict[str, str] = {
     "SLUS_210.07": "",
 }
-
-# list of object file names (e.g., "tim2_new.c.o"), that have asm that needs
-# to be patched. the respective c files (e.g. "tim2_new.c") will be compiled
-# in two steps: c -> asm, then asm -> obj. in between, the intermediate
-# asm will be passed to `tools/python/fix_asm_matching.py` for patching.
-ASM_PATCH_LIST: list[str] = [
-    "effect_oth.c.o",
-    "photo.c.o",
-    "ig_camra.c.o",
-]
-
-BIN_PATH_LIST: list[str] = [
-    "photo.c.o",
-]
-
-EUC_JP_LIST = [
-    "title.c.o",
-]
 
 
 def get_compiler_command(command: str):
@@ -82,14 +64,14 @@ def get_compiler_command(command: str):
     ee_compiler_dirname = next(os.walk(ee_dir))[1][0]
 
     commands = {
-        "ee-gcc": compiler_dir / "bin" / "ee-gcc",
-        "cc1": compiler_dir / "lib" / "gcc-lib" / "ee" / ee_compiler_dirname / "cc1",
-        "cc1plus": compiler_dir / "lib" / "gcc-lib" / "ee" / ee_compiler_dirname / "cc1plus",
-        "cpp": compiler_dir / "lib" / "gcc-lib" / "ee" / ee_compiler_dirname / "cpp",
-        "as": compiler_dir / "ee" / "bin" / "as",
+        #"ee-gcc": compiler_dir / "bin" / "ee-gcc",
+        #"cc1": compiler_dir / "lib" / "gcc-lib" / "ee" / ee_compiler_dirname / "cc1",
+        #"cc1plus": compiler_dir / "lib" / "gcc-lib" / "ee" / ee_compiler_dirname / "cc1plus",
+        #"cpp": compiler_dir / "lib" / "gcc-lib" / "ee" / ee_compiler_dirname / "cpp",
+        #"as": compiler_dir / "ee" / "bin" / "as",
     }
 
-    return commands[command]
+    #return commands[command]
 
 
 def make_compiler_cmd(config_dir: Path, src_path: Path, language: str):
