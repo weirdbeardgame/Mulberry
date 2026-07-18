@@ -81,7 +81,7 @@ def make_compiler_cmd(config_dir: Path, src_path: Path, language: str):
     game_cc_dir = f"{tools_dir}/cc/{COMPILER}/bin"
     lib_cc_dir = f"{tools_dir}/cc/{COMPILER}/bin"
 
-    compiler_includes = f"-I{src_path.parent / 'src'} -I{src_path.parent / 'include'} -Iinclude -isystem include/sdk/ee -isystem include/gcc"
+    compiler_includes = f"-I{src_path.parent / 'src'} -I{src_path.parent / 'include'} -Iinclude -isystem include/sdk/ee"
     assembler_includes = f"-Wa,-I{src_path.parent / 'include'} -Wa,-I{src_path.parent}"
     common_includes = f"{compiler_includes} {assembler_includes}"
     game_compile_cmd = f"{game_cc_dir}/ee-gcc -c {common_includes} {COMPILER_FLAGS}"
@@ -197,7 +197,7 @@ def build_stuff(
     # Rules
     ld_args = "--no-warn-rwx-segments -EL -T undefined_syms.txt -T undefined_syms_auto.txt -T undefined_funcs_auto.txt -Map $mapfile -T $in -o $out"
 
-    cpp = Path("..", "..", get_compiler_command("cpp"))
+    cpp = Path("..", "..", (Path("tools") / "cc" / COMPILER))
 
     ninja.rule(
         "as",
@@ -438,7 +438,7 @@ def make_asm(config_path: Path, config: dict[str, Any]):
         tmp_obj_path = tmp_path / "obj"
         tmp_asm_dir = tmp_path / "asm"
 
-        cpp = Path("..", "..", "..", get_compiler_command("cpp"))
+        cpp = Path("..", "..", "..", (Path("tools") / "cc" / COMPILER))
 
         for asm_file in tmp_asm_dir.rglob("*.c.s"):
             asm_file_rel = asm_file.relative_to(tmp_path)
@@ -446,7 +446,7 @@ def make_asm(config_path: Path, config: dict[str, Any]):
             obj_file = tmp_obj_path / obj_file_rel.relative_to("obj")
             obj_file.parent.mkdir(parents=True, exist_ok=True)
             subprocess.run(
-                f"{cpp} -I../src -I../include -Iinclude -isystem include/sdk/ee -isystem include/gcc -Wa,-I../include -Wa,-I../..  '{asm_file_rel}' -o  - | "
+                f"{cpp} -I../src -I../include -Iinclude -isystem include/sdk/ee -Wa,-I../include -Wa,-I../..  '{asm_file_rel}' -o  - | "
                 f"iconv -f=UTF-8 -t=EUC-JP '{asm_file_rel}' | "
                 f"mips-linux-gnu-as -no-pad-sections -EL -march=5900 -mabi=eabi -I../include -o {obj_file_rel} {asm_file_rel}",
                 shell=True,
@@ -641,9 +641,9 @@ def main():
         clean(config_dir, config)
         return
 
-    if args.make_asm:
-        make_asm(config_dir, config)
-        return
+    #if args.make_asm:
+    #    make_asm(config_dir, config)
+    #    return
 
     if args.clean:
         clean(config_dir, config)
