@@ -17,6 +17,13 @@ import tempfile
 import subprocess
 import ninja_syntax
 
+from dataclasses import dataclass, asdict
+from utils import ensure_path_and_write, normalize_object_path, to_expected_path
+
+import splat.util.options as splat_options
+from splat.segtypes.linker_entry import LinkerEntry, clean_up_path
+from spimdisasm.common.CompilerConfig import compilerOptions
+
 from typing import Any, Union, Protocol, Literal, cast
 from pathlib import Path
 from contextlib import contextmanager
@@ -29,6 +36,10 @@ from splat.segtypes.linker_entry import LinkerEntry
 from tools.python.fix_assets import fix_assets
 from tools.python.fix_linkerscript import fix_linkerscript
 
+from sys import stdout
+from subprocess import run
+from dataclasses import dataclass
+from struct import unpack
 
 @contextmanager
 def suppress_stdout_stderr():
@@ -56,6 +67,11 @@ COMPILER_FLAGS = "-O3,p -sym on -str readonly"
 LANGUAGES: dict[str, str] = {
     "SLUS_210.07": "",
 }
+
+FUNCTION_SYMBOL_LABEL = "glabel"
+END_FUNCTION_SYMBOL_LABEL = "endlabel"
+UNIQUE_TEXT_SECTION_DIRECTIVE = '.section .text,"ax",@progbits,unique,'
+INCLUDE_MACRO_INC_DIRECTIVE = '.include "macro.inc"'
 
 
 def get_compiler_command(command: str):
@@ -136,12 +152,12 @@ def write_permuter_settings(config_dir: Path, src_path: Path, language: str):
         f.write(
             f"""compiler_command = "{game_compile_cmd} -D__GNUC__"
 assembler_command = "{CROSS}as -march=r5900 -mabi=eabi -Iinclude"
-compiler_type = "gcc"
+compiler_type = "mwcc"
 
 [preserve_macros]
 
 [decompme.compilers]
-"tools/build/cc/gcc/gcc" = "{COMPILER}"
+"tools/build/cc/mwcc/mwcc" = "{COMPILER}"
 """
         )
 
@@ -331,6 +347,162 @@ def build_stuff(
         "checksum.sha1",
         implicit=[elf_path],
     )
+
+
+def get_line_file_path(args: AnnotationArgs):
+    if args.line_file_path is not None:
+        return args.line_file_path
+
+ #   if args.elf_path.name == SH2_SERIAL and "Event/stage" in args.asm_path.as_posix():
+#        return Path(f"{TOOLS}/alessatool/dwarf") / Path(args.asm_path.name).with_suffix(".line")
+
+    return None
+
+
+def line_has_vram_addr(line: str, addr_str: str) -> bool:
+    if addr_str not in line or "*/" not in line:
+        return False
+
+    return line.index("*/") > line.index(addr_str)
+
+
+def annotate_asm(args: AnnotationArgs):
+    with open(args.asm_path, "r") as asm_file:
+        asm_contents = asm_file.read()
+
+    asm_lines = asm_contents.splitlines()
+    asm_line_index = 0
+
+    vram_start = args.vram_start
+    vram_end = args.vram_end
+
+    if vram_start is None or vram_end is None:
+        vram_start, vram_end = find_vram_bounds(asm_lines)
+
+    line_file_path = get_line_file_path(args)
+
+    if line_file_path is None or not line_file_path.exists():
+        addresses = (f"0x{v:X}" for v in range(vram_start, vram_end, 0x4))
+        proc = run([args.addr2line_path, "-e", args.elf_path, *addresses], capture_output=True, encoding=args.encoding)
+        addr2line_output_lines = proc.stdout.splitlines()
+    else:
+        # parse the binary line number file.
+
+        # the format is a list of u_shorts, one per line number.
+        # there should be one line number per vram address, and each vram
+        # address should be exactly 4 bytes apart, mirroring how the addr2line
+        # output is formatted
+
+        with open(line_file_path, "rb") as line_file:
+            line_data = line_file.read()
+            line_numbers = unpack(f"<{len(line_data) // 2}H", line_data)
+            compile_unit = args.asm_path.with_suffix(".c").name
+            addr2line_output_lines = list(map(lambda n : to_addr2line_format(compile_unit, n), line_numbers))
+
+    main_tu_name = None
+    prev_tu_name = None
+    prev_line_number = -1
+    function_count = 0
+    is_in_function_label = False
+    current_vram_addr = vram_start
+    annotated_asm_lines = []
+
+    for addr_index in range(0, len(addr2line_output_lines) - 1):
+        line = addr2line_output_lines[addr_index]
+
+        if line.startswith("?"):
+            current_vram_addr += 0x4
+            continue
+
+        separator_index = line.rfind(":")
+        current_line_number = int(line[separator_index+1:])
+
+        if current_line_number == prev_line_number:
+            current_vram_addr += 0x4
+            continue
+
+        vram_addr_str = f"{current_vram_addr:X}"
+
+        current_tu_name = line[0:separator_index]
+        if current_tu_name != main_tu_name and current_tu_name != prev_tu_name:
+            if main_tu_name:
+                print(f"[warn] alessatool/annotate: address at {vram_addr_str} belongs to {current_tu_name}")
+            else:
+                main_tu_name = current_tu_name
+        prev_tu_name = current_tu_name
+
+        while True:
+            if asm_line_index >= len(asm_lines):
+                raise AssertionError(
+                    f"address 0x{current_vram_addr:X} not found in asm"
+                )
+
+            asm_line = asm_lines[asm_line_index]
+
+            if line_has_vram_addr(asm_line, vram_addr_str):
+                break
+
+            should_append_asm_line = True
+            if args.tu:
+                asm_line_trimmed = asm_line.strip()
+
+                # track when we go in & out of function symbols
+                if asm_line_trimmed.startswith(FUNCTION_SYMBOL_LABEL):
+                    function_count += 1
+                    is_in_function_label = True
+                    annotated_asm_lines.append(f"{UNIQUE_TEXT_SECTION_DIRECTIVE}{function_count}")
+                    annotated_asm_lines.append("")
+                elif asm_line_trimmed.startswith(END_FUNCTION_SYMBOL_LABEL):
+                    is_in_function_label = False
+
+                # remove `nop`s
+                if not is_in_function_label and asm_line_trimmed.endswith("nop"):
+                    should_append_asm_line = False
+                
+                # remove `macro.inc` include directive
+                elif asm_line_trimmed == INCLUDE_MACRO_INC_DIRECTIVE:
+                    should_append_asm_line = False
+
+            if should_append_asm_line:
+                annotated_asm_lines.append(asm_line)
+
+            asm_line_index += 1
+
+        annotated_asm_lines.append(f"\t.loc 1 {current_line_number}")    
+        annotated_asm_lines.append(asm_line)
+        asm_line_index += 1
+
+        prev_line_number = current_line_number
+        current_vram_addr += 0x4
+    
+    while asm_line_index < len(asm_lines) - 1:
+        annotated_asm_lines.append(asm_lines[asm_line_index])
+        asm_line_index += 1
+
+    assert main_tu_name, "no valid compilation unit found"
+    annotated_asm_lines = [
+        ".section .debug",
+        ".previous",
+        ".text",
+        f".file 1 \"{main_tu_name}\"",
+        *annotated_asm_lines
+    ]
+
+    append_final_new_line(annotated_asm_lines)
+    annotated_asm_contents = "\n".join(annotated_asm_lines)
+
+    if not args.stdout and args.out_path:
+        with open(args.out_path, "w") as out_file:
+            out_file.write(annotated_asm_contents)
+        if args.verbose:
+            print(f"alessatool/annotate: wrote asm to {args.out_path}")
+    else:
+        stdout.write(annotated_asm_contents)
+
+
+def append_final_new_line(lines: list[str]):
+    if lines[-1] != "":
+        lines.append("")
 
 
 def make_asm(config_path: Path, config: dict[str, Any]):
@@ -620,6 +792,8 @@ def main():
         print("ERROR: this script must be run from it's directory!")
         exit(1)
 
+    compilerOptions["MWCCPS2"].value.bigAddendWorkaroundForMigratedFunctions = False
+
     config = splat_load_yaml(
         [args.YAML_FILE],
         modes=["all"],
@@ -629,6 +803,9 @@ def main():
 
     basename = config["options"]["basename"]
     config_dir = Path(args.YAML_FILE).parent
+
+    compiler_dir = Path("tools") / "cc" / COMPILER
+
 
     if basename not in LANGUAGES:
         supported_elfs = f"{set(f'{elf} ({lang})' for elf, lang in LANGUAGES.items())}".replace("'", "")
@@ -648,7 +825,13 @@ def main():
     if args.clean:
         clean(config_dir, config)
 
-    split.main([args.YAML_FILE], modes=["all"], verbose=False)
+        split.main(
+            list(map(compiler_dir, args.yamls)),
+            modes="all",
+            verbose=args.verbose,
+            use_cache=args.use_cache,
+            make_full_disasm_for_code=args.make_full_disasm_for_code
+        )
 
     src_path = Path(config["options"]["src_path"])
     asm_path = Path(config["options"]["asm_path"])
