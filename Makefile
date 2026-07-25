@@ -1,7 +1,11 @@
 # Disable printing "Entering/Leaving directory ..."
 MAKEFLAGS += --no-print-directory
 
-NUMPROC ?= $(shell nproc)
+ARCH ?= $(shell uname -m)
+KERNEL ?= $(shell uname -s)
+PLATFORM ?= $(if $(filter $(KERNEL),Darwin),macos,linux)
+OS ?= $(PLATFORM)-$(subst _,-,$(ARCH))
+NUMPROC ?= $(if $(filter $(PLATFORM),linux),$(shell nproc),$(shell sysctl -n hw.logicalcpu))
 
 CHECK_ENV_CMDS := \
 	python3 \
@@ -97,7 +101,7 @@ configure: ## Configure  project (needs SLUS_210.07)
 .build-only:
 	@cd config/; \
 	ninja -t clean; \
-	ninja -j$(NUMPROC)
+	ninja -v -j$(NUMPROC)
 
 .check-files-on-error:
 	ls -l config/build/SLUS_210.07 config/SLUS_210.07

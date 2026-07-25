@@ -1,3 +1,28 @@
-INCLUDE "undefined_syms.txt"
-INCLUDE "undefined_syms_auto.txt"
-INCLUDE "undefined_funcs_auto.txt"
+MEMORY
+{
+	main	(RWX)	: ORIGIN = 0x100000,	LENGTH = 0x0
+}
+
+KEEP_SECTION
+{
+	.rodata,
+	.data,
+	.vutext,
+	.vudata,
+	.vubss
+}
+
+SECTIONS
+{
+
+	.main	:
+	{
+		_gp = 0x25f4f0;
+		.	= ALIGN(0x80);
+
+        __start = .;
+		### 🔴 code 🔴 ###
+
+		. = ALIGN(0x80);
+	}	>	main
+}

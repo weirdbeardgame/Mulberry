@@ -64,8 +64,10 @@ CROSS = "mips-ps2-decompals-"
 COMPILER = "mwcps2-3.0b52-030722"
 COMPILER_FLAGS = "-O3,p -sym on -str readonly"
 
-WIBO = f"{TOOLS_DIR}/wibo-x86_64"
-
+PLATFORM = "x86_64" # @todo get this from makefile
+# PLATFORM = "macos"
+WIBO = f"{TOOLS_DIR}/wibo-{PLATFORM}"
+LCF = "SLUS_210.07.lcf"
 
 LANGUAGES: dict[str, str] = {
     "SLUS_210.07": "",
@@ -209,7 +211,7 @@ def build_stuff(
     ninja = ninja_syntax.Writer(open(str(ROOT / config_dir / "build.ninja"), "w"), width=9999)
 
     # Rules
-    ld_args = "-map -lcf $in -o $out"
+    ld_args = "-map -sym on,elf -noinhibit-exec -main ENTRYPOINT -o $out $lcf $objects"
 
     ld = Path("..", (Path("tools") / "cc" / COMPILER / "mwldps2.exe"))
     cpp = Path("..", (Path("tools") / "cc" / COMPILER / "mwccps2.exe"))
@@ -220,7 +222,7 @@ def build_stuff(
         # NOTE: Japanese strings are EUC-JP encoded!!
         #       We need to convert them from (-f) UTF-8 to (-t) EUC-JP while compiling,
         #       otherwise Japanese strings will be compiled wrong!
-        command=f"{WIBO} {cpp} {common_includes} $in -o  - | iconv -f=UTF-8 -t=EUC-JP | {CROSS}as -no-pad-sections -EL -march=5900 -mabi=eabi -I{src_path.parent / 'include'} -o $out",
+        command=f"{CROSS}as -no-pad-sections -EL -march=5900 -mabi=eabi -mno-branch-relocs -I{src_path.parent / 'include'} -Iinclude -o $out $in",
     )
 
     ninja.rule(
@@ -275,7 +277,7 @@ def build_stuff(
     ninja.rule(
         "elf",
         description="elf $out",
-        command=f"{ld}objcopy $in $out -O binary && python3 {ROOT}/tools/python/fix_bin_matching.py {language} $out",
+        command=f"{CROSS}objcopy $in $out -O binary && python3 {ROOT}/tools/python/fix_bin_matching.py {language} $out",
     )
 
     for entry in linker_entries:
@@ -320,12 +322,18 @@ def build_stuff(
             print(f"ERROR: Unsupported build segment type {seg.type}")
             sys.exit(1)
 
+    built_object_paths = [str(obj) for obj in built_objects]
+
     ninja.build(
         pre_elf_path,
         "ld",
-        ld_path,
-        implicit=[str(obj) for obj in built_objects],
-        variables={"mapfile": map_path},
+        ld_path.replace(".ld",".lcf"),
+        implicit=built_object_paths,
+        variables={
+            "mapfile": map_path,
+            "objects": [str(obj) for obj in built_objects],
+            "lcf": LCF
+        },
     )
 
     ninja.build(
@@ -782,8 +790,6 @@ def generate_lcf():
         objects = entries_by_section_type[section_type]
         if not objects:
             continue
-        if section_type == ".bss":
-            alignment = args.bss_alignment
 
         block = [
             f"\t\t# {section_type}",
@@ -802,8 +808,8 @@ def generate_lcf():
 
     generated_lcf = "\n\n".join(lcf_blocks)
 
-    template_path = args.template_path
-    output_path = args.lcf_output_path
+    template_path = Path("config") / LCF.replace(".lcf", ".inc.lcf")
+    output_path = Path("config") / LCF
 
     template = template_path.read_text()
     output = template.replace(
@@ -812,8 +818,7 @@ def generate_lcf():
     )
     output_path.write_text(output)
 
-    if args.verbose:
-        print(f"✅ Mullberry/generate: wrote LCF to {output_path}")
+    print(f"✅ Mulberry/generate: wrote LCF to {output_path}")
 
 
 def main():
