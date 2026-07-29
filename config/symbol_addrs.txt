@@ -1,3 +1,15 @@
+D_FFFF                                             = 0x0000FFFF; // ignore:True
+D_FFFFF                                            = 0x000FFFFF; // ignore:True
+D_FFFFFF                                           = 0x00FFFFFF; // ignore:True
+D_20000001                                         = 0x20000001; // ignore:True
+D_20000003                                         = 0x20000003; // ignore:True
+D_20000004                                         = 0x20000004; // ignore:True
+D_20000010                                         = 0x20000010; // ignore:True
+D_20000020                                         = 0x20000020; // ignore:True
+D_20000050                                         = 0x20000050; // ignore:True
+D_E0002000                                         = 0xE0002000; // ignore:True
+D_00252910                                         = 0x00252910; // size:0x20
+//                                                    = 0x00000000; // visibility:local
 _root                                              = 0x00100220; // visibility:local
 _args                                              = 0x00257D80; // visibility:local
 __ps2_libinfo__                                    = 0x00224700; // size:0x10 visibility:local allow_duplicated:True
