@@ -49,7 +49,7 @@ segments:
       # project configuration. vram address is used, when reported, in non text
       # sections to calculate the correct align value.
       subsegments:
-        - [0x000080, asmtu, sdk/sce/ee/crt0]
+        - { start: 0x000080, type: asmtu, name: sdk/sce/ee/crt0, ld_align_segment_start: 0x8 }
         - [0x0002B0, asmtu, sdk/sce/ee/libgraph/graph001]
         - [0x000450, asmtu, sdk/sce/ee/libgraph/graph002]
         - [0x0004B8, asmtu, sdk/sce/ee/libgraph/graph003]
@@ -192,7 +192,7 @@ segments:
         - [0x0248B0, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/dtoa]
         - [auto, c, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/impure]
         - [0x025D48, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/errno]
-        - [0x025D58, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/exit]
+        - [0x025D58, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/exit1] # fix linker stupid
         - [0x025E08, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/fflush]
         - [0x025F20, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/findfp]
         - [0x0261C0, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/fread]
@@ -243,7 +243,7 @@ segments:
         - [0x02E480, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/vsprintf]
         - [0x02E530, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/writer]
         - [0x02E590, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/wsetup]
-        - [0x02E6A0, asmtu, cs4/Seimei/src/AniFile]
+        - { start: 0x02E6A0, type: asmtu, name: cs4/Seimei/src/AniFile, ld_align_segment_start: 0x10 }
         - [0x02EA20, asmtu, cs4/Seimei/src/Anim]
         - [0x032110, asmtu, cs4/Seimei/src/Camera]
         - [0x034930, asmtu, cs4/Seimei/src/Debug]
@@ -458,7 +458,7 @@ segments:
         - [0x115910, asmtu, cs4/Seimei/src/Event0085]
         - [0x115B70, asmtu, unklib_00215AF0]
         - [0x117AF0, asmtu, unklib_00217A70]
-        # - [auto, asmtu, vutext]
+        - [auto, c, vutext]
 
         # vutext
         - [0x11C700, data, vutext]
@@ -833,7 +833,7 @@ segments:
         - { vram: 0x00257D0C, type: .sbss, name: unklib_00215AF0}
         - { vram: 0x00257D10, type: .sbss, name: unklib_00217A70}
 
-        - { vram: 0x00257D80, type: .bss, name: sdk/sce/ee/crt0}
+        - { vram: 0x00257D80, type: .bss, name: sdk/sce/ee/crt0, ld_align_segment_start: 0x8 }
         - { vram: 0x00257EC8, type: .bss, name: sdk/sce/ee/libdma/libdma}
         - { vram: 0x00257F00, type: .bss, name: sdk/sce/ee/libmpeg/mpc}
         - { vram: 0x00258100, type: .bss, name: sdk/sce/ee/libkernl/thread}
@@ -855,7 +855,7 @@ segments:
         - { vram: 0x00260180, type: .bss, name: sdk/sce/ee/libcdvd/cdvd000}
         - { vram: 0x00260418, type: .bss, name: sdk/sce/ee/libcdvd/cdvd047}
         - { vram: 0x00260440, type: .bss, name: sdk/sce/ee/libmc/libmc}
-        - { vram: 0x00261A40, type: .bss, name: cs4/Seimei/src/Camera}
+        - { vram: 0x00261A40, type: .bss, name: cs4/Seimei/src/Camera, ld_align_segment_start: 0x10 }
         - { vram: 0x00324E80, type: .bss, name: cs4/Seimei/src/Debug}
         - { vram: 0x00324EC0, type: .bss, name: cs4/Seimei/src/Draw}
         - { vram: 0x003254B0, type: .bss, name: cs4/Seimei/src/File}
@@ -919,8 +919,8 @@ segments:
         - { vram: 0x00A3A270, type: .bss, name: cs4/Seimei/src/TexEffect}
         - { vram: 0x00A3C890, type: .bss, name: cs4/Seimei/src/Sound/Snd}
         - { vram: 0x00A3EE40, type: .bss, name: cs4/Seimei/src/Sound/SndReverb}
-        - { vram: 0x00A3EE58, type: .bss, name: cs4/Seimei/src/Sound/SndSq}
-        - { vram: 0x00A3EE70, type: .bss, name: cs4/Seimei/src/Sound/SndVoice}
+        - { vram: 0x00A3EE58, type: .bss, name: cs4/Seimei/src/Sound/SndSq, ld_align_segment_start: 0x8 }
+        - { vram: 0x00A3EE70, type: .bss, name: cs4/Seimei/src/Sound/SndVoice, ld_align_segment_start: 0x10 }
         - { vram: 0x00A40480, type: .bss, name: cs4/Seimei/src/Sound/VagStm}
         - { vram: 0x00A40960, type: .bss, name: cs4/Seimei/src/sfx/PtclMng}
         - { vram: 0x00A40DA0, type: .bss, name: cs4/Seimei/src/sfx/Sfx}
