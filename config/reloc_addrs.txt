@@ -5123,7 +5123,7 @@ rom:0x026B1C reloc:MIPS_26                             symbol:fflush
 rom:0x127E24 reloc:MIPS_32             addend:+0x1E4   symbol:.data
 rom:0x127E28 reloc:MIPS_32             addend:+0x23C   symbol:.data
 rom:0x127E2C reloc:MIPS_32             addend:+0x294   symbol:.data
-rom:0x127E54 reloc:MIPS_32                             symbol:.rodata
+// rom:0x127E54 reloc:MIPS_32                             symbol:.rodata
 rom:0x128110 reloc:MIPS_32                             symbol:.data
 rom:0x026C2C reloc:MIPS_26                             symbol:strchr
 rom:0x026C68 reloc:MIPS_26                             symbol:strcmp
