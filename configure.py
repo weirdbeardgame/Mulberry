@@ -211,7 +211,7 @@ def build_stuff(
     ninja = ninja_syntax.Writer(open(str(ROOT / config_dir / "build.ninja"), "w"), width=9999)
 
     # Rules
-    ld_args = "-map -sym on,elf -noinhibit-exec -main ENTRYPOINT -o $out $lcf $objects"
+    ld_args = "-map -sym on,elf -noinhibit-exec -main _start -o $out $lcf $objects"
 
     ld = Path("..", (Path("tools") / "cc" / COMPILER / "mwldps2.exe"))
     cpp = Path("..", (Path("tools") / "cc" / COMPILER / "mwccps2.exe"))
@@ -796,6 +796,19 @@ def generate_lcf():
             f"\t\t__{section_type[1:]}_start = .;",
             f"\t\tALIGNALL(0x{alignment:X});",
         ]
+            
+        if section_type == ".sdata":
+            block = [
+                "\t\t_gp\t= ALIGN(128) + 0x7FF0;",
+                "",
+            ] + block
+
+        if section_type == ".sbss":
+            block = [
+                "\t\t_fbss\t= .;",
+                "",
+            ] + block
+        
         for entry in objects:
             alignment = entry.segment.ld_align_segment_start 
             if alignment is not None:

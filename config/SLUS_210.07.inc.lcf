@@ -1,6 +1,7 @@
 MEMORY
 {
 	main	(RWX)	: ORIGIN = 0x100000,	LENGTH = 0x0
+	heap	(RW)	: ORIGIN = AFTER(main),	LENGTH = 0x0
 }
 
 KEEP_SECTION
@@ -14,6 +15,12 @@ KEEP_SECTION
 
 SECTIONS
 {
+		#	define for crt0
+		_heap_size	= 0x0149CC80;
+		_stack	= 0x01F00000;
+		_stack_size	= 0x00100000;
+		#	define for lcf
+		_align_segment	= 0x80;
 
 	.main	:
 	{
@@ -24,4 +31,11 @@ SECTIONS
 
 		. = ALIGN(0x80);
 	}	>	main
+
+	.heap	:
+	{
+		#	to get the address for heap
+		end	= .;
+		_end	= .;
+	}	>	heap
 }
