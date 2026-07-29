@@ -347,6 +347,7 @@ segments:
         - [0x09DF70, asmtu, cs4/Seimei/src/MCIconData]
         - [0x09DF90, asmtu, cs4/Seimei/src/MultiStm]
         - [0x09E1E0, asmtu, unklib_0019E160]
+        - [0x09FAF0, asmtu, unklib_0019FA70]
         - [0x0A1510, asmtu, cs4/Seimei/src/Mirror]
         - [0x0A23B0, asmtu, cs4/Seimei/src/Riddle]
         - [0x0A4F80, asmtu, cs4/Seimei/src/E031Act]
@@ -456,9 +457,11 @@ segments:
         - [0x1157F0, asmtu, cs4/Seimei/src/P036Act]
         - [0x115910, asmtu, cs4/Seimei/src/Event0085]
         - [0x115B70, asmtu, unklib_00215AF0]
+        - [0x117AF0, asmtu, unklib_00217A70]
+        # - [auto, asmtu, vutext]
 
         # vutext
-        - [0x11C700, textbin, vutext]
+        - [0x11C700, data, vutext]
         - [0x124780, .data, sdk/sce/ee/libgraph/graph001] # vram: 0x00224700
         - [0x1247A0, .data, sdk/sce/ee/libgraph/graph002] # vram: 0x00224720
         - [0x1247C0, .data, sdk/sce/ee/libgraph/graph018] # vram: 0x00224740
@@ -535,7 +538,7 @@ segments:
         - [0x12C700, .data, cs4/Seimei/src/MsgFile] # vram: 0x0022C680
         - [0x12C800, .data, cs4/Seimei/src/MemoryCard] # vram: 0x0022C780
         - [0x12CBD0, .data, cs4/Seimei/src/MCIconData] # vram: 0x0022CB50
-        - [0x146830, .data, unklib_0019E160] # vram: 0x002467B0
+        - [0x146830, .data, unklib_0019FA70] # vram: 0x002467B0
         - [0x146940, .data, cs4/Seimei/src/Mirror] # vram: 0x002468C0
         - [0x148280, .data, cs4/Seimei/src/Riddle] # vram: 0x00248200
         - [0x148480, .data, cs4/Seimei/src/E032Act] # vram: 0x00248400
@@ -586,6 +589,7 @@ segments:
         - [0x1505C0, .data, cs4/Seimei/src/Event0032] # vram: 0x00250540
         - [0x150600, .data, cs4/Seimei/src/Event0001] # vram: 0x00250580
         - [0x150620, .data, unklib_00215AF0] # vram: 0x002505A0
+        - [0x150660, .data, unklib_00217A70] # vram: 0x002505E0
 
         - [0x150680, .rodata, sdk/sce/ee/libgraph/graph003] # vram: 0x00250600
         - [0x1506C8, .rodata, sdk/sce/ee/libgraph/graph008] # vram: 0x00250648
@@ -686,7 +690,7 @@ segments:
         - [0x154FA0, .rodata, unklib_00195CA0] # vram: 0x00254F20
         - [0x154FD0, .rodata, cs4/Seimei/src/MsgFile] # vram: 0x00254F50
         - [0x154FF0, .rodata, cs4/Seimei/src/MemoryCard] # vram: 0x00254F70
-        - [0x1550F0, .rodata, unklib_0019E160] # vram: 0x00255070
+        - [0x1550F0, .rodata, unklib_0019FA70] # vram: 0x00255070
         - [0x155150, .rodata, cs4/Seimei/src/Riddle] # vram: 0x002550D0
         - [0x155168, .rodata, cs4/Seimei/src/TexEffect] # vram: 0x002550E8
         - [0x1551F0, .rodata, cs4/Seimei/src/Sound/Sec] # vram: 0x00255170
@@ -716,7 +720,7 @@ segments:
         - [0x157410, .rodata, cs4/Seimei/src/MiniGame/sgh/sghDice] # vram: 0x00257390
         - [0x157460, .rodata, cs4/Seimei/src/MiniGame/sgh/sghMsg] # vram: 0x002573E0
         - [0x157470, .rodata, cs4/Seimei/src/menu/MenuTD] # vram: 0x002573F0
-        - [0x1574D8, .rodata, unklib_00215AF0] # vram: 0x00257458
+        - [0x1574D8, .rodata, unklib_00217A70] # vram: 0x00257458
 
         - [0x157580, .sdata, cs4/Seimei/src/Draw] # vram: 0x00257500
         - [0x157584, .sdata, cs4/Seimei/src/Game] # vram: 0x00257504
@@ -794,6 +798,7 @@ segments:
         - { vram: 0x00257A44, type: .sbss, name: unklib_00195CA0}
         - { vram: 0x00257A78, type: .sbss, name: cs4/Seimei/src/MemoryCard}
         - { vram: 0x00257A7C, type: .sbss, name: unklib_0019E160}
+        - { vram: 0x00257A88, type: .sbss, name: unklib_0019FA70}
         - { vram: 0x00257A9C, type: .sbss, name: cs4/Seimei/src/Mirror}
         - { vram: 0x00257AA0, type: .sbss, name: cs4/Seimei/src/Sound/Snd}
         - { vram: 0x00257AC4, type: .sbss, name: cs4/Seimei/src/Sound/SndSq}
@@ -826,6 +831,7 @@ segments:
         - { vram: 0x00257D00, type: .sbss, name: cs4/Seimei/src/menu/MenuTD}
         - { vram: 0x00257D08, type: .sbss, name: cs4/Seimei/src/sfx/SfxScriptIF}
         - { vram: 0x00257D0C, type: .sbss, name: unklib_00215AF0}
+        - { vram: 0x00257D10, type: .sbss, name: unklib_00217A70}
 
         - { vram: 0x00257D80, type: .bss, name: sdk/sce/ee/crt0}
         - { vram: 0x00257EC8, type: .bss, name: sdk/sce/ee/libdma/libdma}
@@ -906,6 +912,7 @@ segments:
         - { vram: 0x00A33330, type: .bss, name: cs4/Seimei/src/MemoryCard}
         - { vram: 0x00A33980, type: .bss, name: cs4/Seimei/src/MultiStm}
         - { vram: 0x00A341A0, type: .bss, name: unklib_0019E160}
+        - { vram: 0x00A36E90, type: .bss, name: unklib_0019FA70}
         - { vram: 0x00A37090, type: .bss, name: cs4/Seimei/src/Mirror}
         - { vram: 0x00A37EF0, type: .bss, name: cs4/Seimei/src/Riddle}
         - { vram: 0x00A38070, type: .bss, name: cs4/Seimei/src/MovePath}
@@ -948,5 +955,6 @@ segments:
         - { vram: 0x00A5AA70, type: .bss, name: cs4/Seimei/src/MiniGame/sgh/sghPad}
         - { vram: 0x00A5AAC0, type: .bss, name: cs4/Seimei/src/menu/MenuTD}
         - { vram: 0x00A5B060, type: .bss, name: unklib_00215AF0}
+        - { vram: 0x00A5B1C0, type: .bss, name: unklib_00217A70}
 
     - [0x157900]
