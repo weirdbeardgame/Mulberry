@@ -197,6 +197,9 @@ def build_stuff(
         object_strs = [str(obj) for obj in object_paths]
 
         for object_path in object_paths:
+            if object_path.name == "elf_header.s.o":
+                continue
+
             if object_path.suffix == ".o":
                 built_objects.add(object_path)
 
