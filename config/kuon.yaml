@@ -136,6 +136,7 @@ segments:
         - [0x020630, asmtu, sdk/sce/ee/gcc/ee/lib/libm/kf_rem_pio2]
         - [0x020E98, asmtu, sdk/sce/ee/gcc/ee/lib/libm/kf_sin]
         - [0x020FA0, asmtu, sdk/sce/ee/gcc/ee/lib/libm/kf_tan]
+        - [auto, c, sdk/sce/ee/gcc/ee/lib/libm/s_infconst]
         - [0x021228, asmtu, sdk/sce/ee/gcc/ee/lib/libm/s_copysign]
         - [0x021270, asmtu, sdk/sce/ee/gcc/ee/lib/libm/s_fabs]
         - [0x0212A8, asmtu, sdk/sce/ee/gcc/ee/lib/libm/s_isinf]
@@ -159,6 +160,8 @@ segments:
         - [0x022370, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_moddi3]
         - [0x022A00, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_udivdi3]
         - [0x022F80, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_umoddi3]
+        - [auto, c, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_thenan_df]
+        - [auto, c, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/ctype_]
         - [0x0234E8, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_floatdidf]
         - [0x023590, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_floatdisf]
         - [0x023678, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_fixunsdfdi]
@@ -187,6 +190,7 @@ segments:
         - [0x0247A0, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/callocr]
         - [0x024858, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/closer]
         - [0x0248B0, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/dtoa]
+        - [auto, c, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/impure]
         - [0x025D48, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/errno]
         - [0x025D58, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/exit]
         - [0x025E08, asmtu, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/fflush]
@@ -284,6 +288,7 @@ segments:
         - [0x062F40, asmtu, cs4/Seimei/src/EneThk]
         - [0x0649E0, asmtu, cs4/Seimei/src/PointLight]
         - [0x065370, asmtu, cs4/Seimei/lib/libaio]
+        - [0x0658F0, asmtu, cs4/Seimei/src/Shadow]
         - [0x0683E0, asmtu, cs4/Seimei/src/Scene]
         - [0x068BF0, asmtu, cs4/Seimei/src/ShadowVolume]
         - [0x068E00, asmtu, cs4/Seimei/src/DepthAlpha]
@@ -481,13 +486,13 @@ segments:
         - [0x1261A8, .data, sdk/sce/ee/libkernl/iopnotify] # vram: 0x00226128
         - [0x1261B0, .data, sdk/sce/ee/libpad/libpad] # vram: 0x00226130
         - [0x1261F8, .data, sdk/sce/ee/libsdr/sdr_main] # vram: 0x00226178
-        #- [0x126210, .data, unklib_00226190] # vram: 0x00226190
+        #- [0x126210, .data, unklib_00226190] # vram: 0x00226190 later sdr_cb
         - [0x126240, .data, sdk/sce/ee/libcdvd/cdvd000] # vram: 0x002261C0
         - [0x127DE8, .data, sdk/sce/ee/libcdvd/cdvd036] # vram: 0x00227D68
         - [0x127DF8, .data, sdk/sce/ee/libcdvd/cdvd047] # vram: 0x00227D78
         - [0x127E00, .data, sdk/sce/ee/libmc/libmc] # vram: 0x00227D80
-        #- [0x127E20, .data, unklib_00227DA0] # vram: 0x00227DA0
-        #- [0x128118, .data, unklib_00228098] # vram: 0x00228098
+        - [0x127E20, .data, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/impure] # vram: 0x00227DA0
+        - [0x128118, .data, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/locale] # vram: 0x00228098
         - [0x128120, .data, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/mallocr] # vram: 0x002280A0
         - [0x128578, .data, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/mlock] # vram: 0x002284F8
         - [0x128580, .data, cs4/Seimei/src/AniFile] # vram: 0x00228500
@@ -503,7 +508,7 @@ segments:
         - [0x1289B0, .data, cs4/Seimei/src/MyThk] # vram: 0x00228930
         - [0x1289C0, .data, cs4/Seimei/src/Binder] # vram: 0x00228940
         - [0x128AC0, .data, cs4/Seimei/src/Ene] # vram: 0x00228A40
-        #- [0x128FA0, .data, cs4/Seimei/src/Shadow] # vram: 0x00228F20
+        - [0x128FA0, .data, cs4/Seimei/src/Shadow] # vram: 0x00228F20
         - [0x129000, .data, cs4/Seimei/src/DepthAlpha] # vram: 0x00228F80
         - [0x129040, .data, cs4/Seimei/src/Rta] # vram: 0x00228FC0
         - [0x129080, .data, cs4/Seimei/src/rta_util] # vram: 0x00229000
@@ -615,17 +620,17 @@ segments:
         - [0x151CC0, .rodata, sdk/sce/ee/gcc/ee/lib/libm/ef_rem_pio2] # vram: 0x00251C40
         - [0x152080, .rodata, sdk/sce/ee/gcc/ee/lib/libm/kf_rem_pio2] # vram: 0x00252000
         - [0x1520D0, .rodata, sdk/sce/ee/gcc/ee/lib/libm/kf_tan] # vram: 0x00252050
-        #- [0x152118, .rodata, unklib_00252098] # vram: 0x00252098
+        - [0x152118, .rodata, sdk/sce/ee/gcc/ee/lib/libm/s_infconst] # vram: 0x00252098
         - [0x152120, .rodata, sdk/sce/ee/gcc/ee/lib/libm/s_scalbn] # vram: 0x002520A0
         - [0x152150, .rodata, sdk/sce/ee/gcc/ee/lib/libm/sf_atan] # vram: 0x002520D0
         - [0x1521A8, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_divdi3] # vram: 0x00252128
         - [0x1522A8, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_moddi3] # vram: 0x00252228
         - [0x1523A8, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_udivdi3] # vram: 0x00252328
         - [0x1524A8, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_umoddi3] # vram: 0x00252428
-        #- [0x1525A8, .rodata, unklib_00252528] # vram: 0x00252528
-        #- [0x1525C0, .rodata, unklib_00252540] # vram: 0x00252540
+        - [0x1525A8, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/_thenan_df] # vram: 0x00252528
+        - [0x1525C0, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/ctype_] # vram: 0x00252540
         - [0x1526D0, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/dtoa] # vram: 0x00252650
-        #- [0x152728, .rodata, unklib_002526A8] # vram: 0x002526A8
+        - [0x152728, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/impure] # vram: 0x002526A8
         - [0x152730, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/locale] # vram: 0x002526B0
         - [0x152778, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/mprec] # vram: 0x002526F8
         - [0x1528A0, .rodata, sdk/sce/ee/gcc/lib/gcc-lib/ee/version/libgcc/strtod] # vram: 0x00252820
@@ -769,7 +774,7 @@ segments:
         - { vram: 0x00257960, type: .sbss, name: cs4/Seimei/src/Hmd}
         - { vram: 0x00257964, type: .sbss, name: cs4/Seimei/src/Binder}
         - { vram: 0x00257968, type: .sbss, name: cs4/Seimei/lib/libaio}
-        #- { vram: 0x00257974, type: .sbss, name: cs4/Seimei/lib/Shadow}
+        - { vram: 0x00257974, type: .sbss, name: cs4/Seimei/src/Shadow}
         - { vram: 0x00257978, type: .sbss, name: cs4/Seimei/src/Scene}
         - { vram: 0x00257988, type: .sbss, name: cs4/Seimei/src/DepthAlpha}
         - { vram: 0x0025798C, type: .sbss, name: cs4/Seimei/src/Rta}
@@ -870,7 +875,7 @@ segments:
         - { vram: 0x00969A50, type: .bss, name: cs4/Seimei/src/Ene}
         - { vram: 0x00974D80, type: .bss, name: cs4/Seimei/src/PointLight}
         - { vram: 0x009750C0, type: .bss, name: cs4/Seimei/lib/libaio}
-        #- { vram: 0x009782F0, type: .bss, name: cs4/Seimei/lib/Shadow}
+        - { vram: 0x009782F0, type: .bss, name: cs4/Seimei/src/Shadow}
         - { vram: 0x009783C0, type: .bss, name: cs4/Seimei/src/DepthAlpha}
         - { vram: 0x009B43C0, type: .bss, name: cs4/Seimei/src/Rta}
         - { vram: 0x009B5120, type: .bss, name: cs4/Seimei/src/Script}
