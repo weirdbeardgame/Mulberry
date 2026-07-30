@@ -1,8 +1,8 @@
 #include "common.h"
 
-INCLUDE_ASM("config/asm/nonmatchings/cs4/Seimei/src/Scene", ClearLoadMovieId);
+void ClearLoadMovieId() {}
 
-INCLUDE_ASM("config/asm/nonmatchings/cs4/Seimei/src/Scene", GetLoadMovieId);
+unsigned char GetLoadMovieId() { return 0; }
 
 INCLUDE_ASM("config/asm/nonmatchings/cs4/Seimei/src/Scene", SetLoadMovieId);
 
