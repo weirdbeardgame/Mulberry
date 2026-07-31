@@ -22,8 +22,8 @@ typedef struct {
 	void *gpReg;
 	int initPriority;
 	int currentPriority;
-	u_int attr;
-	u_int option;
+	unsigned int attr;
+	unsigned int option;
 	int waitType;
 	int waitId;
 	int wakeupCount;
@@ -34,8 +34,8 @@ typedef struct {
 	int maxCount;
 	int initCount;
 	int numWaitThreads;
-	u_int attr;
-	u_int option;
+	unsigned int attr;
+	unsigned int option;
 } SemaParam;
 
 extern void *_gp;

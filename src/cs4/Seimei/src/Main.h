@@ -1,6 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+extern int gTime;
+extern int GoToEndingFlag;
+extern int GoToTitleFlag;
+
+
 void SetGoToEndingFade();
 int CheckGoToEndingFlag();
 void SetGoToEndingFlag();

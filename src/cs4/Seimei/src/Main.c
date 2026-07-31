@@ -12,7 +12,13 @@
 #include "Title.h"
 #include "common.h"
 #include "ee/eekernel.h"
+#include "ee/registers.h"
+#include "sce/libcdvd.h"
 #include "typedefs.h"
+
+int gTime;
+int GoToEndingFlag;
+int GoToTitleFlag;
 
 void SetGoToEndingFade(void) {
   SetFadeMng(1, (sceVu0IVECTOR){0}, 30, NULL, SetGoToEndingFlag, 0, 0);

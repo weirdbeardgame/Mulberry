@@ -62,7 +62,7 @@ TOOLS_DIR = ROOT / "tools"
 CROSS = "mips-ps2-decompals-"
 
 COMPILER = "mwcps2-3.0b52-030722"
-COMPILER_FLAGS = "-O3,p -sym on -str readonly"
+COMPILER_FLAGS = "-O3,p -sym on -str readonly -cwd source"
 
 PLATFORM = "x86_64" # @todo get this from makefile
 # PLATFORM = "macos"
@@ -216,16 +216,18 @@ def build_stuff(
     # Rules
     ld_args = "-map -sym on,elf -noinhibit-exec -main _start -o $out $lcf $objects"
 
+    rel_root = Path(os.path.relpath(ROOT, config_dir))
+
     ld = Path("..", (Path("tools") / "cc" / COMPILER / "mwldps2.exe"))
-    cpp = Path("..", (Path("tools") / "cc" / COMPILER / "mwccps2.exe"))
+    cpp = Path("tools") / "cc" / COMPILER / "mwccps2.exe"
+
+    print({cpp})
+    print({common_includes})
 
     ninja.rule(
         "as",
         description="as $in",
-        # NOTE: Japanese strings are EUC-JP encoded!!
-        #       We need to convert them from (-f) UTF-8 to (-t) EUC-JP while compiling,
-        #       otherwise Japanese strings will be compiled wrong!
-        command=f"{CROSS}as -no-pad-sections -EL -march=5900 -mabi=eabi -mno-branch-relocs -I{src_path.parent / 'include'} -Iinclude -o $out $in",
+        command=f"{CROSS}as -no-pad-sections -EL -march=5900 -mabi=eabi -I{src_path.parent / 'include'} -o $out",
     )
 
     ninja.rule(
@@ -234,8 +236,6 @@ def build_stuff(
         command=(
             f"s_in=$$(echo $in.S | sed 's,^[^/]*/[^/]*/,cc-src/,') && "  # .............. 1) remove ../../ from path + prefix with cc-src/ + suffix with .S and store it into s_in var: ../src/file.c -> s_in=cc-src/src/file.c.S
             f'mkdir -p $$(dirname "$$s_in") && '  # ..................................... 2) create directory from s_in var: s_in=cc-src/src/path/to/file.c.S -> mkdir -p cc-src/src/path/to/
-            f"{game_compile_cmd.replace(' -c ', ' -S ')} $in -o $$s_in && "  # .......... 3) replace -c with -S in gcc command to generate intermediate assembly file instead of object
-            f"python3 {ROOT}/tools/python/fix_asm_matching.py {language} $$s_in && "  # . 4) fix assembly file using known patterns with tools/python/fix_asm_matching.py
             f"{game_compile_cmd} $$s_in -o $out && "  # ................................. 5) compile assembly file into object
             f"{ld}strip $out -N dummy-symbol-name"  # ................................ 6) strip 'dummy-symbol-name' from object
         ),
@@ -245,18 +245,6 @@ def build_stuff(
         "cc",
         description="cc $in",
         command=f"{game_compile_cmd} $in -o $out && {ld}strip $out -N dummy-symbol-name",
-    )
-
-    ninja.rule(
-        "cc-eucjp",
-        description="convert source to EUC-JP encoding and compile same as 'cc'",
-        command=(
-            f"eucjp_in=$$(echo $in.eucjp.c | sed 's,^[^/]*/[^/]*/,cc-src/,') && "  # . 1) remove ../../ from path + prefix with cc-src/ + suffix with .eucjp.c and store it into eucjp_in var: ../src/file.c -> eucjp_in=cc-src/src/file.c.eucjp.c
-            f'mkdir -p $$(dirname "$$eucjp_in") && '  # .............................. 2) create directory from eucjp_in var: s_in=cc-src/src/path/to/file.c.eucjp.c -> mkdir -p cc-src/src/path/to/
-            #f"iconv -o $$eucjp_in -f=UTF-8 -t=EUC-JP $in && "  # ..................... 3) convert source file to EUC-JP (save converted source to cc-src/src/file.c.eucjp.c)
-            f'{game_compile_cmd} -I$$(dirname "$in") $$eucjp_in -o $out && '  # ...... 4) compile converted source file into object (also add original source directory as include path to allow relative imports)
-            f"{CROSS}strip $out -N dummy-symbol-name"  # ............................. 5) strip 'dummy-symbol-name' from object
-        ),
     )
 
     #ninja.rule(
