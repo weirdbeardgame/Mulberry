@@ -302,7 +302,7 @@ def build_stuff(
             build(entry.object_path, entry.src_paths, "as")
 
         elif isinstance(seg, splat.segtypes.common.c.CommonSegC):
-            entry.src_paths = [Path("../..") / Path(f"{src_path}") for src_path in entry.src_paths]
+            entry.src_paths = [Path("..") / Path(f"{src_path}") for src_path in entry.src_paths]
             if any(str(src_path).startswith("src/lib/") for src_path in entry.src_paths):
                 build(entry.object_path, entry.src_paths, "libcc")
 

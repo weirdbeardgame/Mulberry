@@ -17,7 +17,7 @@ options:
     undefined_funcs_auto_path: undefined_funcs_auto.txt
     undefined_syms_auto_path: undefined_syms_auto.txt
     symbol_addrs_path: symbol_addrs.txt
-    extensions_path: ../../tools/splat_ext
+    extensions_path: ../tools/splat_ext
     section_order: [".text", ".vutext", ".data", ".vudata", ".rodata", ".sdata", ".sbss", ".bss"]
     #auto_all_sections: [".data", ".sdata", ".sbss", ".rodata", ".bss"]
     disasm_unknown: True
@@ -252,7 +252,7 @@ segments:
         - [0x038710, asmtu, cs4/Seimei/src/File]
         - [0x038D00, asmtu, cs4/Seimei/src/Game]
         - [0x039A00, asmtu, cs4/Seimei/src/Load]
-        - [0x03A380, asmtu, cs4/Seimei/src/Main]
+        - [0x03A380, c, cs4/Seimei/src/Main]
         - [0x03AFE0, asmtu, cs4/Seimei/src/MathUtil]
         - [0x03BCE0, asmtu, cs4/Seimei/src/MdlLink]
         - [0x03BDC0, asmtu, cs4/Seimei/src/Mic]
