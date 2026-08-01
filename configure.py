@@ -226,7 +226,7 @@ def build_stuff(
     ninja.rule(
         "as",
         description="as $in",
-        command=f"{CROSS}as -no-pad-sections -EL -march=5900 -mabi=eabi -I{src_path.parent / 'include'} -o $out",
+        command=f"{CROSS}as -no-pad-sections -EL -march=5900 -mabi=eabi -mno-branch-relocs -Iinclude -I{src_path.parent / 'include'} -o $out $in",
     )
 
     ninja.rule(
