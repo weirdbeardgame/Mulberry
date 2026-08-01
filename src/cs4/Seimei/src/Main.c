@@ -24,7 +24,11 @@
 int gTime;
 int GoToEndingFlag;
 int GoToTitleFlag;
-struct _TMP_MENU_MNG_ST g_TmpMenuMng;
+
+sceVu0FVECTOR V0;
+GameState GameSt;
+
+extern TMP_MENU_MNG_ST g_TmpMenuMng;
 
 void SetGoToEndingFade(void) {
   SetFadeMng(1, (sceVu0IVECTOR){0}, 30, NULL, SetGoToEndingFlag, 0, 0);
@@ -62,7 +66,7 @@ static void InitGameSt(signed int argc /* r18 */, char **argv /* r17 */) {
   SetPadVibFlag(1);
 
   for (i = 0; i < argc; i++) {
-    if (strcmp(argv[i], "xxxxxxxx") == 0) {
+    if (strcmp(argv[i], "@padviboff") == 0) {
       SetPadVibFlag(0);
     }
   }
@@ -193,7 +197,7 @@ void Timer0Handler(void) {
 static inline void WaitIop(void) {
   char sp50[0x80];
   memset(&sp50, 0, sizeof(sp50));
-  sprintf(sp50, "xxxxxxxx1", "xxxxxxxx2");
+  sprintf(sp50, "%s", "cdrom0:\\iop\\ioprp280.img;1");
   StringCorrectPath4Disc(sp50, 1);
   while (!sceSifRebootIop(sp50))
     ;
