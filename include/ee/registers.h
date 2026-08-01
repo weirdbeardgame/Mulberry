@@ -5,4 +5,5 @@
 #define REG_RCNT0_MODE      (volatile u_int *)0x10000010
 #define REG_RCNT1_COUNT     (volatile u_int *)0x10000800
 #define REG_RCNT1_MODE      (volatile u_int *)0x10000810
+#define REG_RCNT0_TARGET    (volatile u_int *)0x10000020
 #endif // EE_REGISTERS_H

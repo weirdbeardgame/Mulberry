@@ -222,7 +222,6 @@ def build_stuff(
     cpp = Path("tools") / "cc" / COMPILER / "mwccps2.exe"
 
     print({cpp})
-    print({common_includes})
 
     ninja.rule(
         "as",
@@ -237,14 +236,13 @@ def build_stuff(
             f"s_in=$$(echo $in.S | sed 's,^[^/]*/[^/]*/,cc-src/,') && "  # .............. 1) remove ../../ from path + prefix with cc-src/ + suffix with .S and store it into s_in var: ../src/file.c -> s_in=cc-src/src/file.c.S
             f'mkdir -p $$(dirname "$$s_in") && '  # ..................................... 2) create directory from s_in var: s_in=cc-src/src/path/to/file.c.S -> mkdir -p cc-src/src/path/to/
             f"{game_compile_cmd} $$s_in -o $out && "  # ................................. 5) compile assembly file into object
-            f"{ld}strip $out -N dummy-symbol-name"  # ................................ 6) strip 'dummy-symbol-name' from object
         ),
     )
 
     ninja.rule(
         "cc",
         description="cc $in",
-        command=f"{game_compile_cmd} $in -o $out && {ld}strip $out -N dummy-symbol-name",
+        command=f"{game_compile_cmd} $in -o $out",
     )
 
     #ninja.rule(

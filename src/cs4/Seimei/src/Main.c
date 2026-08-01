@@ -6,10 +6,15 @@
 #include "Font.h"
 #include "Game.h"
 #include "Load.h"
+#include "Memory.h"
+#include "Pad.h"
 #include "Scene.h"
 #include "Script.h"
+#include "Sound/Snd.h"
+#include "String.h"
 #include "TexEffect.h"
 #include "Title.h"
+#include "Unk.h"
 #include "common.h"
 #include "ee/eekernel.h"
 #include "ee/registers.h"
@@ -19,6 +24,7 @@
 int gTime;
 int GoToEndingFlag;
 int GoToTitleFlag;
+struct _TMP_MENU_MNG_ST g_TmpMenuMng;
 
 void SetGoToEndingFade(void) {
   SetFadeMng(1, (sceVu0IVECTOR){0}, 30, NULL, SetGoToEndingFlag, 0, 0);
