@@ -52,4 +52,5 @@ extern GameState GameSt; // size: 0x30, address: 0x3A5E10
 int GameLoop();
 void InitGameData();
 void InitGameDataAfterLoad();
+void * GetGameTexList();
 #endif // GAME_H

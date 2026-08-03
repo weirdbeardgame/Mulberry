@@ -101,7 +101,7 @@ def make_compiler_cmd(config_dir: Path, src_path: Path, language: str):
 
     game_cc_dir = f"{tools_dir}/cc/{COMPILER}"
 
-    compiler_includes = f"-I{src_path.parent / 'src'} -I{src_path.parent / 'include'} -Iinclude/sdk/ee"
+    compiler_includes = f"-I{src_path.parent / 'src'} -I{src_path.parent / 'include'} -Iinclude/sdk/ee -I../src/cs4/Seimei/fslib"
     assembler_includes = f"-I{src_path.parent / 'include'} -I{src_path.parent}"
     common_includes = f"{compiler_includes} {assembler_includes}"
     game_compile_cmd = f"{WIBO} {game_cc_dir}/mwccps2.exe -c {common_includes} {COMPILER_FLAGS}"
