@@ -28,14 +28,6 @@ options:
     make_full_disasm_for_code: true
     asm_nonmatching_label_macro: ""
     create_bss_pads: False
-# custom field used by fix_linkerscript.py to fix linkerscript alignments
-_section_subalign:
-    elf_header: 8
-    main: 2
-    main_bss: 1
-    reg_info: 4
-    mips_debug: 4
-    rest: 4
 segments:
     - [0, databin, elf_header]
     - name: main
@@ -43,12 +35,6 @@ segments:
       start: 0x80
       vram: 0x100000
       bss_size: 0x80BB00 # size of .sbss + size of .bss
-      align: 1
-      subalign: 2 # safe subalign value. proper values are applied by fix_linkerscript.py where necessary
-      # text has align 8 but other sections may have a different alignment ...
-      # explicit align correction is performed by fix_linkerscript.py during
-      # project configuration. vram address is used, when reported, in non text
-      # sections to calculate the correct align value.
       subsegments:
         - { start: 0x000080, type: asmtu, name: sdk/sce/ee/crt0, ld_align_segment_start: 0x8 }
         - [0x0002B0, asmtu, sdk/sce/ee/libgraph/graph001]
@@ -249,10 +235,10 @@ segments:
         - [0x032110, asmtu, cs4/Seimei/src/Camera]
         - [0x034930, asmtu, cs4/Seimei/src/Debug]
         - [0x034D10, asmtu, cs4/Seimei/src/Draw]
-        - [0x038710, asmtu, cs4/Seimei/src/File]
+        - [0x038710, c, cs4/Seimei/src/File]
         - [0x038D00, asmtu, cs4/Seimei/src/Game]
         - [0x039A00, asmtu, cs4/Seimei/src/Load]
-        - [0x03A380, asmtu, cs4/Seimei/src/Main]
+        - [0x03A380, c, cs4/Seimei/src/Main]
         - [0x03AFE0, asmtu, cs4/Seimei/src/MathUtil]
         - [0x03BCE0, asmtu, cs4/Seimei/src/MdlLink]
         - [0x03BDC0, asmtu, cs4/Seimei/src/Mic]
@@ -283,7 +269,7 @@ segments:
         - [0x059C60, asmtu, cs4/Seimei/src/Dss]
         - [0x05ACB0, asmtu, cs4/Seimei/src/Damage]
         - [0x05B3B0, asmtu, cs4/Seimei/src/Hmd]
-        - [0x05E360, asmtu, cs4/Seimei/src/Binder]
+        - [0x05E360, c, cs4/Seimei/src/Binder]
         - [0x05E980, asmtu, cs4/Seimei/src/Ene]
         - [0x060DF0, asmtu, cs4/Seimei/src/EneAct]
         - [0x062F40, asmtu, cs4/Seimei/src/EneThk]
@@ -421,7 +407,7 @@ segments:
         - [0x105150, asmtu, cs4/Seimei/src/E044Act]
         - [0x105560, asmtu, cs4/Seimei/src/sfx/SfxFog]
         - [0x105A00, asmtu, cs4/Seimei/fslib/lib/fsspummng]
-        - [0x106520, asmtu, cs4/Seimei/src/Event]
+        - [0x106520, c, cs4/Seimei/src/Event]
         - [0x106A90, asmtu, cs4/Seimei/src/Event0031]
         - [0x107380, asmtu, cs4/Seimei/src/Event0051]
         - [0x107E90, asmtu, cs4/Seimei/src/MiniGame/sgh/sgh]

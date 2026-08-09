@@ -5,23 +5,15 @@
 from __future__ import annotations
 
 import os
-import re
 import sys
 import json
-import yaml
-import copy
 import splat
 import shutil
 import argparse
-import tempfile
 import subprocess
 import ninja_syntax
 
-from dataclasses import dataclass, asdict
-#from utils import ensure_path_and_write, normalize_object_path, to_expected_path
-
-import splat.util.options as splat_options
-from splat.segtypes.linker_entry import LinkerEntry, clean_up_path
+from splat.segtypes.linker_entry import LinkerEntry
 from spimdisasm.common.CompilerConfig import compilerOptions
 
 from typing import Any, Union, Protocol, Literal, cast
@@ -30,16 +22,6 @@ from contextlib import contextmanager
 
 from splat.scripts import split
 from splat.util.conf import load as splat_load_yaml
-from splat.segtypes.linker_entry import LinkerEntry
-
-# from tools.python.fix_gp import fix_gp
-from tools.python.fix_assets import fix_assets
-from tools.python.fix_linkerscript import fix_linkerscript
-
-from sys import stdout
-from subprocess import run
-from dataclasses import dataclass
-from struct import unpack
 
 @contextmanager
 def suppress_stdout_stderr():
@@ -110,7 +92,7 @@ def make_compiler_cmd(config_dir: Path, src_path: Path, language: str):
 
 
 def exec_shell(command: list[str]) -> str:
-    ret = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    ret = subprocess.run(command, capture_output=True, text=True, check=False)
     return ret.stdout
 
 
@@ -196,6 +178,21 @@ def build_stuff(
 
         object_strs = [str(obj) for obj in object_paths]
 
+        expected_strs = []
+        for obj in object_paths:
+            if obj.name.endswith(".c.o"):
+                obj = obj.with_name(obj.name.removesuffix(".c.o") + ".o")
+            elif obj.name.endswith(".s.o"):
+                obj = obj.with_name(obj.name.removesuffix(".s.o") + ".o")
+    
+            if obj.parts[:2] == ("build", "asm"):
+                p = obj.relative_to("build/asm")
+            elif obj.parts[:2] == ("build", "src"):
+                p = obj.relative_to("build/src")
+            else:
+                p = obj
+            expected_strs.append(str(Path("build/expected") / p))
+
         for object_path in object_paths:
             if object_path.name == "elf_header.s.o":
                 continue
@@ -207,6 +204,14 @@ def build_stuff(
                 outputs=object_strs,
                 rule=task,
                 inputs=[str(s) for s in src_paths],
+                variables=variables,
+                implicit_outputs=implicit_outputs,
+            )
+
+            ninja.build(
+                outputs=expected_strs,
+                rule="as",
+                inputs=[str((Path("asm") / s.relative_to("../src") if s.parts[:2] == ("..", "src") else s).with_suffix(".s")) for s in src_paths],
                 variables=variables,
                 implicit_outputs=implicit_outputs,
             )
@@ -295,16 +300,15 @@ def build_stuff(
             else:
                 build(entry.object_path, entry.src_paths, "cc")
 
-        elif isinstance(seg, splat.segtypes.common.databin.CommonSegDatabin):
-            build(entry.object_path, entry.src_paths, "as")
-
-        elif isinstance(seg, splat.segtypes.common.rodatabin.CommonSegRodatabin):
-            build(entry.object_path, entry.src_paths, "as")
-
-        elif isinstance(seg, splat.segtypes.common.textbin.CommonSegTextbin):
-            build(entry.object_path, entry.src_paths, "as")
-
-        elif isinstance(seg, splat.segtypes.common.sbss.CommonSegSbss):
+        elif isinstance(
+                    seg,
+                    (
+                        splat.segtypes.common.databin.CommonSegDatabin,
+                        splat.segtypes.common.rodatabin.CommonSegRodatabin,
+                        splat.segtypes.common.textbin.CommonSegTextbin,
+                        splat.segtypes.common.sbss.CommonSegSbss,
+                    ),
+                ):
             build(entry.object_path, entry.src_paths, "as")
 
         else:
@@ -338,288 +342,6 @@ def build_stuff(
         implicit=[elf_path],
     )
 
-
-def get_line_file_path(args: AnnotationArgs):
-    if args.line_file_path is not None:
-        return args.line_file_path
-
- #   if args.elf_path.name == SH2_SERIAL and "Event/stage" in args.asm_path.as_posix():
-#        return Path(f"{TOOLS}/alessatool/dwarf") / Path(args.asm_path.name).with_suffix(".line")
-
-    return None
-
-
-def line_has_vram_addr(line: str, addr_str: str) -> bool:
-    if addr_str not in line or "*/" not in line:
-        return False
-
-    return line.index("*/") > line.index(addr_str)
-
-
-def annotate_asm(args: AnnotationArgs):
-    with open(args.asm_path, "r") as asm_file:
-        asm_contents = asm_file.read()
-
-    asm_lines = asm_contents.splitlines()
-    asm_line_index = 0
-
-    vram_start = args.vram_start
-    vram_end = args.vram_end
-
-    if vram_start is None or vram_end is None:
-        vram_start, vram_end = find_vram_bounds(asm_lines)
-
-    line_file_path = get_line_file_path(args)
-
-    if line_file_path is None or not line_file_path.exists():
-        addresses = (f"0x{v:X}" for v in range(vram_start, vram_end, 0x4))
-        proc = run([args.addr2line_path, "-e", args.elf_path, *addresses], capture_output=True, encoding=args.encoding)
-        addr2line_output_lines = proc.stdout.splitlines()
-    else:
-        # parse the binary line number file.
-
-        # the format is a list of u_shorts, one per line number.
-        # there should be one line number per vram address, and each vram
-        # address should be exactly 4 bytes apart, mirroring how the addr2line
-        # output is formatted
-
-        with open(line_file_path, "rb") as line_file:
-            line_data = line_file.read()
-            line_numbers = unpack(f"<{len(line_data) // 2}H", line_data)
-            compile_unit = args.asm_path.with_suffix(".c").name
-            addr2line_output_lines = list(map(lambda n : to_addr2line_format(compile_unit, n), line_numbers))
-
-    main_tu_name = None
-    prev_tu_name = None
-    prev_line_number = -1
-    function_count = 0
-    is_in_function_label = False
-    current_vram_addr = vram_start
-    annotated_asm_lines = []
-
-    for addr_index in range(0, len(addr2line_output_lines) - 1):
-        line = addr2line_output_lines[addr_index]
-
-        if line.startswith("?"):
-            current_vram_addr += 0x4
-            continue
-
-        separator_index = line.rfind(":")
-        current_line_number = int(line[separator_index+1:])
-
-        if current_line_number == prev_line_number:
-            current_vram_addr += 0x4
-            continue
-
-        vram_addr_str = f"{current_vram_addr:X}"
-
-        current_tu_name = line[0:separator_index]
-        if current_tu_name != main_tu_name and current_tu_name != prev_tu_name:
-            if main_tu_name:
-                print(f"[warn] alessatool/annotate: address at {vram_addr_str} belongs to {current_tu_name}")
-            else:
-                main_tu_name = current_tu_name
-        prev_tu_name = current_tu_name
-
-        while True:
-            if asm_line_index >= len(asm_lines):
-                raise AssertionError(
-                    f"address 0x{current_vram_addr:X} not found in asm"
-                )
-
-            asm_line = asm_lines[asm_line_index]
-
-            if line_has_vram_addr(asm_line, vram_addr_str):
-                break
-
-            should_append_asm_line = True
-            if args.tu:
-                asm_line_trimmed = asm_line.strip()
-
-                # track when we go in & out of function symbols
-                if asm_line_trimmed.startswith(FUNCTION_SYMBOL_LABEL):
-                    function_count += 1
-                    is_in_function_label = True
-                    annotated_asm_lines.append(f"{UNIQUE_TEXT_SECTION_DIRECTIVE}{function_count}")
-                    annotated_asm_lines.append("")
-                elif asm_line_trimmed.startswith(END_FUNCTION_SYMBOL_LABEL):
-                    is_in_function_label = False
-
-                # remove `nop`s
-                if not is_in_function_label and asm_line_trimmed.endswith("nop"):
-                    should_append_asm_line = False
-                
-                # remove `macro.inc` include directive
-                elif asm_line_trimmed == INCLUDE_MACRO_INC_DIRECTIVE:
-                    should_append_asm_line = False
-
-            if should_append_asm_line:
-                annotated_asm_lines.append(asm_line)
-
-            asm_line_index += 1
-
-        annotated_asm_lines.append(f"\t.loc 1 {current_line_number}")    
-        annotated_asm_lines.append(asm_line)
-        asm_line_index += 1
-
-        prev_line_number = current_line_number
-        current_vram_addr += 0x4
-    
-    while asm_line_index < len(asm_lines) - 1:
-        annotated_asm_lines.append(asm_lines[asm_line_index])
-        asm_line_index += 1
-
-    assert main_tu_name, "no valid compilation unit found"
-    annotated_asm_lines = [
-        ".section .debug",
-        ".previous",
-        ".text",
-        f".file 1 \"{main_tu_name}\"",
-        *annotated_asm_lines
-    ]
-
-    append_final_new_line(annotated_asm_lines)
-    annotated_asm_contents = "\n".join(annotated_asm_lines)
-
-    if not args.stdout and args.out_path:
-        with open(args.out_path, "w") as out_file:
-            out_file.write(annotated_asm_contents)
-        if args.verbose:
-            print(f"alessatool/annotate: wrote asm to {args.out_path}")
-    else:
-        stdout.write(annotated_asm_contents)
-
-
-def append_final_new_line(lines: list[str]):
-    if lines[-1] != "":
-        lines.append("")
-
-
-def make_asm(config_path: Path, config: dict[str, Any]):
-    """
-    Extracts assembly for each function into 'expected/asm/' subfolder.
-
-    The extraction is done following these steps:
-        1. create temporary directory in project folder
-        2. copy yaml to temporary directory
-        3. modify yaml to have c subsegments instead of asm subsegments
-        4. remove data, bss, etc., subsegments
-        5. run splat on the new config yaml
-        6. splat extracts assembly for each function into '<temp_dir>/asm/nonmatchings/'
-        7. copy '<temp_dir>/asm/nonmatchings/' to '<project_dir>/expected/asm/'
-    """
-    with tempfile.TemporaryDirectory(dir=config_path, prefix="tmp_") as tmp_dir:
-        tmp_path = Path(tmp_dir)
-
-        yaml_path = tmp_path / "config.yaml"
-        asm_path = tmp_path / "asm" / "nonmatchings"
-        dst_path = tmp_path / ".." / "expected" / "asm"
-        dst_path = dst_path.resolve().relative_to(ROOT)
-
-        if dst_path.exists():
-            print(f"expected asm dir '{dst_path}' already exists")
-            return
-
-        config = copy.deepcopy(config)
-        config["options"]["target_path"] = "../" + config["options"]["target_path"]
-        config["options"]["asm_path"] = "asm"
-        config["options"]["src_path"] = "src"
-        config["options"]["build_path"] = "build"
-        config["options"]["asset_path"] = "assets"
-        config["options"]["undefined_funcs_auto_path"] = "../" + config["options"]["undefined_funcs_auto_path"]
-        config["options"]["undefined_syms_auto_path"] = "../" + config["options"]["undefined_syms_auto_path"]
-        config["options"]["symbol_addrs_path"] = "../" + config["options"]["symbol_addrs_path"]
-        config["options"]["extensions_path"] = "../" + config["options"]["extensions_path"]
-
-        new_segments: list[Any] = []
-        segments: list[Any] = config["segments"]
-        for segment in segments:
-            if isinstance(segment, list):
-                new_segments.append(segment)
-            elif isinstance(segment, dict) and segment["name"] == "main":
-                new_subsegments: list[Any] = []
-                subsegments = cast(list[Any], segment["subsegments"])
-                for subsegment in subsegments:
-                    if isinstance(subsegment, list):
-                        if subsegment[1] == "asm":
-                            subsegment[1] = "c"
-                        new_subsegments.append(subsegment)
-                    elif isinstance(subsegment, dict):
-                        subsegment["type"] = subsegment["type"].strip(".")
-                        if subsegment["type"] == "rodata":
-                            # splat now requires rodata to be always prefixed with a dot (.)
-                            # for the rodata migration to work properly
-                            subsegment["type"] = ".rodata"
-                        new_subsegments.append(subsegment)
-                segment["subsegments"] = new_subsegments
-                new_segments.append(segment)
-        config["segments"] = new_segments
-
-        def rename_locals(base_path: Path):
-            for asm_file in base_path.rglob("*.s"):
-                data = asm_file.read_text()
-                data = re.sub(r"__local_\d+", "", data)
-                asm_file.write_text(data)
-
-        with yaml_path.open(mode="w") as yaml_file:
-            yaml.dump(config, yaml_file, default_flow_style=False)
-
-        with suppress_stdout_stderr():
-            split.main([yaml_path], modes=["all"], verbose=False)
-
-        # remove '__local_#' from asm
-        rename_locals(asm_path)
-
-        dst_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(asm_path, dst_path, dirs_exist_ok=True)
-
-        print(f"expected asm extracted to '{dst_path}'")
-
-        # make expected objs
-
-        for subseg in new_segments[1]["subsegments"]:
-            if isinstance(subseg, list) and subseg[1] == "c":
-                subseg[1] = "asm"
-                subseg[2] += ".c"
-
-        config["options"]["asm_jtbl_label_macro"] = "llabel"
-
-        with yaml_path.open(mode="w") as yaml_file:
-            yaml.dump(config, yaml_file, default_flow_style=False)
-
-        shutil.rmtree(tmp_path / "asm")
-        (tmp_path / ".splache").unlink()
-
-        with suppress_stdout_stderr():
-            split.main([yaml_path], modes=["all"], verbose=False)
-
-        # remove '__local_#' from asm
-        rename_locals(asm_path)
-
-        dst_path = dst_path.parent / "obj"
-        tmp_obj_path = tmp_path / "obj"
-        tmp_asm_dir = tmp_path / "asm"
-
-        cpp = Path("..", "..", "..", (Path("tools") / "cc" / COMPILER))
-
-        for asm_file in tmp_asm_dir.rglob("*.c.s"):
-            asm_file_rel = asm_file.relative_to(tmp_path)
-            obj_file_rel = Path("obj") / asm_file.relative_to(tmp_asm_dir).with_suffix(".o")
-            obj_file = tmp_obj_path / obj_file_rel.relative_to("obj")
-            obj_file.parent.mkdir(parents=True, exist_ok=True)
-            subprocess.run(
-                f"{cpp} -I../src -I../include -Iinclude -Iinclude/sdk/ee -I../.. '{asm_file_rel}' -o - | "
-                #f"iconv -f=UTF-8 -t=EUC-JP '{asm_file_rel}' | "
-                f"mips-linux-gnu-as -no-pad-sections -EL -march=5900 -mabi=eabi -I../include -o {obj_file_rel} {asm_file_rel}",
-                shell=True,
-                cwd=tmp_path,
-            )
-
-        shutil.copytree(tmp_obj_path, dst_path, dirs_exist_ok=True)
-
-        print(f"expected obj built to '{dst_path}'")
-
-
 def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], language: str):
     """
     Generate `objdiff.json` configuration from splat YAML config.
@@ -633,7 +355,7 @@ def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], la
     """
     segments: list[Any] = config["segments"]
 
-    tu_to_diff: list[tuple[Literal["asm", "c"], str]] = []
+    tu_to_diff: list[tuple[Literal["asmtu", "c"], str]] = []
 
     for segment in segments:
         if not (isinstance(segment, dict) and segment["name"] == "main"):
@@ -653,7 +375,7 @@ def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], la
             else:
                 raise RuntimeError("invalid subsegment type")
 
-            if subs_type in ("asm", "c"):
+            if subs_type in ("asmtu", "c"):
                 if subs_name in (
                     "crt0",
                     "main/glob",
@@ -678,7 +400,7 @@ def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], la
     units: list[dict[str, Any]] = []
 
     for tu_type, tu_name in tu_to_diff:
-        target_path = Path("expected", "obj", tu_name).with_suffix(".c.o")
+        target_path = Path("build", "expected", tu_name).with_suffix(".o")
 
         # since we only compile fully decompiled TUs, the
         # "c" type implies that the TU is complete
@@ -695,7 +417,10 @@ def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], la
             "name": tu_name,
             "target_path": str(target_path),
             "base_path": str(base_path) if base_path else None,
-            "metadata": {"progress_categories": [language]},
+            "metadata": {
+                "source_path": str(Path("..", "src", tu_name).with_suffix(".c")),
+                "progress_categories": [language]
+            },
         }
 
         if not base_path:
@@ -717,10 +442,10 @@ def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], la
 
     objdiff_json: dict[str, Any] = {
         "$schema": "https://raw.githubusercontent.com/encounter/objdiff/main/config.schema.json",
-        "custom_make": "true",
+        "custom_make": "ninja",
         "custom_args": [],
-        "build_target": False,
-        "build_base": False,
+        "build_target": True,
+        "build_base": True,
         "watch_patterns": [],
         "units": units,
         "progress_categories": progress_categories,
@@ -858,7 +583,7 @@ def main():
     cwd = Path(os.getcwd()).resolve()
     if not ROOT.samefile(cwd):
         print("ERROR: this script must be run from it's directory!")
-        exit(1)
+        sys.exit(1)
 
     compilerOptions["MWCCPS2"].value.bigAddendWorkaroundForMigratedFunctions = False
 
@@ -876,18 +601,14 @@ def main():
 
 
     if basename not in LANGUAGES:
-        supported_elfs = f"{set(f'{elf} ({lang})' for elf, lang in LANGUAGES.items())}".replace("'", "")
+        supported_elfs = f"{ {f'{elf} ({lang})' for elf, lang in LANGUAGES.items()} }".replace("'", "")
         print(f"unsupported game ELF. Supported versions are: {supported_elfs}")
-        exit(1)
+        sys.exit(1)
 
     language = LANGUAGES[basename]
 
     if args.reset:
         clean(config_dir, config)
-        return
-
-    if args.make_asm:
-        make_asm(config_dir, config)
         return
 
     if args.clean:
@@ -906,35 +627,11 @@ def main():
 
     generate_lcf()
 
-
-    # fix asset .incbin path from relative to root to relative to config dir:
-    #  e.g., change:
-    #     .incbin "config/assets/name.section.bin"
-    #  to:
-    #     .incbin "assets/name.section.bin"
-    fix_assets(asm_data_path, asset_rel_path)
-
     linker_entries = split.linker_writer.entries
 
     build_stuff(config_dir, split.config, linker_entries, language)
 
     write_permuter_settings(config_dir, src_path, language)
-
-    # # replace gp_rel assembler macro with explicit offset as the gcc used
-    # # to compile the code does not support it
-    # gp_value = split.config["options"]["gp_value"]
-    # symbol_addrs_path = Path(split.config["options"]["symbol_addrs_path"])
-    # asm_rel_path = (config_dir / asm_path).resolve().relative_to(ROOT)
-    # symbol_addrs_rel_path = (config_dir / symbol_addrs_path).resolve().relative_to(ROOT)
-    # assert asm_rel_path.is_dir(), f"{asm_rel_path} not found or not a directory"
-    # assert symbol_addrs_rel_path.is_file(), f"{symbol_addrs_rel_path} not found"
-    # fix_gp(asm_rel_path, gp_value, symbol_addrs_rel_path)
-
-    # fix linkerscript by applying explicit alignments as
-    # specified in the config yaml
-    linkerscript_path = (config_dir / f"{basename}.ld").resolve().relative_to(ROOT)
-    assert linkerscript_path.is_file(), f"{linkerscript_path} not found"
-    fix_linkerscript(split.config, linkerscript_path)
 
     generate_objdiff_configuration(config_dir, split.config, language)
 
