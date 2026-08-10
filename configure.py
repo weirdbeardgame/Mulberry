@@ -46,8 +46,7 @@ CROSS = "mips-ps2-decompals-"
 COMPILER = "mwcps2-3.0b52-030722"
 COMPILER_FLAGS = "-O3,p -sym on -str readonly -cwd source"
 
-PLATFORM = "x86_64" # @todo get this from makefile
-# PLATFORM = "macos"
+PLATFORM = sys.platform == "darwin" and "macos" or "x86_64"
 WIBO = f"{TOOLS_DIR}/wibo-{PLATFORM}"
 LCF = "SLUS_210.07.lcf"
 
