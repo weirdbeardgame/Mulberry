@@ -8,20 +8,12 @@ No game assets are hosted on this repository. You must provide them yourself, co
 
 
 ## Getting Started & Building
-Linux is required in order to build this project. It requires a compiler that is only available for Linux. You'll also need at least `python 3.8` to run any command. Your linux distribution should come with `python3` already installed. If not, please follow your distribution's instructions to install it. Python is a mandatory dependency, as many core tools are written in python. On Ubuntu, if necessary, python3 can be installed with the following command:
+Linux (x86-64) or macOS (aarch64) are required in order to build this project. You'll also need at least `python 3.8` to run any command. Your operating system should come with `python3` already installed. If not, please follow your distribution's instructions to install it. Python is a mandatory dependency, as many core tools are written in python. On Ubuntu, if necessary, python3 can be installed with the following command:
 ```bash
 sudo apt install python3-full
 ```
 
-### Add i386 architecture
-The original GCC compiler is a 32-bit executable, so on a 64-bit system the `i386` architecture must be added in order for the system to run it. On Ubuntu you can use the following commands:
-```bash
-sudo dpkg --add-architecture i386
-sudo apt update
-sudo apt install libc6:i386 libstdc++6:i386
-```
-
-### Install dependencies
+### Install dependencies (Ubuntu)
 ```bash
 sudo apt install make python3-venv
 ```
@@ -30,7 +22,7 @@ sudo apt install make python3-venv
 
 This project requires a custom PS2-specific version of binutils to assemble the extracted MIPS assembly. The system-provided `binutils-mips-linux-gnu` package may not work correctly with PS2 assembly, so manual installation is required.
 
-Download the [binutils-mips-ps2-decompals-linux-x86-64.tar.gz (v0.10)](https://github.com/decompals/binutils-mips-ps2-decompals/releases/download/v0.10/binutils-mips-ps2-decompals-linux-x86-64.tar.gz) package.
+On Linux, download the [binutils-mips-ps2-decompals-linux-x86-64.tar.gz (v0.10)](https://github.com/decompals/binutils-mips-ps2-decompals/releases/download/v0.10/binutils-mips-ps2-decompals-linux-x86-64.tar.gz) package, or on macOS aarch64 [binutils-mips-ps2-decompals-macos-arm64.tar.gz (v0.10)](https://github.com/decompals/binutils-mips-ps2-decompals/releases/latest/download/binutils-mips-ps2-decompals-macos-arm64.tar.gz).
 
 Extract the archive to a location of your choice, for example:
 
