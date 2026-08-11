@@ -1,24 +1,24 @@
 '''
-alessatool/annotate
+from alessatool/annotate (memory-of-alessa, silent hill 2+3 decompilation project)
 
 mark up assembly with line numbers.
 can also be used to create full-tu scratches in decomp.me.
-
-example:
-
-alessatool annotate \
-    --asm-path silent-hill-2/config/SLUS_202.28/asm/Effect2/hh_class_water_03.s \
-    --tu
-
-run `alessatool annotate --help` for more information.
 '''
 
 from sys import stdout, stdin
 from pathlib import Path
 from subprocess import run
 from dataclasses import dataclass
-from constants import *
-from struct import unpack
+from argparse import ArgumentParser
+
+ADDR2LINE_PATH = f"mips-ps2-decompals-addr2line"
+
+FUNCTION_SYMBOL_LABEL = "glabel"
+END_FUNCTION_SYMBOL_LABEL = "endlabel"
+SECTION_DIRECTIVE = ".section "
+TEXT_SECTION_DIRECTIVE = ".section .text"
+UNIQUE_TEXT_SECTION_DIRECTIVE = '.section .text,"ax",@progbits,unique,'
+INCLUDE_MACRO_INC_DIRECTIVE = '.include "macro.inc"'
 
 @dataclass
 class AnnotationArgs:
@@ -28,11 +28,9 @@ class AnnotationArgs:
     asm_path: Path | None
     out_path: Path
     addr2line_path: Path
-    line_file_path: Path | None
     tu: bool
     encoding: str
     stdout: bool
-    verbose: bool
 
 def annotate_asm(args: AnnotationArgs):
     if args.asm_path:
@@ -50,25 +48,9 @@ def annotate_asm(args: AnnotationArgs):
     if vram_start is None or vram_end is None:
         vram_start, vram_end = find_vram_bounds(asm_lines)
 
-    line_file_path = get_line_file_path(args)
-
-    if line_file_path is None or not line_file_path.exists():
-        addresses = (f"0x{v:X}" for v in range(vram_start, vram_end, 0x4))
-        proc = run([args.addr2line_path, "-e", args.elf_path, *addresses], capture_output=True, encoding=args.encoding)
-        addr2line_output_lines = proc.stdout.splitlines()
-    else:
-        # parse the binary line number file.
-
-        # the format is a list of u_shorts, one per line number.
-        # there should be one line number per vram address, and each vram
-        # address should be exactly 4 bytes apart, mirroring how the addr2line
-        # output is formatted
-
-        with open(line_file_path, "rb") as line_file:
-            line_data = line_file.read()
-            line_numbers = unpack(f"<{len(line_data) // 2}H", line_data)
-            compile_unit = args.asm_path.with_suffix(".c").name
-            addr2line_output_lines = list(map(lambda n : to_addr2line_format(compile_unit, n), line_numbers))
+    addresses = (f"0x{v:X}" for v in range(vram_start, vram_end, 0x4))
+    proc = run([args.addr2line_path, "-e", args.elf_path, *addresses], capture_output=True, encoding=args.encoding)
+    addr2line_output_lines = proc.stdout.splitlines()
 
     main_tu_name = None
     prev_tu_name = None
@@ -174,19 +156,9 @@ def annotate_asm(args: AnnotationArgs):
     if not args.stdout and args.out_path:
         with open(args.out_path, "w") as out_file:
             out_file.write(annotated_asm_contents)
-        if args.verbose:
-            print(f"alessatool/annotate: wrote asm to {args.out_path}")
+        print(f"alessatool/annotate: wrote asm to {args.out_path}")
     else:
         stdout.write(annotated_asm_contents)
-
-def get_line_file_path(args: AnnotationArgs):
-    if args.line_file_path is not None:
-        return args.line_file_path
-
-    if args.elf_path.name == SH2_SERIAL and args.asm_path and "Event/stage" in args.asm_path.as_posix():
-        return Path(f"{TOOLS}/alessatool/dwarf") / Path(args.asm_path.name).with_suffix(".line")
-
-    return None
 
 def to_addr2line_format(compile_unit: str, line_number: int):
     return f"{compile_unit}:{line_number}"
@@ -238,3 +210,76 @@ def line_has_vram_addr(line: str, addr_str: str) -> bool:
 def append_final_new_line(lines: list[str]):
     if lines[-1] != "":
         lines.append("")
+
+def main():
+    annotate_parser = ArgumentParser(  
+        description="alessatool/annotate: decorate asm with line numbers (memory of alessa cli utility)"
+    )
+
+    annotate_parser.add_argument(
+        "--vram-start",
+        type=lambda x: x is None and None or int(x, 0),
+        help="start of vram range",
+        default=None
+    )
+    annotate_parser.add_argument(
+        "--vram-end",
+        type=lambda x: int(x, 0),
+        help="end of vram range",
+        default=None
+    )
+    annotate_parser.add_argument(
+        "--elf-path",
+        type=Path,
+        default=Path("config/SLUS_210.07"),
+        help="path to the elf file"
+    )
+    annotate_parser.add_argument(
+        "--asm-path",
+        type=Path,
+        default=None,
+        help="path to the asm file to annotate"
+    )
+    annotate_parser.add_argument(
+        "--out-path",
+        type=Path,
+        default=Path("config/asm/decorated.s"),
+        help="path to write the annotated output"
+    )
+    annotate_parser.add_argument(
+        "--stdout",
+        action="store_true",
+        help="ignore output path, write to stdout"
+    )
+    annotate_parser.add_argument(
+        "--addr2line-path",
+        type=Path,
+        default=ADDR2LINE_PATH,
+        help="path to addr2line"
+    )
+    annotate_parser.add_argument(
+        "--line-file-path",
+        type=Path,
+        default=None,
+        help="path to file containing line numbers, packed into unsigned shorts"
+    )
+    annotate_parser.add_argument(
+        "--encoding",
+        type=str,
+        default="shift-jis"
+    )
+    annotate_parser.add_argument(
+        "--tu",
+        action="store_true",
+        help="arrange each function into its own text section"
+    )
+    annotate_parser.set_defaults(func=annotate_asm)
+
+    args = annotate_parser.parse_args()
+    if args.asm_path is None:
+        annotate_parser.print_help()
+    else:
+        annotate_asm(args)
+
+if __name__ == "__main__":
+    main()
