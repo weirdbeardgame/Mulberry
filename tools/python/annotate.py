@@ -258,12 +258,6 @@ def main():
         help="path to addr2line"
     )
     annotate_parser.add_argument(
-        "--line-file-path",
-        type=Path,
-        default=None,
-        help="path to file containing line numbers, packed into unsigned shorts"
-    )
-    annotate_parser.add_argument(
         "--encoding",
         type=str,
         default="shift-jis"
