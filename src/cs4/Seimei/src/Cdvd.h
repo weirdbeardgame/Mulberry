@@ -122,4 +122,7 @@ static LPCDVDREAD *lpCdvdRead;
 static CDVDREADST CdvdReadSt[256];
 extern unsigned int GlobalLoadTimer; // size: 0x4, address: 0x257894
 
+signed int CdvdRead(char * filename /* r4 */, signed int size /* r20 */, unsigned char * * lpBuf /* r19 */, unsigned char bSynch /* r18 */, signed int index /* r17 */, signed int filetype /* r16 */, unsigned int align /* r21 */);
+
+
 #endif // CDVD_H

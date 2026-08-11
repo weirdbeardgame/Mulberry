@@ -1,7 +1,9 @@
 #include "File.h"
+#include "Binder.h"
 #include "Cdvd.h"
 #include "Game.h"
 #include "Model.h"
+#include "My.h"
 #include "Tex.h"
 #include "Unk.h"
 #include "common.h"
@@ -11,6 +13,9 @@
 
 unsigned char ScePath[128];  // size: 0x80, address: 0x3254B0
 unsigned char RootPath[128]; // size: 0x80, address: 0x325530
+
+// Belongs in CDVD.c
+unsigned int GlobalLoadTimer;
 
 void AfterFileReadFunc(u8 *lpAddr, s32 index, s32 fileType, s32 size) {
   switch (fileType) {

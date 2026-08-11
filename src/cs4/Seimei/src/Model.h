@@ -148,4 +148,6 @@ typedef struct _mdlmng {
 
 extern MDLMNG MdlMng[770]; // size: 0x54380, address: 0x6A0E50
 
+
+void SetMdlBndFile(signed int Index /* r17 */);
 #endif // MODEL_H

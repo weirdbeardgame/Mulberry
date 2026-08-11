@@ -5,9 +5,6 @@
 #include "common.h"
 #include "sce/libcdvd.h"
 
-// Belongs in CDVD.c
-unsigned int GlobalLoadTimer;
-
 void GetAllBindInfo(char *fname /* r2 */, unsigned int *lsn /* r2 */,
                     unsigned int *size /* r2 */) {
   // Range: 0x15E2E0 -> 0x15E440

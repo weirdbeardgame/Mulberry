@@ -1,6 +1,6 @@
 #ifndef BINDER_H
 #define BINDER_H
-
+#include "typedefs.h"
 
 // Range: 0x15E440 -> 0x15E760
         // total size: 0x10
@@ -88,5 +88,10 @@ static inline unsigned int foo_fn(char* fname) {
 
 
 void GetAllBindInfo(char * fname /* r2 */, unsigned int * lsn /* r2 */, unsigned int * size /* r2 */);
+void SetAllBindInfo(void);
+unsigned int GetBindNum(LPBINDHEAD *lpBindHead /* r2 */);
+unsigned int GetBindOffsetByName(LPBINDHEAD *lpBindHead, char *fname);
+unsigned int GetBindOffsetByIndex(LPBINDHEAD *lpBindHead, u_short Index);
+void RemapBinderFile(void *lpBuf /* r2 */);
 
 #endif // BINDER_H

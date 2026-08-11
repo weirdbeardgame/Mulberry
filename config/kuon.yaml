@@ -235,7 +235,7 @@ segments:
         - [0x032110, asmtu, cs4/Seimei/src/Camera]
         - [0x034930, asmtu, cs4/Seimei/src/Debug]
         - [0x034D10, asmtu, cs4/Seimei/src/Draw]
-        - [0x038710, asmtu, cs4/Seimei/src/File]
+        - [0x038710, c, cs4/Seimei/src/File]
         - [0x038D00, asmtu, cs4/Seimei/src/Game]
         - [0x039A00, asmtu, cs4/Seimei/src/Load]
         - [0x03A380, asmtu, cs4/Seimei/src/Main]
