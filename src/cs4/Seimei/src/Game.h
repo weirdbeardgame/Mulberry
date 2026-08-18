@@ -46,11 +46,13 @@ typedef struct {
     u_char unused[2]; // offset 0x2E, size 0x2
 } GameState;
 
-extern GameState GameSt; // size: 0x30, address: 0x3A5E10
+extern GameState GameSt; // size: 0x30, address: 0x3A5E10    
+extern void * lpGameTexList; 
 
-
-int GameLoop();
+int GameLoop();    
 void InitGameData();
 void InitGameDataAfterLoad();
 void * GetGameTexList();
+static void DrawGamePause();
+
 #endif // GAME_H

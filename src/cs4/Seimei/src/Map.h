@@ -1,9 +1,8 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "typedefs.h"
+#include "common.h"
 
-// total size: 0x50
 typedef struct _PARTS {
     // Members
     sceVu0FVECTOR Pos; // offset 0x0, size 0x10
@@ -18,7 +17,11 @@ typedef struct _PARTS {
 
 int GetMdlDataIndexFromMapMdlInfo(int Type, int MdlId);
 PARTS* GetMapPartsInfoByCtrlId(int Type, int CtrlId);
- 
-int GetMdlMngIndexByCtrlId(int Type, int CtrlId);
+
+int GetMdlMngIndexByCtrlId(int Type, int CtrlId);    
+void CheckSaveEvent();
+void UpdateMapSfx();
+void UpdateMapSe();    
+void SetMapModel();
 
 #endif // MAP_H
