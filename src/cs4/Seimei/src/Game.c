@@ -5,6 +5,7 @@
 #include "EtcEvent.h"
 #include "Event.h"
 #include "Filter.h"
+#include "Font.h"
 #include "KuonMsg.h"
 #include "Main.h"
 #include "Model.h"
@@ -14,6 +15,8 @@
 #include "Unk.h"
 #include "common.h"
 #include "ee/eeregs.h"
+
+void *lpGameTexList;
 
 void InitGameData() {
   SetObjFunc();
