@@ -19,7 +19,8 @@ typedef int sceVu0IVECTOR[4] __attribute__((aligned (16)));
 typedef float sceVu0FVECTOR[4] __attribute__((aligned (16)));
 typedef float sceVu0FMATRIX[4][4] __attribute__((aligned (16)));
 
-
+#define false (u_char)0x0
+#define true (u_char)0x1
 
 typedef char s8;
 typedef short s16;

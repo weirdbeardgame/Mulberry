@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "typedefs.h"
+#include "common.h"
 
 typedef struct {
     // Members

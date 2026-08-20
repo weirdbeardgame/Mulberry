@@ -1,9 +1,15 @@
 #include "Game.h"
+#include "Camera.h"
 #include "Drama.h"
+#include "DrawOT.h"
+#include "EtcEvent.h"
 #include "Event.h"
 #include "Filter.h"
 #include "Main.h"
+#include "Model.h"
 #include "Pad.h"
+#include "TexEffect.h"
+#include "Unk.h"
 #include "common.h"
 
 void InitGameData() {

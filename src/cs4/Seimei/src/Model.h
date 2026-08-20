@@ -157,6 +157,17 @@ typedef struct _mdlmng {
     u_short blood_pool_sfx_idx; // offset 0x1BC, size 0x2
 } MDLMNG;
 
+// total size: 0x20
+typedef struct {
+    // Members
+    signed int state; // offset 0x0, size 0x4
+    unsigned int flag; // offset 0x4, size 0x4
+    unsigned int calc_total_time; // offset 0x8, size 0x4
+    unsigned int total_time; // offset 0xC, size 0x4
+    unsigned int get_time; // offset 0x10, size 0x4
+    unsigned int dmy[3]; // offset 0x14, size 0xC
+} _MNG_STATE_ST;
+
 extern MDLMNG MdlMng[770]; // size: 0x54380, address: 0x6A0E50
 
 void KickMdlPacket();
