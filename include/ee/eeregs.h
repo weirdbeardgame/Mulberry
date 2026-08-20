@@ -21,8 +21,15 @@
 #define DGET_IPU_CTRL()   (*IPU_CTRL)
 #define DGET_IPU_BP()     (*IPU_BP)
 
+#define D_CHCR_STR_M      (0x01  << 8)
+
+
 #define D_ENABLER         ((volatile u_int *)(0x1000f520))
 #define D_ENABLEW         ((volatile u_int *)(0x1000f590))
+
+#define D1_CHCR           ((volatile u_int *)(0x10009000))
+#define D2_CHCR           ((volatile u_int *)(0x1000a000))
+
 #define D3_CHCR           ((volatile u_int *)(0x1000b000))
 #define D4_CHCR           ((volatile u_int *)(0x1000b400))
 

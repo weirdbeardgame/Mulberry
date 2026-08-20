@@ -5,12 +5,15 @@
 #include "EtcEvent.h"
 #include "Event.h"
 #include "Filter.h"
+#include "KuonMsg.h"
 #include "Main.h"
 #include "Model.h"
 #include "Pad.h"
+#include "Sprite.h"
 #include "TexEffect.h"
 #include "Unk.h"
 #include "common.h"
+#include "ee/eeregs.h"
 
 void InitGameData() {
   SetObjFunc();

@@ -12,7 +12,6 @@ typedef struct _TMP_MENU_MNG_ST {
     u_char dmy[12]; // offset 0x2C, size 0xC
 } TMP_MENU_MNG_ST;
 
-extern TMP_MENU_MNG_ST g_TmpMenuMng; // size: 0x38, address: 0xA00C70
 
 extern struct /* @anon0 */ {
     // Members
@@ -208,5 +207,400 @@ typedef struct /* @anon1 */
     int ItemId; // offset 0x258, size 0x4
     float SclLimit; // offset 0x25C, size 0x4    
 } PENECTRL;
+
+typedef struct /* @anon6 */
+{
+    // Members
+    u_int EN1 : 1; // offset 0x0, size 0x4
+    u_int EN2 : 1; // offset 0x0, size 0x4
+    u_int CRTMD : 3; // offset 0x0, size 0x4
+    u_int MMOD : 1; // offset 0x0, size 0x4
+    u_int AMOD : 1; // offset 0x0, size 0x4
+    u_int SLBG : 1; // offset 0x0, size 0x4
+    u_int ALP : 8; // offset 0x0, size 0x4
+    u_int p0 : 16; // offset 0x0, size 0x4
+    u_int p1; // offset 0x4, size 0x4
+} PMODE; // offset 0x0, size 0x8
+
+typedef struct /* @anon17 */ {    
+    u_int INT : 1; // offset 0x0, size 0x4
+    u_int FFMD : 1; // offset 0x0, size 0x4    
+    u_int DPMS : 2; // offset 0x0, size 0x4    
+    u_int p0 : 28; // offset 0x0, size 0x4
+    u_int p1; // offset 0x4, size 0x4
+} SMODE2; // offset 0x8, size 0x8
+
+typedef struct /* @anon7 */ {
+    u_int FBP : 9; // offset 0x0, size 0x4
+    u_int FBW : 6; // offset 0x0, size 0x4
+    u_int PSM : 5; // offset 0x0, size 0x4
+    u_int p0 : 12; // offset 0x0, size 0x4
+    u_int DBX : 11; // offset 0x4, size 0x4
+    u_int DBY : 11; // offset 0x4, size 0x4
+    u_int p1 : 10; // offset 0x4, size 0x4    
+} DISPFB; // offset 0x10, size 0x8
+
+typedef struct /* @anon20 */
+{
+    u_int DX : 12; // offset 0x0, size 0x4
+    u_int DY : 11; // offset 0x0, size 0x4
+    u_int MAGH : 4; // offset 0x0, size 0x4
+    u_int MAGV : 2; // offset 0x0, size 0x4
+    u_int p0 : 3; // offset 0x0, size 0x4
+    u_int DW : 12; // offset 0x4, size 0x4
+    u_int DH : 11; // offset 0x4, size 0x4
+    u_int p1 : 9; // offset 0x4, size 0x4    
+} DISPLAY; // offset 0x18, size 0x8
+            
+// total size: 0x8           
+typedef struct /* @anon18 */
+{
+    // Members
+    u_int R : 8; // offset 0x0, size 0x4
+    u_int G : 8; // offset 0x0, size 0x4
+    u_int B : 8; // offset 0x0, size 0x4
+    u_int p0 : 8; // offset 0x0, size 0x4
+    u_int p1; // offset 0x4, size 0x4    
+} BG_COLOR; // offset 0x20, size 0x8
+
+typedef struct /* @anon0 */
+{    
+    PMODE pmode;
+    SMODE2 smode2;
+    DISPFB dispfb;
+    DISPLAY display;
+    BG_COLOR bgcolor;    
+} DISP; // offset 0x0, size 0x50
+        
+typedef struct /* @anon3 */
+{
+    u_long NLOOP : 15; // offset 0x0, size 0x4
+    u_long EOP : 1; // offset 0x0, size 0x4
+    u_long pad16 : 16; // offset 0x0, size 0x4
+    u_long id : 14; // offset 0x0, size 0x4
+    u_long PRE : 1; // offset 0x0, size 0x4
+    u_long PRIM : 11; // offset 0x0, size 0x4
+    u_long FLG : 2; // offset 0x0, size 0x4
+    u_long NREG : 4; // offset 0x0, size 0x4
+    u_long REGS0 : 4; // offset 0x8, size 0x4
+    u_long REGS1 : 4; // offset 0x8, size 0x4
+    u_long REGS2 : 4; // offset 0x8, size 0x4
+    u_long REGS3 : 4; // offset 0x8, size 0x4
+    u_long REGS4 : 4; // offset 0x8, size 0x4
+    u_long REGS5 : 4; // offset 0x8, size 0x4
+    u_long REGS6 : 4; // offset 0x8, size 0x4
+    u_long REGS7 : 4; // offset 0x8, size 0x4
+    u_long REGS8 : 4; // offset 0x8, size 0x4
+    u_long REGS9 : 4; // offset 0x8, size 0x4
+    u_long REGS10 : 4; // offset 0x8, size 0x4
+    u_long REGS11 : 4; // offset 0x8, size 0x4
+    u_long REGS12 : 4; // offset 0x8, size 0x4
+    u_long REGS13 : 4; // offset 0x8, size 0x4
+    u_long REGS14 : 4; // offset 0x8, size 0x4
+    u_long REGS15 : 4; // offset 0x8, size 0x4
+} GIFTAG0; // offset 0x50, size 0x10
+
+typedef struct /* @anon15 */   
+{    
+    u_long FBP : 9; // offset 0x0, size 0x4
+    u_long pad09 : 7; // offset 0x0, size 0x4
+    u_long FBW : 6; // offset 0x0, size 0x4
+    u_long pad22 : 2; // offset 0x0, size 0x4
+    u_long PSM : 6; // offset 0x0, size 0x4
+    u_long pad30 : 2; // offset 0x0, size 0x4
+    u_long FBMSK : 32; // offset 0x0, size 0x4    
+} FRAME1; // offset 0x0, size 0x8
+
+
+typedef struct /* @anon26 */ {
+    u_long ZBP : 9; // offset 0x0, size 0x4
+    u_long pad09 : 15; // offset 0x0, size 0x4
+    u_long PSM : 4; // offset 0x0, size 0x4
+    u_long pad28 : 4; // offset 0x0, size 0x4
+    u_long ZMSK : 1; // offset 0x0, size 0x4
+    u_long pad33 : 31; // offset 0x0, size 0x4    
+} ZBUF1; // offset 0x10, size 0x8
+
+
+typedef struct /* @anon22 */ 
+{
+    u_long OFX : 16; // offset 0x0, size 0x4
+    u_long pad16 : 16; // offset 0x0, size 0x4
+    u_long OFY : 16; // offset 0x0, size 0x4
+    u_long pad48 : 16; // offset 0x0, size 0x4    
+} XYOFFSET1; // offset 0x20, size 0x8
+    
+typedef struct /* @anon10 */ {
+    u_long SCAX0 : 11; // offset 0x0, size 0x4
+    u_long pad11 : 5; // offset 0x0, size 0x4
+    u_long SCAX1 : 11; // offset 0x0, size 0x4
+    u_long pad27 : 5; // offset 0x0, size 0x4
+    u_long SCAY0 : 11; // offset 0x0, size 0x4
+    u_long pad43 : 5; // offset 0x0, size 0x4
+    u_long SCAY1 : 11; // offset 0x0, size 0x4
+    u_long pad59 : 5; // offset 0x0, size 0x4    
+} SCISSOR1; // offset 0x30, size 0x8
+
+typedef struct /* @anon1 */ {
+    u_long AC : 1; // offset 0x0, size 0x4
+    u_long pad01 : 63; // offset 0x0, size 0x4    
+} PRMODECONT; // offset 0x40, size 0x8
+
+typedef struct /* @anon24 */ {
+    u_long CLAMP : 1; // offset 0x0, size 0x4
+    u_long pad01 : 63; // offset 0x0, size 0x4    
+} COL_CLAMP; // offset 0x50, size 0x8
+
+
+typedef struct /* @anon5 */
+{
+    u_long DTHE : 1; // offset 0x0, size 0x4
+    u_long pad01 : 63; // offset 0x0, size 0x4    
+} DTHE; // offset 0x60, size 0x8
+    
+typedef struct /* @anon19 */
+{
+    u_long ATE : 1; // offset 0x0, size 0x4
+    u_long ATST : 3; // offset 0x0, size 0x4
+    u_long AREF : 8; // offset 0x0, size 0x4
+    u_long AFAIL : 2; // offset 0x0, size 0x4
+    u_long DATE : 1; // offset 0x0, size 0x4
+    u_long DATM : 1; // offset 0x0, size 0x4
+    u_long ZTE : 1; // offset 0x0, size 0x4
+    u_long ZTST : 2; // offset 0x0, size 0x4
+    u_long pad19 : 45; // offset 0x0, size 0x4    
+} TEST1; // offset 0x70, size 0x8
+
+typedef struct /* @anon2 */
+{
+    FRAME1 frame1;
+    u_long frame1addr; // offset 0x8, size 0x4
+    long zbuf1addr; // offset 0x18, size 0x4
+    ZBUF1 zbuf1;
+    XYOFFSET1 xyoffset1;
+    long xyoffset1addr; // offset 0x28, size 0x4
+    SCISSOR1 scissor1;
+    long scissor1addr; // offset 0x38, size 0x4
+    PRMODECONT prmodecont;
+    long prmodecontaddr; // offset 0x48, size 0x4
+    COL_CLAMP colclamp;
+    long colclampaddr; // offset 0x58, size 0x4
+    DTHE dthe;
+    long dtheaddr; // offset 0x68, size 0x4
+    TEST1 test1;
+    long test1addr; // offset 0x78, size 0x4
+    
+} DRAW0; // offset 0x60, size 0x80
+
+typedef struct /* @anon19 */ {
+    u_long ATE : 1; // offset 0x0, size 0x4
+    u_long ATST : 3; // offset 0x0, size 0x4
+    u_long AREF : 8; // offset 0x0, size 0x4
+    u_long AFAIL : 2; // offset 0x0, size 0x4
+    u_long DATE : 1; // offset 0x0, size 0x4
+    u_long DATM : 1; // offset 0x0, size 0x4
+    u_long ZTE : 1; // offset 0x0, size 0x4
+    u_long ZTST : 2; // offset 0x0, size 0x4
+    u_long pad19 : 45; // offset 0x0, size 0x4            
+} TESTA; // offset 0x0, size 0x8
+
+            
+typedef struct /* @anon27 */
+{
+    u_long PRIM : 3; // offset 0x0, size 0x4
+    u_long IIP : 1; // offset 0x0, size 0x4
+    u_long TME : 1; // offset 0x0, size 0x4
+    u_long FGE : 1; // offset 0x0, size 0x4
+    u_long ABE : 1; // offset 0x0, size 0x4
+    u_long AA1 : 1; // offset 0x0, size 0x4
+    u_long FST : 1; // offset 0x0, size 0x4
+    u_long CTXT : 1; // offset 0x0, size 0x4
+    u_long FIX : 1; // offset 0x0, size 0x4
+    u_long pad11 : 53; // offset 0x0, size 0x4
+} PRIM; // offset 0x10, size 0x8
+ 
+typedef struct /* @anon4 */ 
+{
+    u_int R : 8; // offset 0x0, size 0x4
+    u_int G : 8; // offset 0x0, size 0x4
+    u_int B : 8; // offset 0x0, size 0x4
+    u_int A : 8; // offset 0x0, size 0x4
+    float Q; // offset 0x4, size 0x4            
+} RGBAQ; // offset 0x20, size 0x8
+
+typedef struct /* @anon23 */
+{
+    // Members
+    u_long X : 16; // offset 0x0, size 0x4
+    u_long Y : 16; // offset 0x0, size 0x4
+    u_long Z : 32; // offset 0x0, size 0x4
+} XYZ2A; // offset 0x30, size 0x8
+
+typedef struct /* @anon23 */ 
+{
+    // Members
+    u_long X : 16; // offset 0x0, size 0x4
+    u_long Y : 16; // offset 0x0, size 0x4
+    u_long Z : 32; // offset 0x0, size 0x4    
+} XYZ2B; // offset 0x40, size 0x8
+
+            
+typedef struct /* @anon19 */
+{
+    u_long ATE : 1; // offset 0x0, size 0x4
+    u_long ATST : 3; // offset 0x0, size 0x4
+    u_long AREF : 8; // offset 0x0, size 0x4
+    u_long AFAIL : 2; // offset 0x0, size 0x4
+    u_long DATE : 1; // offset 0x0, size 0x4
+    u_long DATM : 1; // offset 0x0, size 0x4
+    u_long ZTE : 1; // offset 0x0, size 0x4
+    u_long ZTST : 2; // offset 0x0, size 0x4
+    u_long pad19 : 45; // offset 0x0, size 0x4    
+} TESTB; // offset 0x50, size 0x8
+
+typedef struct /* @anon21 */
+{
+    TESTA testa;
+    long testaaddr; // offset 0x8, size 0x4
+    PRIM prim;
+    long primaddr; // offset 0x18, size 0x4
+    RGBAQ rgbaq;
+    long rgbaqaddr; // offset 0x28, size 0x4
+    XYZ2A xyz2a;
+    long xyz2aaddr; // offset 0x38, size 0x4
+    XYZ2B xyz2b;            
+    long xyz2baddr; // offset 0x48, size 0x4
+    TESTB testb;
+    long testbaddr; // offset 0x58, size 0x4        
+} CLEAR0; // offset 0xE0, size 0x60
+
+typedef struct /* @anon3 */
+{
+    u_long NLOOP : 15; // offset 0x0, size 0x4
+    u_long EOP : 1; // offset 0x0, size 0x4
+    u_long pad16 : 16; // offset 0x0, size 0x4
+    u_long id : 14; // offset 0x0, size 0x4
+    u_long PRE : 1; // offset 0x0, size 0x4
+    u_long PRIM : 11; // offset 0x0, size 0x4
+    u_long FLG : 2; // offset 0x0, size 0x4
+    u_long NREG : 4; // offset 0x0, size 0x4
+    u_long REGS0 : 4; // offset 0x8, size 0x4
+    u_long REGS1 : 4; // offset 0x8, size 0x4
+    u_long REGS2 : 4; // offset 0x8, size 0x4
+    u_long REGS3 : 4; // offset 0x8, size 0x4
+    u_long REGS4 : 4; // offset 0x8, size 0x4
+    u_long REGS5 : 4; // offset 0x8, size 0x4
+    u_long REGS6 : 4; // offset 0x8, size 0x4
+    u_long REGS7 : 4; // offset 0x8, size 0x4
+    u_long REGS8 : 4; // offset 0x8, size 0x4
+    u_long REGS9 : 4; // offset 0x8, size 0x4
+    u_long REGS10 : 4; // offset 0x8, size 0x4
+    u_long REGS11 : 4; // offset 0x8, size 0x4
+    u_long REGS12 : 4; // offset 0x8, size 0x4
+    u_long REGS13 : 4; // offset 0x8, size 0x4
+    u_long REGS14 : 4; // offset 0x8, size 0x4    
+    u_long REGS15 : 4; // offset 0x8, size 0x4    
+} GIFTAG1; // offset 0x140, size 0x10
+
+typedef struct /* @anon2 */
+{
+    FRAME1 frame1;
+    u_long frame1addr;
+    ZBUF1 zbuf1;
+    long zbuf1addr;
+    XYOFFSET1 xyoffset1;
+    long xyoffset1addr;
+    SCISSOR1 scissor1;
+    long scissor1addr;
+    PRMODECONT prmodecont;
+    long prmodecontaddr;
+    COL_CLAMP colclamp;
+    long colclampaddr;
+    DTHE dthe;
+    long dtheaddr;
+    TEST1 test1;     
+    long test1addr;      
+} DRAW1; // offset 0x150, size 0x80
+        
+// total size: 0x60        
+typedef struct /* @anon21 */ 
+{
+    TESTA testa;
+    long testaaddr;
+    PRIM prim;
+    long primaddr;
+    RGBAQ rgbaq;
+    long rgbaqaddr;
+    XYZ2A xyz2a;
+    long xyz2aaddr;
+    XYZ2B xyz2b;     
+    long xyz2baddr;
+    TESTB testb;
+    long testbaddr;
+} CLEAR1; // offset 0x1D0, size 0x60   
+
+typedef struct /* @anon25 */
+{
+    DISP disp[2];
+    GIFTAG0 giftag0;
+    DRAW0 draw0;
+    CLEAR0 clear0;
+    GIFTAG1 giftag1;
+    DRAW1 draw1;
+    CLEAR1 clear1;
+
+} DB_BUF; // offset 0x0, size 0x230
+
+// total size: 0x470
+typedef struct /* @anon8 */
+{
+    DB_BUF dbBuf;    
+    float camPos[4]; // offset 0x230, size 0x10
+    float camAng[4]; // offset 0x240, size 0x10
+    float camPosB[4]; // offset 0x250, size 0x10
+    float camAngB[4]; // offset 0x260, size 0x10
+    float vsMat[4][4]; // offset 0x270, size 0x40
+    float wsMat[4][4]; // offset 0x2B0, size 0x40
+    float wvMat[4][4]; // offset 0x2F0, size 0x40
+    float lcMat[4][4]; // offset 0x330, size 0x40
+    float wcMat[4][4]; // offset 0x370, size 0x40
+    float csMat[4][4]; // offset 0x3B0, size 0x40
+    float scrDepth; // offset 0x3F0, size 0x4
+    u_int * sprBuf[2]; // offset 0x3F4, size 0x8
+    signed int sprBufID; // offset 0x3FC, size 0x4
+    u_int DMATag; // offset 0x400, size 0x4
+    signed int ctxt; // offset 0x404, size 0x4
+    signed int dbBufID; // offset 0x408, size 0x4
+    signed int oddeven; // offset 0x40C, size 0x4
+    u_int calcTime; // offset 0x410, size 0x4
+    u_int drawTime; // offset 0x414, size 0x4
+    u_int frameTime; // offset 0x418, size 0x4
+    float fov; // offset 0x41C, size 0x4
+    signed int TotalPolyNum; // offset 0x420, size 0x4
+    signed int TotalPrimNum; // offset 0x424, size 0x4
+    float WaterLevel; // offset 0x428, size 0x4
+    u_char DrawFlag; // offset 0x42C, size 0x1
+    u_char DrawHitModel; // offset 0x42D, size 0x1
+    u_char BlurMode; // offset 0x42E, size 0x1
+    u_char BlurRate; // offset 0x42F, size 0x1
+    u_char ProjectionType; // offset 0x430, size 0x1
+    u_char unused[15]; // offset 0x431, size 0xF
+    float PlaneParam[4]; // offset 0x440, size 0x10
+    float FogParam[4]; // offset 0x450, size 0x10
+    float FogParam16[4]; // offset 0x460, size 0x10
+} DRAW_MNG; // size: 0x4, address: 0x257500
+
+typedef struct /* @anon0 */ 
+{
+    // Members
+    u_char r; // offset 0x0, size 0x1
+    u_char g; // offset 0x1, size 0x1
+    u_char b; // offset 0x2, size 0x1
+    u_char a; // offset 0x3, size 0x1
+} COLOR;
+
+extern TMP_MENU_MNG_ST g_TmpMenuMng; // size: 0x38, address: 0xA00C70
+extern u_int * lpMdlPacketMem; // size: 0x4, address: 0x2578B0
+extern DRAW_MNG *lpDrawMng;
 
 #endif // UNK_H
