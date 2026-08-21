@@ -422,13 +422,9 @@ def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], la
         is_complete = tu_type == "c"
 
         base_path = Path("build", "src", tu_name).with_suffix(".c.o")
-        # if is_complete:
-        #     # compose the build path as "build/src/path/of/tu.c.o"
-        # else:
-        #     # leave unset if the TU is not yet decompiled
-        #     base_path = None
 
-        fn_order = not tu_name.startswith("sdk/")
+        if tu_name.startswith("sdk/"):
+            continue
 
         unit: dict[str, Any] = {
             "name": tu_name,
@@ -436,7 +432,7 @@ def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], la
             "base_path": str(base_path) if base_path else None,
             "metadata": {
                 "complete": is_complete,
-                "reverse_fn_order": fn_order,
+                "reverse_fn_order": True,
                 "source_path": str(Path("..", "src", tu_name).with_suffix(".c")),
                 "progress_categories": [language],
             },
