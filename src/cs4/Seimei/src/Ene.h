@@ -198,4 +198,7 @@ struct /* @anon5 */ {
     signed int ItemId; // offset 0x48, size 0x4
 } * lpEneSave /* r21 */);
 
+    void EnePlayAll();
+    void InitEneSave();
+
 #endif // ENE_H
