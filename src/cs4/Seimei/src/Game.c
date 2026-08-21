@@ -1,4 +1,8 @@
 #include "Game.h"
+#include "lib/FsFont.h"
+#include "sfx/Sfx.h"
+#include "sfx/SfxPostEffect.h"
+#include "FrontEnd/FrontEnd_Card.h"
 #include "Camera.h"
 #include "Drama.h"
 #include "DrawOT.h"
@@ -347,7 +351,7 @@ int GameLoop() {
 
 void *GetGameTexList() { return lpGameTexList; }
 
-COLOR g_col = {127, 127, 127, 127};
+// COLOR g_col = {127, 127, 127, 127};
 
 static void DrawGamePause(void) {
   u_short *lpMsg;
@@ -370,7 +374,7 @@ static void DrawGamePause(void) {
     lpMdlPacketMem = MakeSpritePacketUseSpr((LPSP *)&SpData, lpMdlPacketMem);
 
     FontDrawBegin(0);
-    SetFontColor(g_col);
+    SetFontColor((COLOR){127, 127, 127, 127});
     FsFontSetScale(1.5f, 1.5f);
 
     if ((lpMsg = (u_short *)KnMsgMng_GetMapNameMsg()) != NULL) {

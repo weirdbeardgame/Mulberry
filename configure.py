@@ -44,7 +44,7 @@ TOOLS_DIR = ROOT / "tools"
 CROSS = "mips-ps2-decompals-"
 
 COMPILER = "mwcps2-3.0b52-030722"
-COMPILER_FLAGS = "-O3,p -sym on -str readonly -cwd source"
+COMPILER_FLAGS = "-O4,p -sym on -str readonly -cwd source -inline deferred"
 
 PLATFORM = sys.platform == "darwin" and "macos" or "x86_64"
 WIBO = f"{TOOLS_DIR}/wibo-{PLATFORM}"
