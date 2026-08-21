@@ -159,6 +159,7 @@ def build_stuff(
     game_compile_cmd, common_includes = make_compiler_cmd(config_dir, src_path, language)
 
     built_objects: set[Path] = set()
+    progress_objects: set[str] = set()
 
     def build(
         object_paths: Union[Path, list[Path]],
@@ -220,6 +221,9 @@ def build_stuff(
                     inputs=[str((Path("../src") / s.relative_to("asm")).with_suffix(".c")) for s in src_paths],
                     variables=variables,
                 )
+                progress_objects.update(transit_strs)
+            else:
+                progress_objects.update(object_strs)
 
             ninja.build(
                 outputs=expected_strs,
@@ -228,6 +232,7 @@ def build_stuff(
                 variables=variables,
                 implicit_outputs=implicit_outputs,
             )
+            progress_objects.update(expected_strs)
 
     ninja = ninja_syntax.Writer(open(str(ROOT / config_dir / "build.ninja"), "w"), width=9999)
 
@@ -287,6 +292,12 @@ def build_stuff(
         command=f"{CROSS}objcopy $in $out -O binary",
     )
 
+    ninja.rule(
+        "objdiff",
+        command="../tools/objdiff/objdiff-cli report generate -o $out -f json",
+    )
+
+
     for entry in linker_entries:
         seg = entry.segment
 
@@ -329,6 +340,17 @@ def build_stuff(
             sys.exit(1)
 
     built_object_paths = [str(obj) for obj in built_objects]
+    progress_object_paths = []
+    for obj in progress_objects:
+        if obj.startswith(("build/src/sdk/", "build/expected/src/sdk/", "build/src/data/", "build/expected/src/data/")):
+            continue
+        progress_object_paths.append(obj)
+
+    ninja.build(
+        "report.json",
+        "objdiff",
+        implicit=progress_object_paths,
+    )
 
     ninja.build(
         pre_elf_path,

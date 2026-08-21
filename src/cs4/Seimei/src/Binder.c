@@ -7,6 +7,10 @@
 
 static unsigned int AllBindDataNum; // size: 0x4, address: 0x257964
 
+static LPCDVD CdvdAllBind;
+
+static LPCDVD *lpCdvd = &CdvdAllBind;
+
 static BINDINFO AllBindInfo[3200];
 
 static inline unsigned int foo_fn(char* fname) {

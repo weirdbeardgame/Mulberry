@@ -116,10 +116,9 @@ map-mismatch:  ## Check for mismatches in mapfile
 	@python3 tools/python/map_mismatch.py --language 
 
 report:  ## Create progress report in config directory
-	@(stat config/expected/obj/ >/dev/null 2>&1 || (echo "Target objects do not exist, please run \`make make-asm\`"; false));
-	@(stat config/build/src/ >/dev/null 2>&1 || (echo "Base objects do not exist, please run \`make build\`"; false));
-	@tools/objdiff/objdiff-cli report generate -p config/ -o config/report.json -f json
-	@python3 tools/python/fix_report.py config/report.json
+	@cd config/; \
+	ninja -t clean; \
+	ninja report.json -v -j$(NUMPROC)
 	@python3 -c "import json;from pathlib import Path;report=json.loads(Path('config/report.json').read_text());print(f\"Progress: {report['measures']['fuzzy_match_percent']:.2f}%\")"
 
 clean:  ## Clean artifact in config directory
