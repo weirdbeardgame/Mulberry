@@ -178,10 +178,15 @@ def build_stuff(
         object_strs = [str(obj) for obj in object_paths]
 
         expected_strs = []
+        transit_strs = []
         for obj in object_paths:
             if obj.name.endswith(".c.o"):
                 obj = obj.with_name(obj.name.removesuffix(".c.o") + ".o")
             elif obj.name.endswith(".s.o"):
+                tr = obj.with_name(obj.name.removesuffix(".s.o") + ".c.o")
+                if tr.parts[:2] == ("build", "asm"):
+                    tr = Path("build/src") / tr.relative_to("build/asm")
+                    transit_strs.append(str(tr))
                 obj = obj.with_name(obj.name.removesuffix(".s.o") + ".o")
     
             if obj.parts[:2] == ("build", "asm"):
@@ -190,6 +195,7 @@ def build_stuff(
                 p = obj.relative_to("build/src")
             else:
                 p = obj
+            
             expected_strs.append(str(Path("build/expected") / p))
 
         for object_path in object_paths:
@@ -206,6 +212,14 @@ def build_stuff(
                 variables=variables,
                 implicit_outputs=implicit_outputs,
             )
+
+            if transit_strs:
+                ninja.build(
+                    outputs=transit_strs,
+                    rule="cc",
+                    inputs=[str((Path("../src") / s.relative_to("asm")).with_suffix(".c")) for s in src_paths],
+                    variables=variables,
+                )
 
             ninja.build(
                 outputs=expected_strs,
@@ -341,6 +355,8 @@ def build_stuff(
         implicit=[elf_path],
     )
 
+    ninja.default(elf_path + ".ok")
+
 def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], language: str):
     """
     Generate `objdiff.json` configuration from splat YAML config.
@@ -405,20 +421,24 @@ def generate_objdiff_configuration(config_path: Path, config: dict[str, Any], la
         # "c" type implies that the TU is complete
         is_complete = tu_type == "c"
 
-        if is_complete:
-            # compose the build path as "build/src/path/of/tu.c.o"
-            base_path = Path("build", "src", tu_name).with_suffix(".c.o")
-        else:
-            # leave unset if the TU is not yet decompiled
-            base_path = None
+        base_path = Path("build", "src", tu_name).with_suffix(".c.o")
+        # if is_complete:
+        #     # compose the build path as "build/src/path/of/tu.c.o"
+        # else:
+        #     # leave unset if the TU is not yet decompiled
+        #     base_path = None
+
+        fn_order = not tu_name.startswith("sdk/")
 
         unit: dict[str, Any] = {
             "name": tu_name,
             "target_path": str(target_path),
             "base_path": str(base_path) if base_path else None,
             "metadata": {
+                "complete": is_complete,
+                "reverse_fn_order": fn_order,
                 "source_path": str(Path("..", "src", tu_name).with_suffix(".c")),
-                "progress_categories": [language]
+                "progress_categories": [language],
             },
         }
 
