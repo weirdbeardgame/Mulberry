@@ -14,16 +14,17 @@ struct _ETC_EVENT_MNSG__ENE_EXT_GENE_DATA_ST {
     unsigned int dmy[3]; // offset 0x14, size 0xC
 };
 
-struct _ETC_EVENT_MNG_ST {
+typedef struct  {
     // Members
     _MNG_STATE_ST mng_state; // offset 0x0, size 0x20
     signed int DrawState; // offset 0x20, size 0x4
     unsigned char * * pEtcEventFileBuf; // offset 0x24, size 0x4
     struct _ETC_EVENT_MNSG__ENE_EXT_GENE_DATA_ST EneExtGeneEventData; // offset 0x28, size 0x20
-};
+} _ETC_EVENT_MNG_ST;
+    
+extern _ETC_EVENT_MNG_ST g_EtcEventMng;
 
-    struct _ETC_EVENT_MNG_ST g_EtcEventMng;
+int EtcEventMng_EneExtGeneEvent_Update( _ETC_EVENT_MNG_ST * pEtcEventMng /* r2 */);
+int EtcEventMng_EneExtGeneEvent_End(_ETC_EVENT_MNG_ST * pEtcEventMng /* r2 */);
 
-    int EtcEventMng_EneExtGeneEvent_Update(struct _ETC_EVENT_MNG_ST * pEtcEventMng /* r2 */);
-    int EtcEventMng_EneExtGeneEvent_End(struct _ETC_EVENT_MNG_ST * pEtcEventMng /* r2 */);
 #endif // ETC_EVENT_H

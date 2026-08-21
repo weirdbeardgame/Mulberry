@@ -22,8 +22,8 @@ extern struct /* @anon0 */ {
     unsigned short cam_id; // offset 0x6, size 0x2
 }* lpSceneLoad; // size: 0x4, address: 0x257530
 
-static float VZ[4]; // size: 0x10, address: 0x228720
-static float VW[4]; // size: 0x10, address: 0x228730
+extern float VZ[4]; // size: 0x10, address: 0x228720
+extern float VW[4]; // size: 0x10, address: 0x228730
 
 typedef enum /* @enum */ {
     HSYN_PORT_SQBGM = 0,
