@@ -25,4 +25,11 @@ f32 atan2f(f32, f32);
 
 #define BSS __attribute__ ((section (".bss")))
 
+#ifndef INCLUDE_ASM
+#define INCLUDE_ASM(FOLDER, NAME)
+#endif
+#ifndef INCLUDE_RODATA
+#define INCLUDE_RODATA(FOLDER, NAME)
+#endif
+
 #endif /* COMMON_H */
