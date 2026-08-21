@@ -3,14 +3,6 @@
 
 #include "Model.h"
 
-typedef struct _TMP_MENU_MNG_ST {
-    // Members
-    _MNG_STATE_ST mng_state; // offset 0x0, size 0x20
-    int DrawState; // offset 0x20, size 0x4
-    u_char** pTmpMenuFileBuf; // offset 0x24, size 0x4
-    float draw_up_rate; // offset 0x28, size 0x4
-    u_char dmy[12]; // offset 0x2C, size 0xC
-} TMP_MENU_MNG_ST;
 
 
 extern struct /* @anon0 */ {
@@ -51,12 +43,6 @@ typedef enum /* @enum */ {
     SND_SQSONG_FADE_IN = 2,
     SND_SQSONG_FADE_STATE_QUO = 3,
 } FADE;
-
-typedef enum {
-    TMP_MENU__UDDRAW_ORDER__ON = 0,
-    TMP_MENU__UDDRAW_ORDER__OFF = 1,
-    TMP_MENU__UDDRAW_ORDER__OFF_FORCE = 2,
-} _TMP_MENU__UDDRAW_ORDER_EN;
 
 // Members
 // total size: 0x1A0
@@ -599,7 +585,6 @@ typedef struct /* @anon0 */
     u_char a; // offset 0x3, size 0x1
 } COLOR;
 
-extern TMP_MENU_MNG_ST g_TmpMenuMng; // size: 0x38, address: 0xA00C70
 extern u_int * lpMdlPacketMem; // size: 0x4, address: 0x2578B0
 extern DRAW_MNG *lpDrawMng;
 

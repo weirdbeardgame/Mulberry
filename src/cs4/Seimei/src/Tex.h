@@ -52,7 +52,7 @@ typedef struct /* @anon25 */
 } TEX1; // offset 0xD8, size 0x8
 
 
-// * GetTexMngByName(void * lpTexList /* r18 */, char * texname /* r17 */);
+void ReadTexList(char * filename /* r2 */, void * * lplpBuf /* r2 */, signed int filetype /* r2 */, signed int index /* r2 */);
 
 
 #endif // TEX_H

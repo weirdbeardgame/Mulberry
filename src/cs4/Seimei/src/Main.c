@@ -14,6 +14,7 @@
 #include "String.h"
 #include "TexEffect.h"
 #include "Title.h"
+#include "TmpMenu.h"
 #include "Unk.h"
 #include "common.h"
 #include "ee/eekernel.h"
@@ -27,8 +28,6 @@ int GoToTitleFlag;
 
 sceVu0FVECTOR V0;
 GameState GameSt;
-
-extern TMP_MENU_MNG_ST g_TmpMenuMng;
 
 void SetGoToEndingFade(void) {
   SetFadeMng(1, (sceVu0IVECTOR){0}, 30, NULL, SetGoToEndingFlag, 0, 0);

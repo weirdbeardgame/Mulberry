@@ -1,7 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "typedefs.h"
+#include "common.h"
 
 typedef struct /* @anon17 */
 {        

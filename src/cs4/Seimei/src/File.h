@@ -10,5 +10,12 @@ void InitFileSystem();
 void ReadRootPath();
 unsigned char * GetRootPath();
 void AfterFileReadFunc(u8 *lpAddr, s32 index, s32 fileType, s32 size);
+int FileCheckAsyncBusy(void);
+void FileBackReadControl();
+void FileReadControl(int bDraw);
+int FileRead(char *filename /* r2 */, signed int size /* r2 */,
+                    u_char **lpBuf /* r2 */,
+                    u_char bSynch /* r2 */, int index /* r2 */,
+                    int filetype /* r2 */, u_int align /* r2 */);
 
 #endif // FILE_H

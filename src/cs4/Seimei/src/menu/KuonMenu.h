@@ -21,4 +21,8 @@ enum _KUON_MENU__RELOAD_FLAG_EN {
     KUON_MENU_RELOAD_FLAG_TITLE = -32768,
 };
 
+int KnMenuMng_Update(int call_check /* r16 */);
+int KnMenuMng_Draw();
+int KnMenuMng_Crean();
+
 #endif // KUONMENU_H
