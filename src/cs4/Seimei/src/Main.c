@@ -26,7 +26,6 @@ int gTime;
 int GoToEndingFlag;
 int GoToTitleFlag;
 
-sceVu0FVECTOR V0;
 GameState GameSt;
 
 void SetGoToEndingFade(void) {
