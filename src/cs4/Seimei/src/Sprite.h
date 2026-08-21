@@ -18,9 +18,9 @@ typedef struct /* @anon0 */
         float st[4][4]; // offset 0x90, size 0x40        
     };        
     
-    TEX0 tex0;        
-    TEX1 tex1;
-    TEST test;
+    sceGsTex0 tex0;        
+    sceGsTex1 tex1;
+    sceGsTest test;
 } SPDATA;
 
 typedef struct /* @anon10 */ {
@@ -38,9 +38,9 @@ typedef struct /* @anon10 */ {
         float st[4][4]; // offset 0x90, size 0x40
     };
 
-    TEX0 tex0;
-    TEX1 tex1;
-    TEST test;
+    sceGsTex0 tex0;
+    sceGsTex1 tex1;
+    sceGsTest test;
 } LPSP;
 
 

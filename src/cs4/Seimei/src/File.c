@@ -17,6 +17,43 @@ unsigned char ScePath[128];  // size: 0x80, address: 0x3254B0
 // Belongs in CDVD.c
 unsigned int GlobalLoadTimer;
 
+void InitFileSystem() {
+  /* anonymous block */
+  // Range: 0x138C20 -> 0x138C78
+
+  sceSifInitRpc(0);
+  sceSifInitIopHeap();
+  sceSifLoadFileReset();
+  sceFsReset();
+  while (!sceCdInit(0)) {
+  }
+  sceCdMmode(2);
+}
+
+void ReadRootPath() {
+  memset(RootPath, 0, 0x80);
+  memset(ScePath, 0, 0x80);
+  sprintf((char *)RootPath, "cdrom0:\\");
+  sprintf((char *)ScePath, "cdrom0:\\");
+}
+
+unsigned char *GetRootPath() { return RootPath; }
+
+void InitFileRead(void) { InitCdvdRead(); }
+
+signed int FileRead(char *filename /* r2 */, signed int size /* r2 */,
+                    unsigned char **lpBuf /* r2 */,
+                    unsigned char bSynch /* r2 */, signed int index /* r2 */,
+                    signed int filetype /* r2 */, unsigned int align /* r2 */) {
+  return CdvdRead(filename, size, lpBuf, bSynch, index, filetype, align);
+}
+
+void FileReadControl(int bDraw) { CdvdAsyncProc(bDraw); }
+
+void FileBackReadControl(void) { CdvdBackReadProc(); }
+
+int FileCheckAsyncBusy(void) { return CdvdCheckAsyncBusy(); }
+
 void AfterFileReadFunc(u8 *lpAddr, s32 index, s32 fileType, s32 size) {
   switch (fileType) {
   case 0x0:
@@ -61,8 +98,7 @@ void AfterFileReadFunc(u8 *lpAddr, s32 index, s32 fileType, s32 size) {
   case 0x7:
     RemapMdlLink(lpAddr);
     SetTexList(lpAddr, 2);
-    FsFontSetTexBuf(2,
-                    GetTexMngByName(GetGameTexList(), "iconfont.tm2")->lpTm2);
+    FsFontSetTexBuf(2, GetTexMngByName(GetGameTexList(), "iconfont.tm2")->lpTm2);
     ItemMng_CallBack_FinishLoadFile_ItemList();
     break;
 
@@ -192,41 +228,4 @@ void AfterFileReadFunc(u8 *lpAddr, s32 index, s32 fileType, s32 size) {
     break;
   }
   return;
-}
-
-int FileCheckAsyncBusy(void) { return CdvdCheckAsyncBusy(); }
-
-void FileBackReadControl(void) { CdvdBackReadProc(); }
-
-void FileReadControl(int bDraw) { CdvdAsyncProc(bDraw); }
-
-signed int FileRead(char *filename /* r2 */, signed int size /* r2 */,
-                    unsigned char **lpBuf /* r2 */,
-                    unsigned char bSynch /* r2 */, signed int index /* r2 */,
-                    signed int filetype /* r2 */, unsigned int align /* r2 */) {
-  return CdvdRead(filename, size, lpBuf, bSynch, index, filetype, align);
-}
-
-void InitFileRead(void) { InitCdvdRead(); }
-
-unsigned char *GetRootPath() { return RootPath; }
-
-void ReadRootPath() {
-  memset(RootPath, 0, 0x80);
-  memset(ScePath, 0, 0x80);
-  sprintf((char *)RootPath, "cdrom0:\\");
-  sprintf((char *)ScePath, "cdrom0:\\");
-}
-
-void InitFileSystem() {
-  /* anonymous block */
-  // Range: 0x138C20 -> 0x138C78
-
-  sceSifInitRpc(0);
-  sceSifInitIopHeap();
-  sceSifLoadFileReset();
-  sceFsReset();
-  while (!sceCdInit(0)) {
-  }
-  sceCdMmode(2);
 }
