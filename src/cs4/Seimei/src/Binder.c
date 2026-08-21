@@ -48,23 +48,71 @@ static inline unsigned int foo_fn(char* fname) {
     return hash;
 }
 
-void GetAllBindInfo(char *fname /* r2 */, unsigned int *lsn /* r2 */,
-                    unsigned int *size /* r2 */) {
-  // Range: 0x15E2E0 -> 0x15E440
-  unsigned int hash = 0; // r7
-  signed int i = 0;      // r9
 
-  hash = foo_fn(fname);
+void ReadBinderFile(char *filename /* r2 */, void **lplpBuf /* r5 */,
+                    signed int dataindex /* r2 */,
+                    signed int filetype /* r2 */) {
+  FileRead(filename, -1, (u_char **)lplpBuf, 0, dataindex, filetype, 0);
+}
 
-  *lsn = 0x0;
-  *size = 0x0;
-  for (i = 0; i < AllBindDataNum; i++) {
-    if (hash == AllBindInfo[i].hash) {
-      *lsn = AllBindInfo[i].lsn;
-      *size = AllBindInfo[i].size;
-      break;
+void RemapBinderFile(void *lpBuf /* r2 */) {
+  u_int i;                // r6
+  LPBINDHEAD *lpBindHead; // r2
+  SHORT_OFFSET *lpOffset; // r5
+
+  if (lpBuf == NULL) {
+    return;
+  }
+
+  lpBindHead = lpBuf;
+  lpOffset = (SHORT_OFFSET *)(lpBindHead + 1);
+
+  for (i = 0; i < lpBindHead->filenum; i++) {
+    lpOffset[i].dataoffset += (u_int)lpBuf;
+    lpOffset[i].nameoffset += (u_int)lpBuf;
+  }
+}
+
+unsigned int GetBindOffsetByIndex(LPBINDHEAD *lpBindHead, u_short Index) {
+  unsigned int i;         // r17
+  SHORT_OFFSET *lpOffset; // r16
+
+  if (lpBindHead == NULL) {
+    return 0;
+  }
+
+  lpOffset = (SHORT_OFFSET *)(lpBindHead + 1);
+
+  for (i = 0; i < lpBindHead->filenum; i++, lpOffset++) {
+    if (lpOffset->fileID == Index) {
+      return lpOffset->dataoffset;
     }
   }
+  return 0;
+}
+
+unsigned int GetBindOffsetByName(LPBINDHEAD *lpBindHead, char *fname) {
+  unsigned int i;         // r17
+  SHORT_OFFSET *lpOffset; // r16
+
+  if (lpBindHead == NULL) {
+    return 0;
+  }
+
+  lpOffset = (SHORT_OFFSET *)(lpBindHead + 1);
+
+  for (i = 0; i < lpBindHead->filenum; i++, lpOffset++) {
+    if (strcmp((char *)lpOffset->nameoffset, fname) == 0) {
+      return lpOffset->dataoffset;
+    }
+  }
+
+  return 0;
+}
+
+unsigned int GetBindNum(LPBINDHEAD *lpBindHead /* r2 */) {
+
+  return lpBindHead->filenum;
 }
 
 void SetAllBindInfo(void) {
@@ -119,68 +167,28 @@ void SetAllBindInfo(void) {
   MemFree(lpCdvd->lpDmyData);
 }
 
-unsigned int GetBindNum(LPBINDHEAD *lpBindHead /* r2 */) {
+void GetAllBindInfo(char *fname /* r2 */, unsigned int *lsn /* r2 */,
+                    unsigned int *size /* r2 */) {
+  // Range: 0x15E2E0 -> 0x15E440
+  unsigned int hash = 0; // r7
+  signed int i = 0;      // r9
 
-  return lpBindHead->filenum;
-}
+  hash = foo_fn(fname);
 
-unsigned int GetBindOffsetByName(LPBINDHEAD *lpBindHead, char *fname) {
-  unsigned int i;         // r17
-  SHORT_OFFSET *lpOffset; // r16
-
-  if (lpBindHead == NULL) {
-    return 0;
-  }
-
-  lpOffset = (SHORT_OFFSET *)(lpBindHead + 1);
-
-  for (i = 0; i < lpBindHead->filenum; i++, lpOffset++) {
-    if (strcmp((char *)lpOffset->nameoffset, fname) == 0) {
-      return lpOffset->dataoffset;
+  *lsn = 0x0;
+  *size = 0x0;
+  for (i = 0; i < AllBindDataNum; i++) {
+    if (hash == AllBindInfo[i].hash) {
+      *lsn = AllBindInfo[i].lsn;
+      *size = AllBindInfo[i].size;
+      break;
     }
   }
-
-  return 0;
 }
 
-unsigned int GetBindOffsetByIndex(LPBINDHEAD *lpBindHead, u_short Index) {
-  unsigned int i;         // r17
-  SHORT_OFFSET *lpOffset; // r16
 
-  if (lpBindHead == NULL) {
-    return 0;
-  }
 
-  lpOffset = (SHORT_OFFSET *)(lpBindHead + 1);
 
-  for (i = 0; i < lpBindHead->filenum; i++, lpOffset++) {
-    if (lpOffset->fileID == Index) {
-      return lpOffset->dataoffset;
-    }
-  }
-  return 0;
-}
 
-void RemapBinderFile(void *lpBuf /* r2 */) {
-  u_int i;                // r6
-  LPBINDHEAD *lpBindHead; // r2
-  SHORT_OFFSET *lpOffset; // r5
 
-  if (lpBuf == NULL) {
-    return;
-  }
 
-  lpBindHead = lpBuf;
-  lpOffset = (SHORT_OFFSET *)(lpBindHead + 1);
-
-  for (i = 0; i < lpBindHead->filenum; i++) {
-    lpOffset[i].dataoffset += (u_int)lpBuf;
-    lpOffset[i].nameoffset += (u_int)lpBuf;
-  }
-}
-
-void ReadBinderFile(char *filename /* r2 */, void **lplpBuf /* r5 */,
-                    signed int dataindex /* r2 */,
-                    signed int filetype /* r2 */) {
-  FileRead(filename, -1, (u_char **)lplpBuf, 0, dataindex, filetype, 0);
-}
