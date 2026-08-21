@@ -1,4 +1,5 @@
 #include "common.h"
+#include "MathUtil.h"
 
 #define REVOLUTIONS(angle) (TWO_PI * (int) ((PI + angle) / TWO_PI))
 
