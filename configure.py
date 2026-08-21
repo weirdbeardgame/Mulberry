@@ -244,8 +244,6 @@ def build_stuff(
     ld = Path("..", (Path("tools") / "cc" / COMPILER / "mwldps2.exe"))
     cpp = Path("tools") / "cc" / COMPILER / "mwccps2.exe"
 
-    print({cpp})
-
     ninja.rule(
         "as",
         description="as $in",
@@ -294,7 +292,7 @@ def build_stuff(
 
     ninja.rule(
         "objdiff",
-        command="../tools/objdiff/objdiff-cli report generate -o $out -f json",
+        command="../tools/objdiff/objdiff-cli report generate -o $out -f json-pretty",
     )
 
 
@@ -342,7 +340,7 @@ def build_stuff(
     built_object_paths = [str(obj) for obj in built_objects]
     progress_object_paths = []
     for obj in progress_objects:
-        if obj.startswith(("build/src/sdk/", "build/expected/src/sdk/", "build/src/data/", "build/expected/src/data/")):
+        if obj.startswith(("build/src/sdk/", "build/expected/sdk/", "build/src/data/", "build/expected/src/data/")):
             continue
         progress_object_paths.append(obj)
 

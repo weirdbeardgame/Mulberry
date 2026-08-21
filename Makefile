@@ -119,7 +119,7 @@ report:  ## Create progress report in config directory
 	@cd config/; \
 	ninja -t clean; \
 	ninja report.json -v -j$(NUMPROC)
-	@python3 -c "import json;from pathlib import Path;report=json.loads(Path('config/report.json').read_text());print(f\"Progress: {report['measures']['fuzzy_match_percent']:.2f}%\")"
+	@python3 -c "import json;from pathlib import Path;report=json.loads(Path('config/report.json').read_text());print(f\"Progress: {report['measures']['matched_code_percent']:.2f}% ({report['measures']['fuzzy_match_percent']:.2f}% Fuzzy)\")"
 
 clean:  ## Clean artifact in config directory
 	@cd config/; \
