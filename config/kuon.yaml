@@ -848,7 +848,7 @@ segments:
         - { vram: 0x003254B0, type: .bss, name: cs4/Seimei/src/File}
         - { vram: 0x003255B0, type: .bss, name: cs4/Seimei/src/Load}
         - { vram: 0x003A5E10, type: .bss, name: cs4/Seimei/src/Main}
-        # - { vram: 0x003A5E40, type: .bss, name: cs4/Seimei/src/Model} # maybe MathUtil?
+        - { vram: 0x003A5E40, type: .bss, name: cs4/Seimei/src/MathUtil}
         - { vram: 0x003A5E50, type: .bss, name: cs4/Seimei/src/Model}
         - { vram: 0x006F51D0, type: .bss, name: cs4/Seimei/src/Pad}
         - { vram: 0x006F5390, type: .bss, name: cs4/Seimei/src/Sprite}

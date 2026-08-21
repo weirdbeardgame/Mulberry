@@ -18,10 +18,15 @@
 #define ARRAY_COUNT(arr) (s32)(sizeof(arr) / sizeof(arr[0]))
 #define ARRAY_COUNTU(arr) (u32)(sizeof(arr) / sizeof(arr[0]))
 
-// #define PI 3.1415928f
+#define PI 3.1415927f
+#define HALF_PI 1.5707964f
+#define TWO_PI 6.2831855f
 
-f32 cosf(f32);
-f32 atan2f(f32, f32);
+float atan2f(float, float);
+float atanf(float);
+float cosf(float);
+float sinf(float);
+float sqrtf(float);
 
 #define BSS __attribute__ ((section (".bss")))
 
