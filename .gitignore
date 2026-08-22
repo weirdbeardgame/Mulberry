@@ -5,7 +5,6 @@ assets/
 asm/
 .ninja_log
 .splache
-report.json
 build.ninja
 permuter_settings.toml
 Makefile.custom
