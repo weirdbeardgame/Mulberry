@@ -1,13 +1,13 @@
 #include "common.h"
 #include "Memory.h"
 
-allocmng AllocMng[2048];
 u_int LastAddr;
 u_int UseMemSize;
 u_int MaxHeapSize;
 
 int _stack_size;
 int _end;
+allocmng AllocMng[2048];
 
 inline int MemGetHeapSize()
 {   

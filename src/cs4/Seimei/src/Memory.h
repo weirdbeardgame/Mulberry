@@ -16,15 +16,14 @@ typedef struct _allocmng {
 } allocmng;
 
 static int FixMemEndIndex; // size: 0x4, address: 0x257940
-
-extern allocmng AllocMng[2048]; // size: 0xE000, address: 0x784BC0
-
 extern u_int LastAddr; // size: 0x4, address: 0x257944
+
 extern u_int UseMemSize; // size: 0x4, address: 0x25794C
 extern u_int MaxHeapSize; // size: 0x4, address: 0x257948
 
 __declspec(data) extern int _stack_size; // size: 0x4, address: 0x100000
 __declspec(data) extern int _end; // size: 0x4, address: 0xA63380
+extern allocmng AllocMng[2048]; // size: 0xE000, address: 0x784BC0
 
 
 
