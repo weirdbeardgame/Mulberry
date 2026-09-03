@@ -1,21 +1,21 @@
 {
   "measures": {
-    "fuzzy_match_percent": 1.1858957,
+    "fuzzy_match_percent": 1.3313618,
     "total_code": "956924",
-    "matched_code": "10556",
-    "matched_code_percent": 1.1031178,
+    "matched_code": "11948",
+    "matched_code_percent": 1.248584,
     "total_data": "8579152",
-    "matched_data": "453732",
-    "matched_data_percent": 5.2887745,
+    "matched_data": "511092",
+    "matched_data_percent": 5.957372,
     "total_functions": 2901,
-    "matched_functions": 49,
-    "matched_functions_percent": 1.6890727,
-    "complete_code": "6052",
-    "complete_code_percent": 0.63244313,
-    "complete_data": "5140",
-    "complete_data_percent": 0.05991268,
+    "matched_functions": 56,
+    "matched_functions_percent": 1.9303689,
+    "complete_code": "8980",
+    "complete_code_percent": 0.9384235,
+    "complete_data": "511200",
+    "complete_data_percent": 5.958631,
     "total_units": 215,
-    "complete_units": 3
+    "complete_units": 5
   },
   "units": [
     {
@@ -2791,29 +2791,45 @@
     {
       "name": "cs4/Seimei/src/Memory",
       "measures": {
+        "fuzzy_match_percent": 100.0,
         "total_code": "1392",
+        "matched_code": "1392",
+        "matched_code_percent": 100.0,
         "total_data": "57360",
+        "matched_data": "57360",
+        "matched_data_percent": 100.0,
         "total_functions": 7,
-        "total_units": 1
+        "matched_functions": 7,
+        "matched_functions_percent": 100.0,
+        "complete_code": "1392",
+        "complete_code_percent": 100.0,
+        "complete_data": "57360",
+        "complete_data_percent": 100.0,
+        "total_units": 1,
+        "complete_units": 1
       },
       "sections": [
         {
           "name": ".text",
           "size": "1424",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": ".data",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": ".bss",
           "size": "57344",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": ".sbss",
           "size": "16",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         }
       ],
@@ -2821,41 +2837,48 @@
         {
           "name": "FreeMemory",
           "size": "448",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "AllocateMemory",
           "size": "544",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "SetFixMemoryEndIndex",
           "size": "20",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "MemFree",
           "size": "44",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "MemAllocAlignReal",
           "size": "60",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "MemAllocReal",
           "size": "68",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "MemInit",
           "size": "208",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         }
       ],
       "metadata": {
-        "complete": false,
+        "complete": true,
         "source_path": "../src/cs4/Seimei/src/Memory.c",
         "progress_categories": [
           ""
@@ -4231,7 +4254,12 @@
         "total_functions": 7,
         "matched_functions": 6,
         "matched_functions_percent": 85.71429,
-        "total_units": 1
+        "complete_code": "1536",
+        "complete_code_percent": 100.0,
+        "complete_data": "448700",
+        "complete_data_percent": 100.0,
+        "total_units": 1,
+        "complete_units": 1
       },
       "sections": [
         {
@@ -4316,7 +4344,7 @@
         }
       ],
       "metadata": {
-        "complete": false,
+        "complete": true,
         "source_path": "../src/cs4/Seimei/src/Binder.c",
         "progress_categories": [
           ""
@@ -22974,22 +23002,22 @@
     {
       "name": "Kuon",
       "measures": {
-        "fuzzy_match_percent": 1.1858957,
+        "fuzzy_match_percent": 1.3313618,
         "total_code": "956924",
-        "matched_code": "10556",
-        "matched_code_percent": 1.1031178,
+        "matched_code": "11948",
+        "matched_code_percent": 1.248584,
         "total_data": "8579152",
-        "matched_data": "453732",
-        "matched_data_percent": 5.2887745,
+        "matched_data": "511092",
+        "matched_data_percent": 5.957372,
         "total_functions": 2901,
-        "matched_functions": 49,
-        "matched_functions_percent": 1.6890727,
-        "complete_code": "6052",
-        "complete_code_percent": 0.63244313,
-        "complete_data": "5140",
-        "complete_data_percent": 0.05991268,
+        "matched_functions": 56,
+        "matched_functions_percent": 1.9303689,
+        "complete_code": "8980",
+        "complete_code_percent": 0.9384235,
+        "complete_data": "511200",
+        "complete_data_percent": 5.958631,
         "total_units": 215,
-        "complete_units": 3
+        "complete_units": 5
       }
     }
   ]
