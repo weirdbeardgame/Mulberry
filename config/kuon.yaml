@@ -269,7 +269,7 @@ segments:
         - [0x059C60, asmtu, cs4/Seimei/src/Dss]
         - [0x05ACB0, asmtu, cs4/Seimei/src/Damage]
         - [0x05B3B0, asmtu, cs4/Seimei/src/Hmd]
-        - [0x05E360, c, cs4/Seimei/src/Binder]
+        - [0x05E360, asmtu, cs4/Seimei/src/Binder]
         - [0x05E980, asmtu, cs4/Seimei/src/Ene]
         - [0x060DF0, asmtu, cs4/Seimei/src/EneAct]
         - [0x062F40, asmtu, cs4/Seimei/src/EneThk]

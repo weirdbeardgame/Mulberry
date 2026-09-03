@@ -15,7 +15,6 @@ typedef struct _allocmng {
     char * lpfuncname; // offset 0x18, size 0x4
 } allocmng;
 
-static int FixMemEndIndex; // size: 0x4, address: 0x257940
 extern u_int LastAddr; // size: 0x4, address: 0x257944
 
 extern u_int UseMemSize; // size: 0x4, address: 0x25794C
