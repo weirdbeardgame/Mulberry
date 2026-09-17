@@ -14,7 +14,6 @@
 unsigned char RootPath[128]; // size: 0x80, address: 0x325530
 unsigned char ScePath[128];  // size: 0x80, address: 0x3254B0
 
-// Belongs in CDVD.c
 unsigned int GlobalLoadTimer;
 
 void InitFileSystem() {

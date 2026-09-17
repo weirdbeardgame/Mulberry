@@ -1,6 +1,7 @@
 #ifndef CDVD_H
 #define CDVD_H
-
+#include "common.h"
+#define SECTOR_SIZE (2048)
 
 typedef struct /* @anon4 */ {
     // Members
@@ -116,8 +117,17 @@ typedef struct /* @anon3 */ {
 } LPCDVD; // size: 0x4, address: 0x257528
 
 extern unsigned int GlobalLoadTimer; // size: 0x4, address: 0x257894
+static CDVDREADST CdvdReadSt[256];
+static LPSETCDVD* lpSetCdvd = (LPSETCDVD* )CdvdReadSt;
+static LPLASTCDVD* lpLastCdvd = (LPLASTCDVD* )CdvdReadSt;
+static LPCDVDREAD* lpCdvdRead = (LPCDVDREAD* )CdvdReadSt;
 
-signed int CdvdRead(char * filename /* r4 */, signed int size /* r20 */, unsigned char * * lpBuf /* r19 */, unsigned char bSynch /* r18 */, signed int index /* r17 */, signed int filetype /* r16 */, unsigned int align /* r21 */);
-
+void InitCdvdRead(void);
+void MakeCdvdReadPath(s8* full, s8* root, s8* fname);
+void MakeCdvdSearchPath(s8* full, s8* fname);
+int CdvdRead(char * filename, int size, u_char * * lpBuf, u_char bSynch, int index, int filetype, u_int align);
+u_int CdvdAsyncProc(int bDraw);
+void CdvdBackReadProc(void);
+int CdvdCheckAsyncBusy(void);
 
 #endif // CDVD_H
