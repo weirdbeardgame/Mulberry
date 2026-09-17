@@ -1,21 +1,21 @@
 {
   "measures": {
-    "fuzzy_match_percent": 1.3765064,
+    "fuzzy_match_percent": 1.5786248,
     "total_code": "956924",
-    "matched_code": "12380",
-    "matched_code_percent": 1.2937287,
+    "matched_code": "14132",
+    "matched_code_percent": 1.4768152,
     "total_data": "8579152",
-    "matched_data": "511092",
-    "matched_data_percent": 5.957372,
+    "matched_data": "596084",
+    "matched_data_percent": 6.9480524,
     "total_functions": 2901,
-    "matched_functions": 60,
-    "matched_functions_percent": 2.0682523,
-    "complete_code": "7444",
-    "complete_code_percent": 0.7779092,
-    "complete_data": "62500",
-    "complete_data_percent": 0.7285102,
+    "matched_functions": 67,
+    "matched_functions_percent": 2.3095484,
+    "complete_code": "7876",
+    "complete_code_percent": 0.8230539,
+    "complete_data": "62532",
+    "complete_data_percent": 0.7288832,
     "total_units": 215,
-    "complete_units": 4
+    "complete_units": 5
   },
   "units": [
     {
@@ -4284,7 +4284,7 @@
         {
           "name": ".sdata",
           "size": "8",
-          "fuzzy_match_percent": 66.66667,
+          "fuzzy_match_percent": 31.25,
           "metadata": {}
         },
         {
@@ -8183,15 +8183,23 @@
     {
       "name": "cs4/Seimei/src/Cdvd",
       "measures": {
+        "fuzzy_match_percent": 99.287476,
         "total_code": "1948",
+        "matched_code": "1752",
+        "matched_code_percent": 89.93839,
         "total_data": "85120",
+        "matched_data": "84992",
+        "matched_data_percent": 99.849625,
         "total_functions": 8,
+        "matched_functions": 7,
+        "matched_functions_percent": 87.5,
         "total_units": 1
       },
       "sections": [
         {
           "name": ".text",
           "size": "2000",
+          "fuzzy_match_percent": 99.287476,
           "metadata": {}
         },
         {
@@ -8201,16 +8209,19 @@
         {
           "name": ".bss",
           "size": "84992",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": ".rodata",
           "size": "112",
+          "fuzzy_match_percent": 11.363636,
           "metadata": {}
         },
         {
           "name": ".sdata",
           "size": "16",
+          "fuzzy_match_percent": 75.0,
           "metadata": {}
         }
       ],
@@ -8218,41 +8229,49 @@
         {
           "name": "CdvdCheckAsyncBusy",
           "size": "16",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "CdvdAsync",
           "size": "948",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "CdvdBackReadProc",
           "size": "8",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "CdvdAsyncProc",
           "size": "196",
+          "fuzzy_match_percent": 92.918365,
           "metadata": {}
         },
         {
           "name": "CdvdRead",
           "size": "668",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "MakeCdvdSearchPath",
           "size": "16",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "MakeCdvdReadPath",
           "size": "24",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "InitCdvdRead",
           "size": "72",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         }
       ],
@@ -22440,7 +22459,12 @@
         "total_functions": 4,
         "matched_functions": 4,
         "matched_functions_percent": 100.0,
-        "total_units": 1
+        "complete_code": "432",
+        "complete_code_percent": 100.0,
+        "complete_data": "32",
+        "complete_data_percent": 100.0,
+        "total_units": 1,
+        "complete_units": 1
       },
       "sections": [
         {
@@ -22457,6 +22481,7 @@
         },
         {
           "name": ".bss",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         }
       ],
@@ -22487,7 +22512,7 @@
         }
       ],
       "metadata": {
-        "complete": false,
+        "complete": true,
         "source_path": "../src/cs4/Seimei/src/Event0001.c",
         "progress_categories": [
           ""
@@ -23008,22 +23033,22 @@
     {
       "name": "Kuon",
       "measures": {
-        "fuzzy_match_percent": 1.3765064,
+        "fuzzy_match_percent": 1.5786248,
         "total_code": "956924",
-        "matched_code": "12380",
-        "matched_code_percent": 1.2937287,
+        "matched_code": "14132",
+        "matched_code_percent": 1.4768152,
         "total_data": "8579152",
-        "matched_data": "511092",
-        "matched_data_percent": 5.957372,
+        "matched_data": "596084",
+        "matched_data_percent": 6.9480524,
         "total_functions": 2901,
-        "matched_functions": 60,
-        "matched_functions_percent": 2.0682523,
-        "complete_code": "7444",
-        "complete_code_percent": 0.7779092,
-        "complete_data": "62500",
-        "complete_data_percent": 0.7285102,
+        "matched_functions": 67,
+        "matched_functions_percent": 2.3095484,
+        "complete_code": "7876",
+        "complete_code_percent": 0.8230539,
+        "complete_data": "62532",
+        "complete_data_percent": 0.7288832,
         "total_units": 215,
-        "complete_units": 4
+        "complete_units": 5
       }
     }
   ]
