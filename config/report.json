@@ -1,15 +1,15 @@
 {
   "measures": {
-    "fuzzy_match_percent": 1.3313618,
+    "fuzzy_match_percent": 1.3765064,
     "total_code": "956924",
-    "matched_code": "11948",
-    "matched_code_percent": 1.248584,
+    "matched_code": "12380",
+    "matched_code_percent": 1.2937287,
     "total_data": "8579152",
     "matched_data": "511092",
     "matched_data_percent": 5.957372,
     "total_functions": 2901,
-    "matched_functions": 56,
-    "matched_functions_percent": 1.9303689,
+    "matched_functions": 60,
+    "matched_functions_percent": 2.0682523,
     "complete_code": "7444",
     "complete_code_percent": 0.7779092,
     "complete_data": "62500",
@@ -22432,20 +22432,27 @@
     {
       "name": "cs4/Seimei/src/Event0001",
       "measures": {
+        "fuzzy_match_percent": 100.0,
         "total_code": "432",
+        "matched_code": "432",
+        "matched_code_percent": 100.0,
         "total_data": "32",
         "total_functions": 4,
+        "matched_functions": 4,
+        "matched_functions_percent": 100.0,
         "total_units": 1
       },
       "sections": [
         {
           "name": ".text",
           "size": "464",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": ".data",
           "size": "32",
+          "fuzzy_match_percent": 66.66667,
           "metadata": {}
         },
         {
@@ -22457,21 +22464,25 @@
         {
           "name": "ActiS0001Event000",
           "size": "168",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "PlayS0001Event000",
           "size": "92",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "InitS0001Event000",
           "size": "120",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         },
         {
           "name": "SetEventFuncS0001",
           "size": "52",
+          "fuzzy_match_percent": 100.0,
           "metadata": {}
         }
       ],
@@ -22997,16 +23008,16 @@
     {
       "name": "Kuon",
       "measures": {
-        "fuzzy_match_percent": 1.3313618,
+        "fuzzy_match_percent": 1.3765064,
         "total_code": "956924",
-        "matched_code": "11948",
-        "matched_code_percent": 1.248584,
+        "matched_code": "12380",
+        "matched_code_percent": 1.2937287,
         "total_data": "8579152",
         "matched_data": "511092",
         "matched_data_percent": 5.957372,
         "total_functions": 2901,
-        "matched_functions": 56,
-        "matched_functions_percent": 1.9303689,
+        "matched_functions": 60,
+        "matched_functions_percent": 2.0682523,
         "complete_code": "7444",
         "complete_code_percent": 0.7779092,
         "complete_data": "62500",
