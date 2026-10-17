@@ -82,3 +82,6 @@ make
 3. Reconfigure the project
 4. Build the project
 
+
+## Note: this project accepts NO AI contribution.
+
