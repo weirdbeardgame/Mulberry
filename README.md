@@ -1,3 +1,6 @@
+## Note: this project accepts NO AI contribution.
+## That's use of tools like Claude and other clankers to try and insta match code
+
 # Mulbery (桑)
 ## What is Mulberry?
 Mulberry is a project that aims to have a matching source decompilation of the PS2 game Kuon. Once we have a matching decompiled rom we want to port the game to modern hardware.
@@ -81,7 +84,4 @@ make
    2. Add a leading dot (`.`) to the type (e.g., `rodata` -> `.rodata`) of each subsection that belongs to the TU
 3. Reconfigure the project
 4. Build the project
-
-
-## Note: this project accepts NO AI contribution.
 
